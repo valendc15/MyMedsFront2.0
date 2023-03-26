@@ -25,7 +25,7 @@ function RegisterPatient(){
       body: JSON.stringify(regobj)
   }).then((res) => {
       toast.success('Registered successfully.')
-      navigate('/login');
+      navigate('/');
   }).catch((err) => {
       toast.error('Failed :' + err.message);
   });
