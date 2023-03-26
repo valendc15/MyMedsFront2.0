@@ -22,12 +22,13 @@ function RegisterPharmacy(){
       method: "POST",
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(regobj)
-  }).then((res) => {
-      toast.success('Registered successfully.')
-      navigate('/login');
-  }).catch((err) => {
-      toast.error('Failed :' + err.message);
-  });
+  }).then(result =>{
+    console.log(result)
+    toast.success("OK!")
+  }).catch(error=>{
+    console.log(error)
+    toast.error('Failed :' + error.message);
+  })
   
   }
 
@@ -59,7 +60,7 @@ function RegisterPharmacy(){
               <button type="submit" className='btn btn-primary' id="reggisterBtn">Register</button>
               </div>
 </form>
-
+    <ToastContainer/>
 </div>
 
   )
