@@ -24,11 +24,11 @@ function RegisterPharmacy(){
       body: JSON.stringify(regobj)
   }).then(result =>{
     console.log(result)
-    toast.success("OK!")
+    alert("OK!")
     navigate('/')
   }).catch(error=>{
     console.log(error)
-    toast.error('Failed :' + error.message);
+    alert('Failed :' + error.message);
   })
   
   }
