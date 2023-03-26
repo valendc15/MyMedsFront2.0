@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom"
-import {toast} from "react-toastify";
+import {toast,ToastContainer} from "react-toastify";
 
 function RegisterPharmacy(){
 
@@ -23,9 +23,15 @@ function RegisterPharmacy(){
       body: JSON.stringify(regobj)
   }).then((res) => {
       toast.success('Registered successfully.')
+      return(
+        <ToastContainer/>
+      )
       navigate('/login');
   }).catch((err) => {
       toast.error('Failed :' + err.message);
+      return(
+        <ToastContainer/>
+      )
   });
   
   }
