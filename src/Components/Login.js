@@ -19,7 +19,6 @@ function login(){
   axios.post("http://localhost:8080/login",{
     email:email,
     password:password
-
   })
   .then(result =>{
     console.log(result)
