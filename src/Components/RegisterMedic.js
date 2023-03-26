@@ -23,7 +23,7 @@ function RegisterMedic(){
       body: JSON.stringify(regobj)
   }).then((res) => {
       toast.success('Registered successfully.')
-      navigate('/');
+      navigate('/login');
   }).catch((err) => {
       toast.error('Failed :' + err.message);
   });
@@ -52,7 +52,7 @@ function RegisterMedic(){
     value={password} onChange={e => passwordchange(e.target.value)}/>
   </div>
   <div className="form-group ">
-    <label >ID</label>
+    <label >id</label>
     <input type="number" className="form-control" id="id" placeholder="Enter your ID"
     value={id} onChange={e => idchange(e.target.value)}/>
   </div>

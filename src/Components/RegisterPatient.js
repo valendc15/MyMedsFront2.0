@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function RegisterPatient(){
 
-  const [dni, dnichange] = useState("");
+  const [id, dnichange] = useState("");
   const [username, namechange] = useState("");
   const [password, passwordchange] = useState("");
   const [mail, emailchange] = useState("");
@@ -17,7 +17,7 @@ function RegisterPatient(){
 
   const handlesubmit = (e) => {
     e.preventDefault();
-    let regobj = { dni, username, password, mail };
+    let regobj = { id, username, password, mail };
     console.log(regobj)
     fetch("http://localhost:8080/patient", {
       method: "POST",
@@ -61,8 +61,8 @@ function RegisterPatient(){
   </div>
   <div className="form-group ">
     <label>DNI</label>
-    <input type="number" className="form-control" id="dni" placeholder="Enter your DNI"
-     value={dni} onChange={e => dnichange(e.target.value)}/>
+    <input type="number" className="form-control" id="id" placeholder="Enter your DNI"
+     value={id} onChange={e => dnichange(e.target.value)}/>
   </div>
   <div className="submit-group">
               <button type="submit" className='btn btn-primary' id="reggisterBtn">Register</button>

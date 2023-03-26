@@ -25,7 +25,7 @@ function RegisterPharmacy(){
   }).then(result =>{
     console.log(result)
     alert("OK!")
-    navigate('/')
+    navigate('/login')
   }).catch(error=>{
     console.log(error)
     alert('Failed :' + error.message);
