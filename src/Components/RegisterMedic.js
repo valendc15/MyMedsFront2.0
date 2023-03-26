@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import {toast} from "react-toastify";
+import { Link, useNavigate } from "react-router-dom"
 
 function RegisterMedic(){
 
@@ -8,10 +10,27 @@ function RegisterMedic(){
   const [password, passwordchange] = useState("");
   const [mail, emailchange] = useState("");
 
+  const navigate = useNavigate();
+
   const handlesubmit = (e) => {
     e.preventDefault();
     let regobj = { id, username, password, mail };
-    console.log(regobj)}
+    console.log(regobj)
+    fetch("http://localhost:8080/medic", {
+      method: "POST",
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(regobj)
+  }).then((res) => {
+      toast.success('Registered successfully.')
+      navigate('/login');
+  }).catch((err) => {
+      toast.error('Failed :' + err.message);
+  });
+  
+  
+  
+  }
+
 
   return(
     <div >

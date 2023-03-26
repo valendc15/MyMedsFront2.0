@@ -18,7 +18,7 @@ function RegisterPatient(){
     e.preventDefault();
     let regobj = { dni, username, password, mail };
     console.log(regobj)
-    fetch("http://localhost:8000/medic", {
+    fetch("http://localhost:8080/patient", {
       method: "POST",
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(regobj)
