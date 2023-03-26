@@ -1,26 +1,45 @@
 import { useState, useEffect } from 'react'
-
 function RegisterPatient(){
 
+  const [dni, dnichange] = useState("");
+  const [username, namechange] = useState("");
+  const [password, passwordchange] = useState("");
+  const [mail, emailchange] = useState("");
+
+
+  const handlesubmit = (e) => {
+    e.preventDefault();
+    let regobj = { dni, username, password, mail };
+    console.log(regobj)}
+   
+
+
   return(
+
+
+
     <div >
       
-    <form className='form'>
+    <form className='form' onSubmit={handlesubmit}>
     <div className="form-group">
     <label>Username</label>
-    <input type="text" className="form-control" id="text" placeholder="Enter your username"/>
+    <input type="text" className="form-control" id="text" placeholder="Enter your username"
+    value={username} onChange={e => namechange(e.target.value)}/>
   </div>
   <div className="form-group">
     <label >Email</label>
-    <input type="email" className="form-control" id="email" placeholder="Enter your Email"/>
+    <input type="email" className="form-control" id="email" placeholder="Enter your Email"
+     value={mail} onChange={e => emailchange(e.target.value)}/>
   </div>
   <div className="form-group">
     <label>Password</label>
-    <input type="password" className="form-control" id="password" placeholder="Enter your Password"/>
+    <input type="password" className="form-control" id="password" placeholder="Enter your Password"
+    value={password} onChange={e => passwordchange(e.target.value)}/>
   </div>
   <div className="form-group ">
     <label>DNI</label>
-    <input type="number" className="form-control" id="dni" placeholder="Enter your DNI"/>
+    <input type="number" className="form-control" id="dni" placeholder="Enter your DNI"
+     value={dni} onChange={e => dnichange(e.target.value)}/>
   </div>
   <div className="submit-group">
               <button type="submit" className='btn btn-primary' id="reggisterBtn">Register</button>
