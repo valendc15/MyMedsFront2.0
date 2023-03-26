@@ -25,6 +25,7 @@ function RegisterPharmacy(){
   }).then(result =>{
     console.log(result)
     toast.success("OK!")
+    navigate('/login')
   }).catch(error=>{
     console.log(error)
     toast.error('Failed :' + error.message);
