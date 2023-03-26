@@ -67,7 +67,7 @@ function Cards(){
                     <CardPh></CardPh>
                     <button className='btn btn-dark' onClick={handleOnClickPh}>Register as a pharmacy</button>
                 </div>
-                <Link to="/"><button className="btn btn-warning w-25 position-absolute bottom-0 end-0">Already have an account? Click Here.</button></Link>
+                <Link to="/login"><button className="btn btn-warning w-25 position-absolute bottom-0 end-0">Already have an account? Click Here.</button></Link>
             </div>
 
         </div>
