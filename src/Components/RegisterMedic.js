@@ -22,13 +22,15 @@ function RegisterMedic(){
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(regobj)
   }).then((res) => {
+      if (!res.ok){
+        throw Error("Error")
+      }
       toast.success('Registered successfully.')
       navigate('/login');
   }).catch((err) => {
-      toast.error('Failed :' + err.message);
+      toast.error('Failed to register');
   });
-  
-  
+
   
   }
 

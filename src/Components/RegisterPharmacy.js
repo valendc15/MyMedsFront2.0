@@ -23,12 +23,13 @@ function RegisterPharmacy(){
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(regobj)
   }).then(result =>{
-    console.log(result)
-    alert("OK!")
+    if (!result.ok){
+      throw Error("Error")
+    }
+    toast.success('Registered successfully')
     navigate('/login')
-  }).catch(error=>{
-    console.log(error)
-    alert('Failed :' + error.message);
+  }).catch((error)=>{
+    toast.error("Failed to register")
   })
   
   }
