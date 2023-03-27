@@ -1,13 +1,15 @@
 import Logo from "./MyMedsLogo.png"
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 
 
 
 
 function Login(){
+  const navigate=useNavigate();
   const [email, setEmail]=useState("");
   const [password, setPassword] = useState("");
 
@@ -22,8 +24,13 @@ function login(){
   })
   .then(result =>{
     console.log(result)
+    toast.success('Logged successfully')
+    localStorage.setItem('token',result.data.token)
+    navigate('/home')
+
   }).catch(error=>{
     console.log(error)
+    toast.error('Failed to log in');
   })
 
 
