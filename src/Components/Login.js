@@ -33,10 +33,10 @@ function Login(){
     }
     return result.json()
 
-  }).then(data=>{
+  }).then((data)=>{
     toast.success('Logged succesfully!')
     localStorage.setItem('token',data.token)
-    navigate('/home')
+    navigate('/home')//Es una poronga
   }).catch(error=>{
     console.log(error)
     toast.error('Failed to log in');

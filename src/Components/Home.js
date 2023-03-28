@@ -9,23 +9,18 @@ function Home(){
     const [name, setName] = useState('hhvv')
 
     useEffect(()=>{
-        let localStoragetoken=sessionStorage.getItem('token');
-        if(!localStoragetoken.getItem('token')){
+        if(!localStorage.getItem('token')){
             navigate('/login');
         }
     },[])
 
-    function Logout(){
-        localStorage.removeItem('token')
-        setName("hhv")
-    }
 
 
     
     return(
         <div>
         <h1>Hola</h1>
-        <button className="btn btn-warning" onClick={Logout()}>Log out</button>
+        <button className="btn btn-warning" onClick={()=>{localStorage.removeItem('token');window.location.reload(false)}}>Log out</button>
         </div>
     )
 }
