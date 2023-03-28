@@ -16,11 +16,15 @@ function Login(){
   
 
 
-function login(){
+  const handlesubmit = (e) => {
   console.log(email, password);
-  axios.post("http://localhost:8080/login",{
-    email:email,
-    password:password
+  e.preventDefault();
+  let regobj = {email, password };
+  console.log(regobj)
+  fetch("http://localhost:8080/doctor", {
+    method: "POST",
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(regobj)
   })
   .then(result =>{
     console.log(result)
@@ -46,7 +50,7 @@ function login(){
                 </div>
                 <div className="col-md-4 col-sm-4 col-xs-12">
                 
-                <form className="form-container">
+                <form className="form-container" onSubmit={handlesubmit}>
                 <img src={Logo} className="logo1"/>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
@@ -61,7 +65,7 @@ function login(){
     onChange={(e)=>setPassword(e.target.value)}/>
   </div>
   <br></br>
-  <button type="submit" onClick={login} class="btn btn-success w-100">Submit</button>
+  <button type="submit" class="btn btn-success w-100">Submit</button>
 </form>
 
                 </div>
