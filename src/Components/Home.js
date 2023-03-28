@@ -9,8 +9,9 @@ function Home(){
     const [name, setName] = useState('hhvv')
 
     useEffect(()=>{
-        if(!localStorage.getItem('token')){
-            navigate('/login')
+        let localStoragetoken=localStorage.getItem('token');
+        if(localStoragetoken==='' || localStoragetoken===undefined){
+            navigate('/login');
         }
     },[])
 
@@ -18,11 +19,6 @@ function Home(){
         localStorage.clear()
     }
     
-
-    
-
-
-
     return(
         <div>
         <h1>Hola</h1>
