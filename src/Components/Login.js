@@ -32,7 +32,7 @@ function Login(){
       throw Error("Error")
     }
     toast.success('Logged successfully')
-    localStorage.setItem('token',result.token)
+    sessionStorage.setItem('token',result.token)
     navigate('/home')
 
   }).catch(error=>{

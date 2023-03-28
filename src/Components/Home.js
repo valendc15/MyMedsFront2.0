@@ -9,14 +9,14 @@ function Home(){
     const [name, setName] = useState('hhvv')
 
     useEffect(()=>{
-        let localStoragetoken=localStorage.getItem('token');
+        let localStoragetoken=sessionStorage.getItem('token');
         if(localStoragetoken==='' || localStoragetoken===undefined){
             navigate('/login');
         }
     },[])
 
     function Logout(){
-        localStorage.clear()
+        sessionStorage.removeItem('token')
     }
     
     return(
