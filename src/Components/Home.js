@@ -10,13 +10,14 @@ function Home(){
 
     useEffect(()=>{
         let localStoragetoken=sessionStorage.getItem('token');
-        if(localStoragetoken==='' || localStoragetoken===undefined){
+        if(!localStoragetoken.getItem('token')){
             navigate('/login');
         }
     },[])
 
     function Logout(){
         sessionStorage.removeItem('token')
+        window.location.reload(true)
     }
     
     return(

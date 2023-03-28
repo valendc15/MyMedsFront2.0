@@ -31,14 +31,17 @@ function Login(){
     if (!result.ok){
       throw Error("Error")
     }
-    toast.success('Logged successfully')
-    sessionStorage.setItem('token',result.token)
-    navigate('/home')
+    return result.json()
 
+  }).then(data=>{
+    toast.success('Logged succesfully!')
+    localStorage.setItem('token',data.token)
+    navigate('/home')
   }).catch(error=>{
     console.log(error)
     toast.error('Failed to log in');
   })
+
 
 
 }
