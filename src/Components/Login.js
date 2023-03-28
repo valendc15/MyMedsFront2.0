@@ -10,26 +10,29 @@ import { toast } from "react-toastify";
 
 function Login(){
   const navigate=useNavigate();
-  const [email, setEmail]=useState("");
+  const [mail, setEmail]=useState("");
   const [password, setPassword] = useState("");
 
   
 
 
   const handlesubmit = (e) => {
-  console.log(email, password);
+  console.log(mail, password);
   e.preventDefault();
-  let regobj = {email, password };
+  let regobj = {mail, password };
   console.log(regobj)
-  fetch("http://localhost:8080/doctor", {
+  fetch("http://localhost:8080/login", {
     method: "POST",
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(regobj)
   })
   .then(result =>{
     console.log(result)
+    if (!result.ok){
+      throw Error("Error")
+    }
     toast.success('Logged successfully')
-    localStorage.setItem('token',result.data.token)
+    localStorage.setItem('token',result.token)
     navigate('/home')
 
   }).catch(error=>{
@@ -55,7 +58,7 @@ function Login(){
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"
-    value={email}
+    value={mail}
     onChange={(e)=>setEmail(e.target.value)}/>
   </div>
   <div class="form-group">
