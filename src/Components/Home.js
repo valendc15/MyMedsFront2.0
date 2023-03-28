@@ -16,9 +16,11 @@ function Home(){
     },[])
 
     function Logout(){
-        sessionStorage.removeItem('token')
-        window.location.reload(true)
+        localStorage.removeItem('token')
+        setName("hhv")
     }
+
+
     
     return(
         <div>
