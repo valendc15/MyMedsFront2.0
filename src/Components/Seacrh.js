@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Popup from "./PopUp";
 
 
@@ -43,9 +43,9 @@ function Search(){
 </svg></button>
 	</div>
 </form> 
-        <Popup trigger={popUpState}>
+        <Popup trigger={popUpState} setTrigger={setpopUpState}>
             <h3>
-                patient:username
+                Patient: {username}
             </h3>
         </Popup>
         </div>
