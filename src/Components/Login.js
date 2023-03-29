@@ -74,7 +74,7 @@ function Login(){
                   value={password}
                   onChange={(e)=>setPassword(e.target.value)}/>
                 </div>
-                <button type="submit" class="btn btn-success w-100" >Submit</button>
+                <button type="submit" class="btn btn-success w-100">Submit</button>
               </form>
 
                 </div>
