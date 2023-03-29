@@ -10,10 +10,11 @@ function Search(){
 
     const handlesubmit = (e) => {
         e.preventDefault();
-        console.log(id)
-        fetch("http://localhost:8080/patient/${id}")
+        fetch(`http://localhost:8080/patient/${id}`)
         .then(response =>{
-            console.log(response.json())
+            return (response.json())
+        }).then(data=>{
+            console.log(data.primarykey);
         })
     }
 
