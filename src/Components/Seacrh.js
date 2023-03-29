@@ -54,7 +54,7 @@ function Search(){
             <p>
                 Do you wish to register {username} as your patient?
             </p>
-            <Button className="btn btn-succes">Register</Button>
+            <button className="btn btn-success">Register</button>
         </Popup>
         </div>
     )
