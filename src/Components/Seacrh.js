@@ -1,3 +1,4 @@
+import { Button } from "bootstrap";
 import { useCallback, useState } from "react";
 import Popup from "./PopUp";
 
@@ -47,6 +48,13 @@ function Search(){
             <h3>
                 Patient: {username}
             </h3>
+            <h4>
+                DNI:{id}
+            </h4>
+            <p>
+                Do you wish to register {username} as your patient?
+            </p>
+            <Button className="btn btn-succes">Register</Button>
         </Popup>
         </div>
     )
