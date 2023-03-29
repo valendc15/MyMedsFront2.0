@@ -21,6 +21,7 @@ function Home(){
         <div>
         <h1>Hola</h1>
         <button className="btn btn-warning" onClick={()=>{localStorage.removeItem('token');window.location.reload(false)}}>Log out</button>
+        <button className="btn btn-info" onClick={navigate('/search')}>Go to Search</button>
         </div>
     )
 }

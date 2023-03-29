@@ -56,3 +56,9 @@ box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
   width: 350px;
 }
 
+.search{
+  position: absolute;
+  width: 75%;
+  left: 30%;
+  top: 45%;
+}
