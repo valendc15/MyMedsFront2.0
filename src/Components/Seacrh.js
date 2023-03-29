@@ -25,6 +25,14 @@ function Search(){
         })
     }
 
+    function connect(){
+        const medicId=localStorage.getItem("id")
+        let obj={id,medicId}
+        fetch("http://localhost:8080/login",{
+            
+        })
+    }
+
 
 
 
@@ -54,7 +62,7 @@ function Search(){
             <p>
                 Do you wish to register {username} as your patient?
             </p>
-            <button className="btn btn-success">Register</button>
+            <button className="btn btn-success" onClick={connect()}>Register</button>
         </Popup>
         </div>
     )

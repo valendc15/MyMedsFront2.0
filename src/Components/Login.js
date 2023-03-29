@@ -36,7 +36,11 @@ function Login(){
   }).then((data)=>{
     toast.success('Logged succesfully!')
     localStorage.setItem('token',data.token)
-    navigate('/home')//Es una poronga
+    localStorage.setItem('id',data.primarykey)
+    if(data.userType==="DOCTOR"){
+      navigate('/search')
+    }
+    navigate('/home')
   }).catch(error=>{
     console.log(error)
     toast.error('Failed to log in');
