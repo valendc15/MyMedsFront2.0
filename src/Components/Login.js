@@ -62,21 +62,20 @@ function Login(){
                 
                 <form className="form-container" onSubmit={handlesubmit}>
                 <img src={Logo} className="logo1"/>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"
-    value={mail}
-    onChange={(e)=>setEmail(e.target.value)}/>
-  </div>
-  <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
-    value={password}
-    onChange={(e)=>setPassword(e.target.value)}/>
-  </div>
-  <br></br>
-  <button type="submit" class="btn btn-success w-100">Submit</button>
-</form>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"
+                  value={mail}
+                  onChange={(e)=>setEmail(e.target.value)}/>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}/>
+                </div>
+                <button type="submit" class="btn btn-success w-100" >Submit</button>
+              </form>
 
                 </div>
                 <div className="col-md-4 col-sm-4 col-xs-12"></div>

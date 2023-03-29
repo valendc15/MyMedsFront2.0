@@ -1,5 +1,6 @@
 import { Button } from "bootstrap";
 import { useCallback, useState } from "react";
+import { toast } from "react-toastify";
 import Popup from "./PopUp";
 
 
@@ -17,19 +18,22 @@ function Search(){
         fetch(`http://localhost:8080/patient/${id}`)
         .then(response =>{
             return (response.json())
-        }).then(data=>{
+        }).then((data)=>{
             console.log(data.primarykey);
             setUsernam(data.username)
             setpopUpState(true)
-
         })
     }
 
     function connect(){
         const medicId=localStorage.getItem("id")
         let obj={id,medicId}
-        fetch("http://localhost:8080/login",{
-            
+        fetch(`http://localhost:8080/doctor/addpatient/${medicId}`,{
+            method:"PUT",
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(id)
+        }).then(data=>{
+            toast.success("User succesfully registered!!")
         })
     }
 
@@ -62,7 +66,7 @@ function Search(){
             <p>
                 Do you wish to register {username} as your patient?
             </p>
-            <button className="btn btn-success" onClick={connect()}>Register</button>
+            <button className="btn btn-success" onClick={connect}>Register</button>
         </Popup>
         </div>
     )
