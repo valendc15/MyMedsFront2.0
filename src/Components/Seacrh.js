@@ -45,7 +45,7 @@ function Search(){
 </form> 
         <Popup trigger={popUpState}>
             <h3>
-                patient:
+                patient:username
             </h3>
         </Popup>
         </div>
