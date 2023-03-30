@@ -40,7 +40,9 @@ function Login(){
     if(data.userType==="DOCTOR"){
       navigate('/search')
     }
-    navigate('/home')
+    else{
+      navigate('/home')
+    }
   }).catch(error=>{
     console.log(error)
     toast.error('Failed to log in');

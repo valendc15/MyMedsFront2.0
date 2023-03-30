@@ -17,11 +17,16 @@ function Search(){
         e.preventDefault();
         fetch(`http://localhost:8080/patient/${id}`)
         .then(response =>{
+            if (!response.ok){
+                throw Error
+            }
             return (response.json())
         }).then((data)=>{
             console.log(data.primarykey);
             setUsernam(data.username)
             setpopUpState(true)
+        }).catch(err=>{
+            toast.error("Patient not found!")
         })
     }
 
@@ -33,7 +38,12 @@ function Search(){
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(id)
         }).then(data=>{
-            toast.success("User succesfully registered!!")
+            if (!data.ok){
+                throw Error("Error")
+            }
+            toast.success("User succesfully registered!")
+        }).catch(err=>{
+            toast.error("Failed to register patient!")
         })
     }
 
