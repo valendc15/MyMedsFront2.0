@@ -6,6 +6,7 @@ import Login from './Components/Login';
 import { ToastContainer } from 'react-toastify';
 import Home from './Components/Home';
 import Search from './Components/Seacrh';
+import ViewPatients from './Components/viewPatients';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Route exact path="/Register" element={<Register></Register>}/>
         <Route exact path='/home' element={<Home></Home>}/>
         <Route exact path='/search' element={<Search></Search>}/>
+        <Route exact path='/viewPatients' element={<ViewPatients></ViewPatients>}/>
       </Routes>
     </Router>
     </div>

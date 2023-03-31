@@ -57,7 +57,7 @@ box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
 }
 
 .search{
-  position: absolute;
+  position: relative;
   width: 75%;
   left: 30%;
   top: 45%;
@@ -89,4 +89,11 @@ box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
   position: absolute;
   top: 16px;
   right: 16px;
+}
+
+
+.searchparagraph{
+  position: relative;
+  margin-top: 20%;
+  font-size: x-large;
 }
