@@ -2,6 +2,7 @@ import { useEffect, useState} from "react";
 import { toast } from "react-toastify";
 import React from "react";
 import { Button } from "bootstrap";
+import MedicNavBar from "./MedicNavBar";
 
 
 function ViewPatients(){
@@ -35,6 +36,7 @@ function ViewPatients(){
 
     return(
         <div>
+            <MedicNavBar></MedicNavBar>
             <h1>Registered Patients</h1>
             <button onClick={handleClick}>Show Patients</button>
             {patientList}

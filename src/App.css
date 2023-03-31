@@ -58,9 +58,7 @@ box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
 
 .search{
   position: relative;
-  width: 75%;
-  left: 30%;
-  top: 45%;
+
 }
 
 
@@ -94,6 +92,52 @@ box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
 
 .searchparagraph{
   position: relative;
-  margin-top: 20%;
+  margin-top: 10%;
   font-size: x-large;
+}
+
+
+nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(24deg, rgba(2,0,36,1) 0%, rgba(177,235,134,1) 0%, rgba(0,212,255,1) 77%, rgba(0,212,255,1) 97%); 
+}
+
+
+#navbar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#navbar li{
+  list-style: none;
+  padding: 0 20px;
+  position: relative;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #FFF;
+}
+
+.active,
+.link:hover{
+  color: aquamarine;
+}
+
+.active::after,
+.link:hover::after{
+  content: "";
+  width: 30%;
+  height: 2px;
+  background: aquamarine;
+  position: absolute;
+  bottom: -4px;
+  left: 20px;
+}
+
+.link{
+  color: #FFF;
+  text-decoration: none;
 }
