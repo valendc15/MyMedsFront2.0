@@ -12,7 +12,7 @@ function ViewPatients(){
     const medicId=localStorage.getItem("id")
 
     function handleClick(){
-        fetch(`http://localhost:8080/patient/${medicId}`)
+        fetch(`http://localhost:8080/doctor/listpatients/${medicId}`)
         .then(response =>{
             if (!response.ok){
                 throw Error
@@ -20,10 +20,10 @@ function ViewPatients(){
             return (response.json())
         }).then((data)=>{
             const patients=data.map(patient=>
-                <div class="card" style="width: 18rem;">
+                <div class="card" styles="width: 18rem;">
                 <div class="card-body">
                 <h5 class="card-title">Name: {patient.username}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">ID:{patient.primarykey}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
                 </div>
                 </div>
                 )
