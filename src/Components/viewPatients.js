@@ -1,7 +1,6 @@
 import { useEffect, useState} from "react";
 import { toast } from "react-toastify";
 import React from "react";
-import { Button } from "bootstrap";
 import MedicNavBar from "./MedicNavBar";
 
 
@@ -20,10 +19,11 @@ function ViewPatients(){
             return (response.json())
         }).then((data)=>{
             const patients=data.map(patient=>
-                <div class="card" styles="width: 18rem;">
+                <div class="card border-primary mb-3" styles="width: 18rem; padding:10px">
                 <div class="card-body">
                 <h5 class="card-title">Name: {patient.username}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
+                <button className="btn btn-dark" onClick={dismisP(patient.username)}>Dismiss Patient</button>
                 </div>
                 </div>
                 )
@@ -33,12 +33,32 @@ function ViewPatients(){
         })
     }
 
+    function dismisP(username){
+    fetch("http://localhost:8080/", {
+    method: "POST",
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(username)
+  })
+  .then(result =>{
+    console.log(result)
+    if (!result.ok){
+      throw Error("Error")
+    }
+    return result.json()
+
+  }).catch(error=>{
+    console.log(error)
+    toast.error('Failed to remove patient');
+  })
+
+
+    }
 
     return(
         <div>
             <MedicNavBar></MedicNavBar>
             <h1>Registered Patients</h1>
-            <button onClick={handleClick}>Show Patients</button>
+            <button className="btn btn-info" onClick={handleClick}>Show Patients</button>
             {patientList}
 
         </div>

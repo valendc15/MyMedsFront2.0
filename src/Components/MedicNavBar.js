@@ -11,7 +11,19 @@ function MedicNavBar(){
         if(!localStorage.getItem('token')){
             navigate('/login');
         }
+        
     },[])
+
+    function logout(){
+        fetch("http://localhost:8080/login", {
+            method: "POST",
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(localStorage.getItem('token'))
+          })
+        localStorage.removeItem('token');
+        window.location.reload(false);
+        localStorage.removeItem('id')
+    }
     
 
     return(
@@ -22,7 +34,7 @@ function MedicNavBar(){
                     <li><Link to="/home" className="link">Home</Link></li>
                     <li><Link to="/search" className="link">Search Patient</Link></li>
                     <li><Link to="/viewPatients" className="link">View Patients</Link></li>
-                    <button className="btn btn-warning"onClick={()=>{localStorage.removeItem('token');window.location.reload(false);localStorage.removeItem('id')}}>LogOut</button>
+                    <button className="btn btn-warning"onClick={logout}>LogOut</button>
                 </ul>
             </div>
         </nav>
