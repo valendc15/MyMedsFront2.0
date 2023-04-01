@@ -23,7 +23,9 @@ function ViewPatients(){
                 <div class="card-body">
                 <h5 class="card-title">Name: {patient.username}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
-                <button className="btn btn-dark" onClick={dismisP(patient.username)}>Dismiss Patient</button>
+                <button className="btn btn-danger d-flex justify-content-end" onClick={()=>{
+                    dismisP(patient.dni)
+                }}>Dismiss Patient</button>
                 </div>
                 </div>
                 )
@@ -33,11 +35,11 @@ function ViewPatients(){
         })
     }
 
-    function dismisP(username){
+    function dismisP(dni){
     fetch("http://localhost:8080/", {
     method: "POST",
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(username)
+    body: JSON.stringify(dni)
   })
   .then(result =>{
     console.log(result)

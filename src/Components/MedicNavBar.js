@@ -15,10 +15,9 @@ function MedicNavBar(){
     },[])
 
     function logout(){
-        fetch("http://localhost:8080/login", {
-            method: "POST",
+        fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`, {
+            method: "PUT",
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(localStorage.getItem('token'))
           })
         localStorage.removeItem('token');
         window.location.reload(false);
