@@ -1,6 +1,6 @@
 import Logo from "./MyMedsLogo.png"
 import { Link,useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect} from "react";
 
 
 
@@ -11,13 +11,18 @@ function MedicNavBar(){
         if(!localStorage.getItem('token')){
             navigate('/login');
         }
-        
+        fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`,{
+            method:"GET",
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(localStorage.getItem('token'))
+        })
     },[])
 
     function logout(){
         fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`, {
             method: "PUT",
             headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(localStorage.getItem('token'))
           })
         localStorage.removeItem('token');
         window.location.reload(false);

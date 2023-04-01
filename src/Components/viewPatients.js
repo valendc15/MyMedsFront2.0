@@ -46,6 +46,7 @@ function ViewPatients(){
     if (!result.ok){
       throw Error("Error")
     }
+    toast.success(`Patient with ${dni} removed successfully!`)
     return result.json()
 
   }).catch(error=>{
