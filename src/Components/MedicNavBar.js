@@ -11,6 +11,7 @@ function MedicNavBar(){
         if(!localStorage.getItem('token')){
             navigate('/login');
         }
+        if(localStorage.getItem!=null){
         fetch(`http://localhost:8080/token/${localStorage.getItem('id')}/checkToken`,{
             method:"PUT",
             headers: { 'content-type': 'application/json' },
@@ -24,7 +25,8 @@ function MedicNavBar(){
             if(data===false){
                 navigate('/login')
             }
-    },[])})
+    },[])}
+})
 
     function logout(){
         fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`, {
