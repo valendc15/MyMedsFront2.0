@@ -16,6 +16,14 @@ function MedicNavBar(){
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(localStorage.getItem('token'))
         })
+        .then(result =>{
+            console.log(result)
+            return result.json()
+        
+          }).then((data)=>{
+            if(data==false){
+                navigate('/login')
+            }
     },[])
 
     function logout(){
