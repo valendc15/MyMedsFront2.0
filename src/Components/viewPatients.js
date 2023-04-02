@@ -36,8 +36,8 @@ function ViewPatients(){
     }
 
     function dismisP(dni){
-    fetch("http://localhost:8080/", {
-    method: "POST",
+    fetch(`http://localhost:8080/doctor/listpatients/${localStorage.getItem('id')}`, {
+    method: "DELETE",
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(dni)
   })
