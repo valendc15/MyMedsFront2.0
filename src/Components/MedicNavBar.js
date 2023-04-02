@@ -11,33 +11,33 @@ function MedicNavBar(){
         if(!localStorage.getItem('token')){
             navigate('/login');
         }
-        fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`,{
-            method:"GET",
+        fetch(`http://localhost:8080/token/${localStorage.getItem('id')}/checkToken`,{
+            method:"PUT",
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(localStorage.getItem('token'))
+            body: localStorage.getItem('token')
         })
         .then(result =>{
             console.log(result)
             return result.json()
         
           }).then((data)=>{
-            if(data==false){
+            if(data===false){
                 navigate('/login')
             }
-    },[])
+    },[])})
 
     function logout(){
         fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`, {
             method: "PUT",
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(localStorage.getItem('token'))
+            body:localStorage.getItem('token')
           })
         localStorage.removeItem('token');
         window.location.reload(false);
         localStorage.removeItem('id')
     }
     
-
+    
     return(
         <nav>
             <img src={Logo} ></img>
