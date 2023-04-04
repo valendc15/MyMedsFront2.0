@@ -8,10 +8,12 @@ function ViewPatients(){
 
 
     const[patientList, setPatinetList]=useState("")
+    const[buttonClose, setButtonClose]=useState(false)
     const medicId=localStorage.getItem("id")
 
 
     function handleOnClick(){
+        setButtonClose(true)
         fetch(`http://localhost:8080/doctor/listpatients/${medicId}`)
         .then(response =>{
             if (!response.ok){
@@ -64,15 +66,27 @@ function ViewPatients(){
 
     }
 
-    return(
-        <div>
+    if(buttonClose==false){
+        return(
+            <div>
             <MedicNavBar></MedicNavBar>
             <h1>Registered Patients</h1>
             <button className="btn btn-info" onClick={handleOnClick}>Show Patients</button>
-            {patientList}
+            </div>
 
-        </div>
+
     )
     }
+    else{
+        return(
+            <div>
+                <MedicNavBar></MedicNavBar>
+                <h1>Registered Patients</h1>
+                <button className="btn btn-dark" onClick={setButtonClose(false)}>Close</button>
+                {patientList}
+            </div>
+        )
+    }
+}
 
 export default ViewPatients;
