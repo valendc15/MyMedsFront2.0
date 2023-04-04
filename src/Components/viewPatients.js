@@ -44,8 +44,6 @@ function ViewPatients(){
                 const patient = <h1 className="justify-content-md-center">There are no registered Patients</h1>
                 setPatinetList(patient)
             }
-        }).catch(err=>{
-            toast.warning('Failed to show patients')
         })
         setButtonClose(true)
     }
