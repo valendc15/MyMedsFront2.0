@@ -11,13 +11,7 @@ function ViewPatients(){
     const medicId=localStorage.getItem("id")
 
 
-    useEffect(()=>{
-        return lol
-    },[])
-
-
-
-    function lol(){
+    function handleOnClick(){
         fetch(`http://localhost:8080/doctor/listpatients/${medicId}`)
         .then(response =>{
             if (!response.ok){
@@ -40,7 +34,7 @@ function ViewPatients(){
                 setPatinetList(patients)
             }
             else{
-                const patient= <h1 className="justify-content-md-center">There are no registered Patients</h1>
+                const patient = <h1 className="justify-content-md-center">There are no registered Patients</h1>
                 setPatinetList(patient)
             }
         }).catch(err=>{
@@ -74,6 +68,7 @@ function ViewPatients(){
         <div>
             <MedicNavBar></MedicNavBar>
             <h1>Registered Patients</h1>
+            <button className="btn btn-info" onClick={handleOnClick}>Show Patients</button>
             {patientList}
 
         </div>
