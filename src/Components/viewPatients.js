@@ -12,8 +12,13 @@ function ViewPatients(){
     const medicId=localStorage.getItem("id")
 
 
+
+    function handleOnClickClose(){
+        setButtonClose(false)
+    }
+
+
     function handleOnClick(){
-        setButtonClose(true)
         fetch(`http://localhost:8080/doctor/listpatients/${medicId}`)
         .then(response =>{
             if (!response.ok){
@@ -23,7 +28,7 @@ function ViewPatients(){
         }).then((data)=>{
             if (data!=null || data!=undefined){
             const patients=data.map(patient=>
-                <div class="card border-primary mb-3 bounce-in-bottom" styles="width: 18rem; padding:10px">
+                <div class="card border-primary mb-3" styles="width: 18rem; padding:10px">
                 <div class="card-body">
                 <h5 class="card-title">Name: {patient.username}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
@@ -42,6 +47,7 @@ function ViewPatients(){
         }).catch(err=>{
             toast.warning('Failed to show patients')
         })
+        setButtonClose(true)
     }
 
     function dismisP(dni){
@@ -66,7 +72,7 @@ function ViewPatients(){
 
     }
 
-    if(buttonClose==false){
+    {if(buttonClose==false){
         return(
             <div>
             <MedicNavBar></MedicNavBar>
@@ -82,11 +88,12 @@ function ViewPatients(){
             <div>
                 <MedicNavBar></MedicNavBar>
                 <h1>Registered Patients</h1>
-                <button className="btn btn-dark" onClick={setButtonClose(false)}>Close</button>
+                <button className="btn btn-dark" onClick={handleOnClickClose}>Close</button>
                 {patientList}
             </div>
         )
     }
+}
 }
 
 export default ViewPatients;
