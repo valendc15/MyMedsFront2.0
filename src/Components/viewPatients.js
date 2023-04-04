@@ -10,7 +10,14 @@ function ViewPatients(){
     const[patientList, setPatinetList]=useState("")
     const medicId=localStorage.getItem("id")
 
-    function handleClick(){
+
+    useEffect(()=>{
+        return lol
+    },[])
+
+
+
+    function lol(){
         fetch(`http://localhost:8080/doctor/listpatients/${medicId}`)
         .then(response =>{
             if (!response.ok){
@@ -18,8 +25,9 @@ function ViewPatients(){
             }
             return (response.json())
         }).then((data)=>{
+            if (data!=null || data!=undefined){
             const patients=data.map(patient=>
-                <div class="card border-primary mb-3" styles="width: 18rem; padding:10px">
+                <div class="card border-primary mb-3 bounce-in-bottom" styles="width: 18rem; padding:10px">
                 <div class="card-body">
                 <h5 class="card-title">Name: {patient.username}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
@@ -30,6 +38,11 @@ function ViewPatients(){
                 </div>
                 )
                 setPatinetList(patients)
+            }
+            else{
+                const patient= <h1 className="justify-content-md-center">There are no registered Patients</h1>
+                setPatinetList(patient)
+            }
         }).catch(err=>{
             toast.warning('Failed to show patients')
         })
@@ -61,11 +74,10 @@ function ViewPatients(){
         <div>
             <MedicNavBar></MedicNavBar>
             <h1>Registered Patients</h1>
-            <button className="btn btn-info" onClick={handleClick}>Show Patients</button>
             {patientList}
 
         </div>
     )
-}
+    }
 
 export default ViewPatients;
