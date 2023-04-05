@@ -7,15 +7,18 @@ import { toast } from "react-toastify";
 
 function PatientRequest(){
 
-    const [medicine, setMedicine]=useState("")
-    const [docID, setDoctorID]=useState("")
+    const [drugName, setMedicine]=useState("")
+    const [docId, setDoctorID]=useState("")
     const userName=localStorage.getItem("username")
+
+    const patientId=localStorage.getItem('id')
 
 
     function handleSumbit(e){
         e.preventDefault();
-        let obj={docID,medicine}
-        fetch(`http://localhost:8080/patient/${localStorage.getItem("id")}/makeRequest`,{
+    
+        let obj={docId: parseInt(docId),drugName}
+        fetch(`http://localhost:8080/patient/${patientId}/makeRequest`,{
             method:"PUT",
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(obj)
@@ -46,14 +49,14 @@ function PatientRequest(){
   <div class="col-md-6">
     <label for="inputPassword4" class="form-label">Doctor ID</label>
     <input type="number" class="form-control" id="inputPassword4"
-    value={docID}
+    value={docId}
     onChange={(e)=>setDoctorID(e.target.value)}
     />
   </div>
   <div class="col-12">
     <label for="inputAddress" class="form-label">Medicine Required</label>
     <input type="text" class="form-control" id="inputAddress" placeholder="Your medicine"
-       value={medicine}
+       value={drugName}
        onChange={(e)=>setMedicine(e.target.value)}/>
   </div>
   <div class="col-12">
