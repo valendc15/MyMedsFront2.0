@@ -12,7 +12,8 @@ function PatientRequest(){
     const userName=localStorage.getItem("username")
 
 
-    function handleSumbit(){
+    function handleSumbit(e){
+        e.preventDefault();
         let obj={docID,medicine}
         fetch(`http://localhost:8080/patient/${localStorage.getItem("id")}/makeRequest`,{
             method:"PUT",
@@ -43,8 +44,8 @@ function PatientRequest(){
 
   </div>
   <div class="col-md-6">
-    <label for="inputPassword4" class="form-label">Doctor Name</label>
-    <input type="password" class="form-control" id="inputPassword4"
+    <label for="inputPassword4" class="form-label">Doctor ID</label>
+    <input type="number" class="form-control" id="inputPassword4"
     value={docID}
     onChange={(e)=>setDoctorID(e.target.value)}
     />
