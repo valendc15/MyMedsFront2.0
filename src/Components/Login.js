@@ -37,9 +37,11 @@ function Login(){
     toast.success('Logged succesfully!')
     localStorage.setItem('token',data.token)
     localStorage.setItem('id',data.primarykey)
+    localStorage.setItem('username',data.username)
     if(data.userType==="DOCTOR"){
       navigate('/search')
     }
+    else if(data.userType==="PATIENT") navigate('/requestsP')
     else{
       navigate('/home')
     }

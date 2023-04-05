@@ -253,3 +253,23 @@ nav{
             animation-timing-function: ease-out;
   }
 }
+
+
+.requestForm{
+  position: absolute;
+  max-width: 500px;
+  top:38%;
+  padding: 10px;
+  left:32%;
+  border: 7px solid #50ffb0;
+  border-radius: 26px 26px 26px 26px;
+-webkit-border-radius: 26px 26px 26px 26px;
+-moz-border-radius: 26px 26px 26px 26px;
+
+}
+
+.h1request{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  border-bottom: solid #50ffb0;
+}
+
