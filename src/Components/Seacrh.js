@@ -32,14 +32,16 @@ function Search(){
     }
 
     function connect(){
-        const medicId=localStorage.getItem("id")
+        const medicId= parseInt( localStorage.getItem("id"))
+        const token=localStorage.getItem("token")
         let obj={id,medicId}
         fetch(`http://localhost:8080/doctor/addpatient/${medicId}`,{
             method:"PUT",
-            headers: { 'content-type': 'application/json' },
+            headers: { 'content-type': 'application/json', 'token': `${token}`,
+        },
             body: JSON.stringify(id)
-        }).then(data=>{
-            if (!data.ok){
+        }).then(result=>{
+            if (!result.ok){
                 throw Error("Error")
             }
             toast.success("User succesfully registered!")
