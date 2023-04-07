@@ -7,7 +7,7 @@ import MedicNavBar from "./MedicNavBar";
 function ViewPatients(){
 
 
-    const[patientList, setPatinetList]=useState("")
+    const[patientList, setPatinetList]=useState([])
     const[buttonClose, setButtonClose]=useState(false)
     const medicId=localStorage.getItem("id")
 
@@ -27,18 +27,7 @@ function ViewPatients(){
             return (response.json())
         }).then((data)=>{
             if (data!=null || data!=undefined){
-            const patients=data.map(patient=>
-                <div class="card border-primary mb-3" styles="width: 18rem; padding:10px">
-                <div class="card-body">
-                <h5 class="card-title">Name: {patient.username}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
-                <button className="btn btn-danger d-flex justify-content-end" onClick={()=>{
-                    dismisP(patient.dni)
-                }}>Dismiss Patient</button>
-                </div>
-                </div>
-                )
-                setPatinetList(patients)
+                setPatinetList(data)
             }
             else{
                 const patient = <h1 className="justify-content-md-center">There are no registered Patients</h1>
@@ -47,7 +36,6 @@ function ViewPatients(){
         })
         setButtonClose(true)
     }
-
     function dismisP(dni){
     fetch(`http://localhost:8080/doctor/listpatients/${localStorage.getItem('id')}`, {
     method: "DELETE",
@@ -59,7 +47,7 @@ function ViewPatients(){
     if (!result.ok){
       throw Error("Error")
     }
-    toast.success(`Patient with ${dni} removed successfully!`)
+    window.location.reload(false)
     return result.json()
 
   }).catch(error=>{
@@ -87,7 +75,23 @@ function ViewPatients(){
                 <MedicNavBar></MedicNavBar>
                 <h1>Registered Patients</h1>
                 <button className="btn btn-dark" onClick={handleOnClickClose}>Close</button>
-                {patientList}
+                <div class="aiuda">
+                {
+                    patientList.map(patient=>{
+                        return(
+                        <div class="card border-primary mb-3 items" styles="width: 18rem; padding:10px">
+                        <div class="card-body">
+                        <h5 class="card-title">Name: {patient.username}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
+                        <button className="btn btn-danger d-flex justify-content-end" onClick={()=>{
+                            dismisP(patient.dni)
+                        }}>Dismiss Patient</button>
+                        </div>
+                        </div>
+                        )
+                    })
+                }
+                </div>
             </div>
         )
     }
