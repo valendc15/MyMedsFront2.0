@@ -259,7 +259,7 @@ nav{
   position: absolute;
   max-width: 500px;
   top:38%;
-  padding: 10px;
+  padding: 30px;
   left:32%;
   border: 7px solid #50ffb0;
   border-radius: 26px 26px 26px 26px;
@@ -272,4 +272,12 @@ nav{
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   border-bottom: solid #50ffb0;
 }
+.aiuda{
+  display: grid;
+  padding: 10px;
+  
+}
 
+.items{
+  max-width: 100%;
+}
