@@ -28,7 +28,7 @@ function Search(){
             if (response.status!=302){
                 throw Error
             }
-            else if (result.status==401){
+            else if (response.status==401){
                 localStorage.clear()
                 navigate('/login')
             }

@@ -2,6 +2,7 @@ import { useEffect, useState} from "react";
 import { toast } from "react-toastify";
 import React from "react";
 import MedicNavBar from "./MedicNavBar";
+import { useNavigate } from "react-router-dom";
 
 
 function ViewPatients(){
@@ -11,7 +12,7 @@ function ViewPatients(){
     const[buttonClose, setButtonClose]=useState(false)
     const medicId=localStorage.getItem("id")
     const token=localStorage.getItem("token")
-
+    const navigate=useNavigate();
 
     function handleOnClickClose(){
         setButtonClose(false)
@@ -22,16 +23,19 @@ function ViewPatients(){
         fetch(`http://localhost:8080/doctor/listpatients/${medicId}`,{
             method: "GET",
             headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`}
-        })
-        .then(response =>{
-            if (response.status!=302){
-                throw Error
-            }
-            else if (result.status==401){
+        }).then((response) =>{
+            if (response.status===401){
                 localStorage.clear()
                 navigate('/login')
             }
             return (response.json())
+            
+        }).catch(error=>{
+            console.log(error);
+            if (error.response.status===401){
+                localStorage.clear()
+                navigate('/login')
+            }
         }).then((data)=>{
             if (data!=null || data!=undefined){
                 setPatinetList(data)
