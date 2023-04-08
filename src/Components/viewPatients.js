@@ -10,7 +10,7 @@ function ViewPatients(){
     const[patientList, setPatinetList]=useState([])
     const[buttonClose, setButtonClose]=useState(false)
     const medicId=localStorage.getItem("id")
-
+    const token=localStorage.getItem("token")
 
 
     function handleOnClickClose(){
@@ -19,9 +19,12 @@ function ViewPatients(){
 
 
     function handleOnClick(){
-        fetch(`http://localhost:8080/doctor/listpatients/${medicId}`)
+        fetch(`http://localhost:8080/doctor/listpatients/${medicId}`,{
+            method: "GET",
+            headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`}
+        })
         .then(response =>{
-            if (!response.ok){
+            if (response.status!=302){
                 throw Error
             }
             return (response.json())
@@ -37,9 +40,10 @@ function ViewPatients(){
         setButtonClose(true)
     }
     function dismisP(dni){
+    const token=localStorage.getItem("token")
     fetch(`http://localhost:8080/doctor/listpatients/${localStorage.getItem('id')}`, {
     method: "DELETE",
-    headers: { 'content-type': 'application/json' },
+    headers: { 'content-type': 'application/json' ,'Authorization': `Bearer ${token}` },
     body: JSON.stringify(dni)
   })
   .then(result =>{

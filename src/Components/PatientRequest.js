@@ -16,14 +16,14 @@ function PatientRequest(){
 
     function handleSumbit(e){
         e.preventDefault();
-    
+        const token=localStorage.getItem("token")
         let obj={docId: parseInt(docId),drugName}
         fetch(`http://localhost:8080/patient/${patientId}/makeRequest`,{
             method:"PUT",
-            headers: { 'content-type': 'application/json' },
+            headers: { 'content-type': 'application/json' ,'Authorization': `Bearer ${token}`},
             body: JSON.stringify(obj)
         }).then(data=>{
-            if (!data.ok){
+            if (data.status==404){
                 throw Error("Error")
             }
             toast.success("Request sent!")

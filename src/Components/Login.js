@@ -3,7 +3,7 @@ import { Link, useHistory, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import jwt from 'jwt-decode'
 
 
 
@@ -17,10 +17,8 @@ function Login(){
 
 
   const handlesubmit = (e) => {
-  console.log(mail, password);
   e.preventDefault();
   let regobj = {mail, password };
-  console.log(regobj)
   fetch("http://localhost:8080/login", {
     method: "POST",
     headers: { 'content-type': 'application/json' },
@@ -35,13 +33,16 @@ function Login(){
 
   }).then((data)=>{
     toast.success('Logged succesfully!')
+    const token=data.token;
+    const decodedToken=jwt(token);
+    console.log(decodedToken);
     localStorage.setItem('token',data.token)
-    localStorage.setItem('id',data.primarykey)
-    localStorage.setItem('username',data.username)
-    if(data.userType==="DOCTOR"){
+    localStorage.setItem('id',decodedToken.id)
+    localStorage.setItem('username',decodedToken.sub)
+    if(decodedToken.Role==="DOCTOR"){
       navigate('/search')
     }
-    else if(data.userType==="PATIENT") navigate('/requestsP')
+    else if(decodedToken.Role==="PATIENT") navigate('/requestsP')
     else{
       navigate('/home')
     }

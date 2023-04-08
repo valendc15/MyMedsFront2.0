@@ -16,9 +16,14 @@ function Search(){
 
     const handlesubmit = (e) => {
         e.preventDefault();
-        fetch(`http://localhost:8080/patient/${id}`)
+        const token=localStorage.getItem('token');
+        fetch(`http://localhost:8080/doctor/getPatientById/${id}`,{
+            method:"GET",
+            headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${token}`,}
+        })
         .then(response =>{
-            if (!response.ok){
+            console.log(response);
+            if (response.status!=302){
                 throw Error
             }
             return (response.json())
@@ -37,11 +42,11 @@ function Search(){
         let obj={id,medicId}
         fetch(`http://localhost:8080/doctor/addpatient/${medicId}`,{
             method:"PUT",
-            headers: { 'content-type': 'application/json', 'token': `${token}`,
+            headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${token}`,
         },
             body: JSON.stringify(id)
         }).then(result=>{
-            if (!result.ok){
+            if (result.status!=202){
                 throw Error("Error")
             }
             toast.success("User succesfully registered!")
