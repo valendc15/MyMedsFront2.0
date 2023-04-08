@@ -10,25 +10,9 @@ function PatientNavBar(){
         if(!localStorage.getItem('token')){
             navigate('/login');
         }
-        if(localStorage.getItem('token')!=null || localStorage.getItem('token')!=undefined){
-        fetch(`http://localhost:8080/token/${localStorage.getItem('id')}/checkToken`,{
-            method:"PUT",
-            headers: { 'content-type': 'application/json' },
-            body: localStorage.getItem('token')
-        })
-        .then(result =>{
-            console.log(result)
-            return result.json()
-        
-          }).then((data)=>{
-            if(data===false){
-                navigate('/login')
-            }
-    },[])}
-    else{
-        navigate('/login')
-    }
-})
+       
+    },[])
+
 
     function logout(){
         fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`, {
