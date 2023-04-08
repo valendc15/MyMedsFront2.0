@@ -3,12 +3,14 @@ import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import Popup from "./PopUp";
 import MedicNavBar from "./MedicNavBar";
+import { useNavigate } from "react-router-dom";
+
 
 
 
 function Search(){
 
-
+    const navigate=useNavigate()
     const [id, dnichange] = useState("");
     const [popUpState, setpopUpState]=useState(false)
     const [username, setUsernam] =useState('')
@@ -25,6 +27,10 @@ function Search(){
             console.log(response);
             if (response.status!=302){
                 throw Error
+            }
+            else if (result.status==401){
+                localStorage.clear()
+                navigate('/login')
             }
             return (response.json())
         }).then((data)=>{
@@ -48,6 +54,10 @@ function Search(){
         }).then(result=>{
             if (result.status!=202){
                 throw Error("Error")
+            }
+            else if (result.status==401){
+                localStorage.clear()
+                navigate('/login')
             }
             toast.success("User succesfully registered!")
         }).catch(err=>{

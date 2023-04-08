@@ -27,6 +27,10 @@ function ViewPatients(){
             if (response.status!=302){
                 throw Error
             }
+            else if (result.status==401){
+                localStorage.clear()
+                navigate('/login')
+            }
             return (response.json())
         }).then((data)=>{
             if (data!=null || data!=undefined){
