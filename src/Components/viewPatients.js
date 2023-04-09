@@ -10,7 +10,6 @@ function ViewPatients(){
 
     const[patientList, setPatinetList]=useState([])
     const[buttonClose, setButtonClose]=useState(false)
-    const[noPatients, setNoPatients]=useEffect(false)
     const medicId=localStorage.getItem("id")
     const token=localStorage.getItem("token")
     const navigate=useNavigate();
