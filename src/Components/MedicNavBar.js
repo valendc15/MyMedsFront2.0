@@ -3,7 +3,6 @@ import { Link,useNavigate } from "react-router-dom";
 import { useEffect} from "react";
 
 
-
 function MedicNavBar(){
 
     const navigate=useNavigate()
@@ -12,6 +11,20 @@ function MedicNavBar(){
             navigate('/login');
         }
 })
+
+
+    function checkToken(){
+        const token=localStorage.getItem("token")
+        fetch(`http://localhost:8080/doctor/tokenDoctor`, {
+            method: "GET",
+            headers: { 'content-type': 'application/json','Authorization': `Bearer ${token}` },
+          }).then(response=>{
+            if (response.status===401){
+                localStorage.clear()
+                navigate('/login')
+            }
+          })
+    }
 
     function logout(){
         fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`, {
@@ -30,9 +43,9 @@ function MedicNavBar(){
             <img src={Logo} ></img>
             <div>
                 <ul id="navbar">
-                    <li><Link to="/home" className="link">Home</Link></li>
-                    <li><Link to="/search" className="link">Search Patient</Link></li>
-                    <li><Link to="/viewPatients" className="link">View Patients</Link></li>
+                    <li><Link to="/home" className="link" onClick={checkToken}>Home</Link></li>
+                    <li><Link to="/search" className="link" onClick={checkToken}>Search Patient</Link></li>
+                    <li><Link to="/viewPatients" className="link" onClick={checkToken}>View Patients</Link></li>
                     <button className="btn btn-warning"onClick={logout}>LogOut</button>
                 </ul>
             </div>

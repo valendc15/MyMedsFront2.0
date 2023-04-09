@@ -30,12 +30,6 @@ function ViewPatients(){
             }
             return (response.json())
             
-        }).catch(error=>{
-            console.log(error);
-            if (error.response.status===401){
-                localStorage.clear()
-                navigate('/login')
-            }
         }).then((data)=>{
             if (data!=null || data!=undefined){
                 setPatinetList(data)
