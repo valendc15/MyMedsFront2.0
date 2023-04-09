@@ -16,7 +16,6 @@ function ViewPatients(){
     const navigate=useNavigate();
 
     function handleOnClickClose(){
-        setNoPatients(false)
         setButtonClose(false)
     }
 
@@ -37,7 +36,8 @@ function ViewPatients(){
                 setPatinetList(data)
             }
             else{
-              setNoPatients(true)
+                const patient = <h1 className="justify-content-md-center">There are no registered Patients</h1>
+                setPatinetList(patient)
             }
         })
         setButtonClose(true)
@@ -77,7 +77,6 @@ function ViewPatients(){
     )
     }
     else{
-      if(noPatients==false){
         return(
             <div>
                 <MedicNavBar></MedicNavBar>
@@ -103,17 +102,6 @@ function ViewPatients(){
             </div>
         )
     }
-    else{
-      return(
-        <div>
-        <MedicNavBar></MedicNavBar>
-        <h1>Registered Patients</h1>
-        <button className="btn btn-dark" onClick={handleOnClickClose}>Close</button>
-        <h2>AIUDA POR FAVOR</h2>
-        </div>
-      )
-    }
-  }
 }
 }
 
