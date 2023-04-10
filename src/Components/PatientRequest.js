@@ -1,6 +1,7 @@
 import PatientNavBar from "./PatientNavBar";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import lol from "./prescription.jpg";
 
 
 
@@ -36,36 +37,36 @@ function PatientRequest(){
 
 
 
-    return(
-        <div>
-        <PatientNavBar></PatientNavBar>
-        <h1 className="h1request">Your request:</h1>
-        <form className="row g-3 requestForm" onSubmit={handleSumbit}>
-  <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Patient name</label>
-    <input class="form-control" id="disabledInput" type="text" placeholder={localStorage.getItem('username')} disabled/>
-
-  </div>
-  <div class="col-md-6">
-    <label for="inputPassword4" class="form-label">Doctor ID</label>
-    <input type="number" class="form-control" id="inputPassword4"
-    value={docId}
-    onChange={(e)=>setDoctorID(e.target.value)}
-    />
-  </div>
-  <div class="col-12">
-    <label for="inputAddress" class="form-label">Medicine Required</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="Your medicine"
-       value={drugName}
-       onChange={(e)=>setMedicine(e.target.value)}/>
-  </div>
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary">Request</button>
-  </div>
-</form>
-  </div>
-
-    )
+    return (
+      <div>
+      <PatientNavBar />
+      <h1 className="h1request">Your request:</h1>
+      <div className="request-container ">
+        <form className="requestForm" onSubmit={handleSumbit}>
+          <div className="form-group">
+            <label htmlFor="inputEmail4" className="form-label">Patient name</label>
+            <input className="form-control" id="disabledInput" type="text" placeholder={localStorage.getItem('username')} disabled/>
+          </div>
+          <div className="form-group">
+            <label htmlFor="inputPassword4" className="form-label">Doctor ID</label>
+            <input type="number" className="form-control" id="inputPassword4"
+              value={docId}
+              onChange={(e)=>setDoctorID(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="inputAddress" className="form-label">Medicine Required</label>
+            <input type="text" className="form-control" id="inputAddress" placeholder="Your medicine"
+              value={drugName}
+              onChange={(e)=>setMedicine(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">Request</button>
+        </form>
+        <img src={lol} className="prescription-img"></img>
+      </div>
+    </div>
+    );
 }
 
 export default PatientRequest;
