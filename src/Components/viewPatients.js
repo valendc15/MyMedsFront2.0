@@ -1,107 +1,121 @@
-import { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import React from "react";
-import MedicNavBar from "./MedicNavBar";
 import { useNavigate } from "react-router-dom";
+import MedicNavBar from "./MedicNavBar";
+import { motion } from "framer-motion";
 
+function ViewPatients() {
+  const [patientList, setPatientList] = useState([]);
+  const [buttonClose, setButtonClose] = useState(false);
+  const medicId = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
-function ViewPatients(){
+  function handleOnClickClose() {
+    setPatientList([]);
+    setButtonClose(false);
+  }
 
+  function handleOnClick() {
+    fetch(`http://localhost:8080/doctor/listpatients/${medicId}`, {
+      method: "GET",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          localStorage.clear();
+          navigate("/login");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data != null || data != undefined) {
+          setPatientList(data);
+        } else {
+          setPatientList([]);
+        }
+        setButtonClose(true);
+      });
+  }
 
-    const[patientList, setPatinetList]=useState([])
-    const[buttonClose, setButtonClose]=useState(false)
-    const medicId=localStorage.getItem("id")
-    const token=localStorage.getItem("token")
-    const navigate=useNavigate();
+  function dismisP(dni) {
+    const token = localStorage.getItem("token");
+    fetch(`http://localhost:8080/doctor/listpatients/${localStorage.getItem("id")}`, {
+      method: "DELETE",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(dni),
+    })
+      .then((result) => {
+        console.log(result);
+        if (!result.ok) {
+          throw Error("Error");
+        }
+        window.location.reload(false);
+        return result.json();
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Failed to remove patient");
+      });
+  }
 
-    function handleOnClickClose(){
-        setButtonClose(false)
-    }
+  return (
+    <div>
+      <MedicNavBar></MedicNavBar>
+      <h1 className="text-center">Registered Patients</h1>
+      <div className="d-flex justify-content-center"> {/* Updated: Center align button */}
+      {buttonClose ? (
+          <motion.button
+            className="btn btn-dark btn-lg mb-3"
+            onClick={handleOnClickClose}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5 }}
+          >
+            Close
+          </motion.button>
+        ) : (
+          <motion.button
+            className="btn btn-info btn-lg mb-3"
+            onClick={handleOnClick}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Show Patients
+          </motion.button>
+        )}
 
-
-    function handleOnClick(){
-        fetch(`http://localhost:8080/doctor/listpatients/${medicId}`,{
-            method: "GET",
-            headers: {'content-type': 'application/json', 'Authorization': `Bearer ${token}`}
-        }).then((response) =>{
-            if (response.status===401){
-                localStorage.clear()
-                navigate('/login')
-            }
-            return (response.json())
-            
-        }).then((data)=>{
-            if (data!=null || data!=undefined){
-                setPatinetList(data)
-            }
-            else{
-                const patient = <h1 className="justify-content-md-center">There are no registered Patients</h1>
-                setPatinetList(patient)
-            }
-        })
-        setButtonClose(true)
-    }
-    function dismisP(dni){
-    const token=localStorage.getItem("token")
-    fetch(`http://localhost:8080/doctor/listpatients/${localStorage.getItem('id')}`, {
-    method: "DELETE",
-    headers: { 'content-type': 'application/json' ,'Authorization': `Bearer ${token}` },
-    body: JSON.stringify(dni)
-  })
-  .then(result =>{
-    console.log(result)
-    if (!result.ok){
-      throw Error("Error")
-    }
-    window.location.reload(false)
-    return result.json()
-
-  }).catch(error=>{
-    console.log(error)
-    toast.error('Failed to remove patient');
-  })
-
-
-    }
-
-    {if(buttonClose==false){
-        return(
-            <div>
-            <MedicNavBar></MedicNavBar>
-            <h1>Registered Patients</h1>
-            <button className="btn btn-info" onClick={handleOnClick}>Show Patients</button>
-            </div>
-
-
-    )
-    }
-    else{
-        return(
-            <div>
-                <MedicNavBar></MedicNavBar>
-                <h1>Registered Patients</h1>
-                <button className="btn btn-dark" onClick={handleOnClickClose}>Close</button>
-                <div class="aiuda">
-                {
-                    patientList.map(patient=>{
-                        return(
-                        <div class="card border-primary mb-3 items" styles="width: 18rem; padding:10px">
-                        <div class="card-body">
-                        <h5 class="card-title">Name: {patient.username}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">DNI:{patient.dni}</h6>
-                        <button className="btn btn-danger d-flex justify-content-end" onClick={()=>{
-                            dismisP(patient.dni)
-                        }}>Dismiss Patient</button>
-                        </div>
-                        </div>
-                        )
-                    })
-                }
+      </div>
+      <div className="row justify-content-center">
+        {patientList.length > 0 ? (
+          patientList.map((patient) => (
+            <motion.div
+              className="col-md-4 col-sm-6 mb-4"
+              key={patient.dni}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="card border-primary" style={{ width: "100%", padding: "10px" }}>
+                <div className="card-body">
+                  <h5 className="card-title">Name: {patient.username}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">DNI: {patient.dni}</h6>
+                  <button className="btn btn-danger float-end" onClick={() => dismisP(patient.dni)}>
+                    Dismiss Patient
+                  </button>
                 </div>
-            </div>
-        )
-    }
-}
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          <h2 className="text-center mt-5">{buttonClose ? "No patients registered" : null}</h2>
+
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default ViewPatients;

@@ -43,7 +43,7 @@ function MedicNavBar(){
             <img src={Logo} ></img>
             <div>
                 <ul id="navbar">
-                    <li><Link to="/home" className="link" onClick={checkToken}>Home</Link></li>
+                    <li><Link to="/home" className="link" onClick={checkToken}>Info</Link></li>
                     <li><Link to="/search" className="link" onClick={checkToken}>Search Patient</Link></li>
                     <li><Link to="/viewPatients" className="link" onClick={checkToken}>View Patients</Link></li>
                     <button className="btn btn-warning"onClick={logout}>LogOut</button>

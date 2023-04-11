@@ -31,7 +31,7 @@ function PatientNavBar(){
             <img src={Logo} ></img>
             <div>
                 <ul id="navbar">
-                    <li><Link to="/home" className="link">Home</Link></li>
+                    <li><Link to="/home" className="link">Info</Link></li>
                     <li><Link to="/requestsP" className="link">Request Prescripiton</Link></li>
                     <button className="btn btn-warning"onClick={logout}>LogOut</button>
                 </ul>
