@@ -12,7 +12,7 @@ function ViewPatients() {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    handleOnClick
+    handleOnClick()
 },[])
 
   function handleOnClick() {

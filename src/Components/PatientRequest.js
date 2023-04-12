@@ -3,17 +3,20 @@ import { toast } from "react-toastify";
 import { FaUser, FaUserMd, FaPrescriptionBottleAlt } from "react-icons/fa";
 import { Dropdown } from "react-bootstrap"; // Import Bootstrap Dropdown component
 import PatientNavBar from "./PatientNavBar";
-
+import { Navigate, useNavigate } from "react-router-dom";
+ 
 function PatientRequest() {
   const [drugName, setMedicine] = useState("");
   const [docId, setDoctorID] = useState("");
   const userName = localStorage.getItem("username");
   const [doclist, setDoclist] = useState([]);
   const patientId = localStorage.getItem("id");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    getDoctors();
-  }, []);
+
+  useEffect(()=>{
+    getDoctors()
+},[])
 
   function handleSumbit(e) {
     e.preventDefault();
