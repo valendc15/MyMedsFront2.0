@@ -8,6 +8,7 @@ import InfoPage from './Components/Home';
 import Search from './Components/Seacrh';
 import ViewPatients from './Components/viewPatients';
 import PatientRequest from './Components/PatientRequest';
+import ViewRequests from './Components/viewRequests';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route exact path='/search' element={<Search></Search>}/>
         <Route exact path='/viewPatients' element={<ViewPatients></ViewPatients>}/>
         <Route exact path='/requestsP' element={<PatientRequest></PatientRequest>}/>
+        <Route exact path='/viewRequests' element={<ViewRequests></ViewRequests>}/>
       </Routes>
     </Router>
     </div>

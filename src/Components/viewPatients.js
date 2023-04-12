@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 
 function ViewPatients() {
   const [patientList, setPatientList] = useState([]);
-  const [buttonClose, setButtonClose] = useState(false);
   const medicId = localStorage.getItem("id");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ function ViewPatients() {
         } else {
           setPatientList([]);
         }
-        setButtonClose(true);
       });
   }
 
@@ -86,7 +84,7 @@ function ViewPatients() {
             </motion.div>
           ))
         ) : (
-          <h2 className="text-center mt-5">{buttonClose ? "No patients registered" : null}</h2>
+          <h2 className="text-center mt-5"></h2>
 
         )}
       </div>
