@@ -44,7 +44,7 @@ function PatientRequest(){
     
 
     function getDoctors(){
-      fetch(`http://localhost:8080/doctor/listpatients/${medicId}`, {
+      fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
         method: "GET",
         headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
