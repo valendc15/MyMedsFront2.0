@@ -62,7 +62,9 @@ function PatientRequest(){
             setDoclist([]);
           }
     })
+
   }
+    
 
 
 
@@ -79,14 +81,22 @@ function PatientRequest(){
                 <FaUserMd className="icon" />
                 Doctor ID
               </label>
-              <input
-                type="number"
-                className="form-control"
-                id="inputPassword4"
-                value={docId}
-                onChange={(e) => setDoctorID(e.target.value)}
-                required // Added required attribute for validation
-              />
+              <Dropdown>
+              <Dropdown.Toggle variant="primary" id="doctorDropdown">
+                Select a doctor
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {doclist.map((doc) => (
+                  <Dropdown.Item
+                    key={doc.userName}
+                    value={doc.id}
+                    onSelect={() => setDoctorID(doc.id)}
+                  >
+                    {doc.name}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
             </div>
             <div className="form-group">
               <label htmlFor="inputAddress" className="form-label">
