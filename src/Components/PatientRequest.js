@@ -62,18 +62,18 @@ function PatientRequest() {
   return (
     <div>
       <PatientNavBar />
-      <h1 classNameName="h1request">Your request:</h1>
-      <div classNameName="request-container justify-content-center">
-        <form classNameName="requestForm" onSubmit={handleSumbit}>
+      <h1 className="h1request">Your request:</h1>
+      <div className="request-container justify-content-center">
+        <form className="requestForm" onSubmit={handleSumbit}>
           <h2>Patient {localStorage.getItem("username")}: </h2>
-          <div classNameName="form-group">
-            <label htmlFor="inputPassword4" classNameName="form-label">
-              <FaUserMd classNameName="icon" />
+          <div className="form-group">
+            <label htmlFor="inputPassword4" className="form-label">
+              <FaUserMd className="icon" />
               Doctor ID
             </label>
-            <div classNameName="dropdown">
+            <div className="dropdown">
               <button
-                classNameName="btn btn-primary dropdown-toggle"
+                className="btn btn-primary dropdown-toggle"
                 type="button"
                 id="doctorDropdown"
                 data-toggle="dropdown"
@@ -82,11 +82,11 @@ function PatientRequest() {
               >
                 Select a doctor
               </button>
-              <div classNameName="dropdown-menu" aria-labelledby="doctorDropdown">
+              <div className="dropdown-menu" aria-labelledby="doctorDropdown">
                 {doclist.map((doc) => (
                   <a
                     key={doc.doctorUsername}
-                    classNameName="dropdown-item"
+                    className="dropdown-item"
                     href="#"
                     onClick={() => setDoctorID(doc.doctorID)}
                   >
@@ -96,25 +96,25 @@ function PatientRequest() {
               </div>
             </div>
           </div>
-          <div classNameName="form-group">
-            <label htmlFor="inputAddress" classNameName="form-label">
-              <FaPrescriptionBottleAlt classNameName="icon" />
+          <div className="form-group">
+            <label htmlFor="inputAddress" className="form-label">
+              <FaPrescriptionBottleAlt className="icon" />
               Medicine Required
             </label>
             <input
               type="text"
-              classNameName="form-control"
+              className="form-control"
               id="inputAddress"
               placeholder="Your medicine"
               value={drugName}
               onChange={(                event) => setMedicine(event.target.value)}
               />
             </div>
-            <button type="submit" classNameName="btn btn-primary">
+            <button type="submit" className="btn btn-primary">
               Submit
             </button>
           </form>
-          <img src={lol} classNameName="prescription-img" alt="Prescription" /> {/* Added alt attribute for accessibility */}
+          <img src={lol} className="prescription-img" alt="Prescription" /> {/* Added alt attribute for accessibility */}
         </div>
       </div>
     );
