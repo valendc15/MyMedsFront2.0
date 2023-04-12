@@ -60,7 +60,7 @@ function Search(){
                 navigate('/login')
             }
             toast.success("User succesfully registered!")
-            navigate("viewPatients")
+            navigate('/viewPatients')
         }).catch(err=>{
             toast.error("Failed to register patient!")
         })

@@ -18,7 +18,7 @@ function RegisterPharmacy(){
     e.preventDefault();
     let regobj = { id, username, password, mail };
     console.log(regobj)
-    fetch("http://localhost:8080/pharmacy", {
+    fetch("http://localhost:8080/pharmacy/savePharmacy", {
       method: "POST",
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(regobj)
