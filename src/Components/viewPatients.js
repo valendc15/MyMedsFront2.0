@@ -11,10 +11,9 @@ function ViewPatients() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  function handleOnClickClose() {
-    setPatientList([]);
-    setButtonClose(false);
-  }
+  useEffect(()=>{
+    handleOnClick
+},[])
 
   function handleOnClick() {
     fetch(`http://localhost:8080/doctor/listpatients/${medicId}`, {
@@ -64,29 +63,6 @@ function ViewPatients() {
       <MedicNavBar></MedicNavBar>
       <h1 className="text-center">Registered Patients</h1>
       <div className="d-flex justify-content-center"> {/* Updated: Center align button */}
-      {buttonClose ? (
-          <motion.button
-            className="btn btn-dark btn-lg mb-3"
-            onClick={handleOnClickClose}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.5 }}
-          >
-            Close
-          </motion.button>
-        ) : (
-          <motion.button
-            className="btn btn-info btn-lg mb-3"
-            onClick={handleOnClick}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Show Patients
-          </motion.button>
-        )}
-
       </div>
       <div className="row justify-content-center">
         {patientList.length > 0 ? (
