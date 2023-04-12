@@ -85,10 +85,10 @@ function PatientRequest() {
               <div className="dropdown-menu" aria-labelledby="doctorDropdown">
                 {doclist.map((doc) => (
                   <a
-                    key={doc.userName}
+                    key={doc.doctorUsername}
                     className="dropdown-item"
                     href="#"
-                    onClick={() => setDoctorID(doc.id)}
+                    onClick={() => setDoctorID(doc.doctorID)}
                   >
                     {doc.name}
                   </a>
