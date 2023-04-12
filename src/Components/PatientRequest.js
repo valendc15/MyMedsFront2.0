@@ -114,6 +114,7 @@ function PatientRequest() {
               Submit
             </button>
           </form>
+          <img src={lol} className="prescription-img" alt="Prescription" /> {/* Added alt attribute for accessibility */}
         </div>
       </div>
     );
