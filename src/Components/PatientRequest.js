@@ -71,31 +71,18 @@ function PatientRequest() {
               <FaUserMd className="icon" />
               Doctor ID
             </label>
-            <div className="dropdown">
-              <button
-                className="btn btn-primary dropdown-toggle"
-                type="button"
-                id="doctorDropdown"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Select a doctor
-              </button>
-              <div className="dropdown-menu" aria-labelledby="doctorDropdown">
+            <ul class="dropdown-menu">
+            <li><span class="dropdown-item-text">Dropdown item text</span></li>
                 {doclist.map((doc) => (
-                  <a
+                  <li>
                     key={doc.doctorUsername}
                     className="dropdown-item"
                     href="#"
                     onClick={() => setDoctorID(doc.doctorID)}
-                  >
-                    {doc.name}
-                  </a>
+                    </li>
                 ))}
+                </ul>
               </div>
-            </div>
-          </div>
           <div className="form-group">
             <label htmlFor="inputAddress" className="form-label">
               <FaPrescriptionBottleAlt className="icon" />
