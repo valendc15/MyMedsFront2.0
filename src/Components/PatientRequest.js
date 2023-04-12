@@ -51,7 +51,7 @@ function PatientRequest() {
         return response.json();
       })
       .then((data) => {
-        if (data != null || data != undefined) {
+        if (Array.isArray(data)) {
           setDoclist(data);
         } else {
           setDoclist([]);
