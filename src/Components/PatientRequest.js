@@ -10,7 +10,8 @@ function PatientRequest() {
   const [docId, setDoctorID] = useState("");
   const userName = localStorage.getItem("username");
   const [doclist, setDoclist] = useState([]);
-  const navigate=useNavigate()
+  const [error, setError] = useState(""); // Added state for error message
+  const navigate = useNavigate();
 
   const patientId = localStorage.getItem("id");
 
@@ -18,30 +19,42 @@ function PatientRequest() {
     getDoctors();
   }, []);
 
-  function handleSumbit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    let obj = { docId: parseInt(docId), drugName };
-    fetch(`http://localhost:8080/patient/${patientId}/makeRequest`, {
-      method: "PUT",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(obj),
-    })
-      .then((data) => {
-        if (data.status === 404) {
-          throw Error("Error");
-        }
-        toast.success("Request sent!");
+
+    // Check for empty medicine name and selected doctor
+    if (drugName === "" || docId === "") {
+      setError("Please select a doctor and enter medicine name.");
+    } else {
+      const token = localStorage.getItem("token");
+      let obj = { docId: parseInt(docId), drugName };
+      fetch(`http://localhost:8080/patient/${patientId}/makeRequest`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(obj),
       })
-      .catch((err) => {
-        toast.error("Failed to send request!");
-      });
+        .then((data) => {
+          if (data.status === 404) {
+            throw Error("Error");
+          }
+          toast.success("Request sent!");
+        })
+        .catch((err) => {
+          toast.error("Failed to send request!");
+        });
+    }
   }
 
   function getDoctors() {
     fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
       .then((response) => {
         if (response.status === 401) {
@@ -51,6 +64,7 @@ function PatientRequest() {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         if (Array.isArray(data)) {
           setDoclist(data);
         } else {
@@ -64,48 +78,57 @@ function PatientRequest() {
       <PatientNavBar />
       <h1 className="h1request">Your request:</h1>
       <div className="request-container justify-content-center">
-        <form className="requestForm" onSubmit={handleSumbit}>
+        <form className="requestForm" onSubmit={handleSubmit}>
           <h2>Patient {localStorage.getItem("username")}: </h2>
           <div className="form-group">
             <label htmlFor="inputPassword4" className="form-label">
               <FaUserMd className="icon" />
               Doctor ID
             </label>
-            <ul class="dropdown-menu">
-            <li><span class="dropdown-item-text">Dropdown item text</span></li>
-                {doclist.map((doc) => (
-                  <li>
-                    key={doc.doctorUsername}
-                    className="dropdown-item"
-                    href="#"
-                    onClick={() => setDoctorID(doc.doctorID)}
-                    </li>
-                ))}
-                </ul>
-              </div>
+            <select
+              className="form-control"
+              onChange={(event) => setDoctorID(event.target.value)}
+              value={docId} // Set the value of the select field to docId
+            >
+              <option value="">Select Doctor</option>
+              {doclist.map((doc) => (
+                <option key={doc.doctorUsername} value={doc.doctorID}>
+                  {doc.doctorUsername}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="form-group">
             <label htmlFor="inputAddress" className="form-label">
-              <FaPrescriptionBottleAlt className="icon" />
-              Medicine Required
+            <FaPrescriptionBottleAlt className="icon" />
+              Medicine Name
             </label>
             <input
               type="text"
               className="form-control"
               id="inputAddress"
-              placeholder="Your medicine"
-              value={drugName}
-              onChange={(                event) => setMedicine(event.target.value)}
-              />
+              placeholder="Enter Medicine Name"
+              value={drugName} // Set the value of the input field to drugName
+              onChange={(event) => setMedicine(event.target.value)}
+            />
+          </div>
+          {error && ( // Render error message if error state is not empty
+            <div className="alert alert-danger" role="alert">
+              {error}
             </div>
+          )}
+          <div className="form-group">
             <button type="submit" className="btn btn-primary">
               Submit
             </button>
-          </form>
-          <img src={lol} className="prescription-img" alt="Prescription" /> {/* Added alt attribute for accessibility */}
+          </div>
+        </form>
+        <div className="requestImgDiv">
+          <img src={lol} alt="request" className="prescription-img" />
         </div>
       </div>
-    );
-  }
-  
-  export default PatientRequest;
-  
+    </div>
+  );
+}
+
+export default PatientRequest;
