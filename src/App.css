@@ -1,5 +1,5 @@
 
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 .register{
   background: rgb(2,0,36);
@@ -324,3 +324,4 @@ nav{
 .items{
   max-width: 100%;
 }
+
