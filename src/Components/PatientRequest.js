@@ -45,19 +45,7 @@ function PatientRequest(){
         <h1 className="h1request">Your request:</h1>
         <div className="request-container justify-content-center">
           <form className="requestForm" onSubmit={handleSumbit}>
-            <div className="form-group">
-              <label htmlFor="inputEmail4" className="form-label">
-                <FaUser className="icon" />
-                Patient name
-              </label>
-              <input
-                className="form-control"
-                id="disabledInput"
-                type="text"
-                placeholder={localStorage.getItem("username")}
-                disabled
-              />
-            </div>
+            <h2>Patient {localStorage.getItem('username')} request</h2>
             <div className="form-group">
               <label htmlFor="inputPassword4" className="form-label">
                 <FaUserMd className="icon" />
