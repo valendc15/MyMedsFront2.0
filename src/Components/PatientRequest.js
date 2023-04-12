@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import { FaUser, FaUserMd, FaPrescriptionBottleAlt } from "react-icons/fa";
-import { Dropdown } from "react-bootstrap"; // Import Bootstrap Dropdown component
 import PatientNavBar from "./PatientNavBar";
-import { Navigate, useNavigate } from "react-router-dom";
- 
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import lol from "./prescription.jpg";
+import { FaUser, FaUserMd, FaPrescriptionBottleAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 function PatientRequest() {
   const [drugName, setMedicine] = useState("");
   const [docId, setDoctorID] = useState("");
   const userName = localStorage.getItem("username");
   const [doclist, setDoclist] = useState([]);
+  const navigate=useNavigate()
+
   const patientId = localStorage.getItem("id");
-  const navigate = useNavigate();
 
-
-  useEffect(()=>{
-    getDoctors()
-},[])
+  useEffect(() => {
+    getDoctors();
+  }, []);
 
   function handleSumbit(e) {
     e.preventDefault();
@@ -24,14 +24,11 @@ function PatientRequest() {
     let obj = { docId: parseInt(docId), drugName };
     fetch(`http://localhost:8080/patient/${patientId}/makeRequest`, {
       method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(obj),
     })
       .then((data) => {
-        if (data.status == 404) {
+        if (data.status === 404) {
           throw Error("Error");
         }
         toast.success("Request sent!");
@@ -44,10 +41,7 @@ function PatientRequest() {
   function getDoctors() {
     fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
       method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
       .then((response) => {
         if (response.status === 401) {
@@ -77,23 +71,30 @@ function PatientRequest() {
               <FaUserMd className="icon" />
               Doctor ID
             </label>
-            <Dropdown>
-              {/* Render Bootstrap Dropdown */}
-              <Dropdown.Toggle variant="primary" id="doctorDropdown">
+            <div className="dropdown">
+              <button
+                className="btn btn-primary dropdown-toggle"
+                type="button"
+                id="doctorDropdown"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
                 Select a doctor
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
+              </button>
+              <div className="dropdown-menu" aria-labelledby="doctorDropdown">
                 {doclist.map((doc) => (
-                  <Dropdown.Item
+                  <a
                     key={doc.userName}
-                    value={doc.id}
-                    onSelect={() => setDoctorID(doc.id)}
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => setDoctorID(doc.id)}
                   >
                     {doc.name}
-                  </Dropdown.Item>
+                  </a>
                 ))}
-              </Dropdown.Menu>
-            </Dropdown>
+              </div>
+            </div>
           </div>
           <div className="form-group">
             <label htmlFor="inputAddress" className="form-label">
@@ -106,18 +107,17 @@ function PatientRequest() {
               id="inputAddress"
               placeholder="Your medicine"
               value={drugName}
-              onChange={(e) => setMedicine(e.target.value)}
-              required // Added required attribute for validation
-            />
-          </div>
-          <button type             ="submit" className="btn btn-primary">
-            Submit
-          </button>
-        </form>
+              onChange={(                event) => setMedicine(event.target.value)}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
-  );
-}
-
-export default PatientRequest;
-
+    );
+  }
+  
+  export default PatientRequest;
+  
