@@ -25,7 +25,6 @@ function Login(){
     body: JSON.stringify(regobj)
   })
   .then(result =>{
-    console.log(result)
     if (!result.ok){
       throw Error("Error")
     }
@@ -35,7 +34,6 @@ function Login(){
     toast.success('Logged succesfully!')
     const token=data.token;
     const decodedToken=jwt(token);
-    console.log(decodedToken);
     localStorage.setItem('token',data.token)
     localStorage.setItem('id',decodedToken.id)
     localStorage.setItem('username',decodedToken.sub)
@@ -47,7 +45,6 @@ function Login(){
       navigate('/home')
     }
   }).catch(error=>{
-    console.log(error)
     toast.error('Failed to log in');
   })
 
@@ -67,19 +64,19 @@ function Login(){
                 
                 <form className="form-container" onSubmit={handlesubmit}>
                 <img src={Logo} className="logo1"/>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"
+                <div className="form-group">
+                  <label >Email address</label>
+                  <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"
                   value={mail}
                   onChange={(e)=>setEmail(e.target.value)}/>
                 </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                <div className="form-group">
+                  <label>Password</label>
+                  <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password"
                   value={password}
                   onChange={(e)=>setPassword(e.target.value)}/>
                 </div>
-                <button type="submit" class="btn btn-success w-100">Submit</button>
+                <button type="submit" className="btn btn-success w-100">Submit</button>
               </form>
 
                 </div>

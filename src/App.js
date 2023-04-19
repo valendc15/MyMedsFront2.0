@@ -23,9 +23,9 @@ function App() {
         <Route exact path='/home' element={<InfoPage></InfoPage>}/>
         <Route exact path='/search' element={<Search></Search>}/>
         <Route exact path='/viewPatients' element={<ViewPatients></ViewPatients>}/>
-        <Route exact path='/requestsP' element={<PatientRequest></PatientRequest>}/>
+        <Route exact path='/requestsP' element={<PatientRequest/>}/>
         <Route exact path='/viewRequests' element={<ViewRequests></ViewRequests>}/>
-        <Route exact path='/lol' element={<ViewRequestsP></ViewRequestsP>}/>
+        <Route exact path='/viewRequestsP' element={<ViewRequestsP></ViewRequestsP>}/>
       </Routes>
     </Router>
     </div>

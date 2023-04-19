@@ -1,3 +1,4 @@
+
 import PatientNavBar from "./PatientNavBar";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -62,15 +63,15 @@ function PatientRequest() {
         if (response.status === 401) {
           localStorage.clear();
           navigate("/login");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (Array.isArray(data)) {
-          setDoclist(data);
         } else {
-          setDoclist([]);
+          return response.json().then((data) => {
+            console.log(data);
+            if (Array.isArray(data)) {
+              setDoclist(data);
+            } else {
+              setDoclist([]);
+            }
+          });
         }
       });
   }
@@ -100,6 +101,7 @@ function PatientRequest() {
               ))}
             </select>
           </div>
+
           <div className="form-group">
             <label htmlFor="inputAddress" className="form-label">
             <FaPrescriptionBottleAlt className="icon" />
