@@ -83,7 +83,7 @@ function PatientRequest() {
           <div className="form-group">
             <label htmlFor="inputPassword4" className="form-label">
               <FaUserMd className="icon" />
-              Doctor ID
+              Doctor Username
             </label>
             <select
               className="form-control"
@@ -93,7 +93,7 @@ function PatientRequest() {
               <option value="">Select Doctor</option>
               {doclist.map((doc) => (
                 <option key={doc.doctorUsername} value={doc.doctorID}>
-                  {doc.doctorUsername}
+                  {doc.doctorUsername} :{doc.doctorID}
                 </option>
               ))}
             </select>

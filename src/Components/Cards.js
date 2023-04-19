@@ -55,15 +55,15 @@ function Cards(){
             <img src={Logo}/>
 
             <div className="row">
-                <div className="col-md-4" >
+                <div className="col-md-4 col-xs-6" >
                     <CardP></CardP>
                     <button className='btn btn-dark ' onClick={handleOnClickP}>Register as a patient</button>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 col-xs-6">
                     <CardM></CardM>
                     <button className='btn btn-dark' onClick={handleOnClickM}>Register as a medic</button>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 col-xs-6">
                     <CardPh></CardPh>
                     <button className='btn btn-dark' onClick={handleOnClickPh}>Register as a pharmacy</button>
                 </div>
