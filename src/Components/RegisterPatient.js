@@ -42,29 +42,29 @@ function RegisterPatient(){
 
     <div >
       
-    <form className='form' onSubmit={handlesubmit}>
+    <form className='form' onSubmit={handlesubmit} style={{ maxWidth: '500px', margin: 'auto' }}>
     <div className="form-group">
     <label>Username</label>
     <input type="text" className="form-control" id="text" placeholder="Enter your username"
-    value={username} onChange={e => namechange(e.target.value)}/>
+    value={username} onChange={e => namechange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
   </div>
   <div className="form-group">
     <label >Email</label>
     <input type="email" className="form-control" id="email" placeholder="Enter your Email"
-     value={mail} onChange={e => emailchange(e.target.value)}/>
+     value={mail} onChange={e => emailchange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
   </div>
   <div className="form-group">
     <label>Password</label>
     <input type="password" className="form-control" id="password" placeholder="Enter your Password"
-    value={password} onChange={e => passwordchange(e.target.value)}/>
+    value={password} onChange={e => passwordchange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
   </div>
   <div className="form-group ">
     <label>DNI</label>
     <input type="number" className="form-control" id="id" placeholder="Enter your DNI"
-     value={id} onChange={e => dnichange(e.target.value)}/>
+     value={id} onChange={e => dnichange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
   </div>
   <div className="submit-group">
-              <button type="submit" className='btn btn-primary' id="reggisterBtn">Register</button>
+              <button type="submit" className='btn btn-primary' id="reggisterBtn" style={{ fontSize: '18px', padding: '12px' }}>Register</button>
               </div>
 </form>
 

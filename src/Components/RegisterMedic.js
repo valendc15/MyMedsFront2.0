@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function RegisterMedic(){
 
-
   const [id, idchange] = useState("");
   const [username, namechange] = useState("");
   const [password, passwordchange] = useState("");
@@ -30,41 +29,36 @@ function RegisterMedic(){
   }).catch((err) => {
       toast.error('Failed to register');
   });
-
-  
   }
 
-
   return(
-    <div >
-      
-    <form className='form'  onSubmit={handlesubmit}> 
-    <div className="form-group">
-    <label >Username</label>
-    <input type="text" className="form-control" id="text" placeholder="Enter your username" value={username} onChange={e => namechange(e.target.value)}/>
-  </div>
-  <div className="form-group">
-    <label >Email</label>
-    <input type="email" className="form-control" id="email" placeholder="Enter your Email"
-    value={mail} onChange={e => emailchange(e.target.value)}/>
-  </div>
-  <div className="form-group">
-    <label>Password</label>
-    <input type="password" className="form-control" id="password" placeholder="Enter your Password"
-    value={password} onChange={e => passwordchange(e.target.value)}/>
-  </div>
-  <div className="form-group ">
-    <label >id</label>
-    <input type="number" className="form-control" id="id" placeholder="Enter your ID"
-    value={id} onChange={e => idchange(e.target.value)}/>
-  </div>
-  <div className="submit-group">
-              <button type="submit" className='btn btn-primary' id="reggisterBtn">Register</button>
-              </div>
-</form>
-
-</div>
-
+    <div>
+      <form className='form' onSubmit={handlesubmit} style={{ maxWidth: '500px', margin: 'auto' }}> 
+        <div className="form-group">
+          <label>Username</label>
+          <input type="text" className="form-control" id="text" placeholder="Enter your username" 
+            value={username} onChange={e => namechange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
+        </div>
+        <div className="form-group">
+          <label>Email</label>
+          <input type="email" className="form-control" id="email" placeholder="Enter your Email"
+            value={mail} onChange={e => emailchange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
+        </div>
+        <div className="form-group">
+          <label>Password</label>
+          <input type="password" className="form-control" id="password" placeholder="Enter your Password"
+            value={password} onChange={e => passwordchange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
+        </div>
+        <div className="form-group">
+          <label>id</label>
+          <input type="number" className="form-control" id="id" placeholder="Enter your ID"
+            value={id} onChange={e => idchange(e.target.value)} style={{ fontSize: '18px', padding: '12px' }}/>
+        </div>
+        <div className="submit-group">
+          <button type="submit" className='btn btn-primary' id="reggisterBtn" style={{ fontSize: '18px', padding: '12px' }}>Register</button>
+        </div>
+      </form>
+    </div>
   )
 }
 

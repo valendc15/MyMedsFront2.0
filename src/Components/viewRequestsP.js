@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import MedicNavBar from "./MedicNavBar";
-import { toast } from "react-toastify";
+import PatientNavBar from "./PatientNavBar";
 
-function ViewRequests() {
+function ViewRequestsP() {
   const [requestList, setRequestList] = useState([]);
   const navigate = useNavigate();
 
@@ -12,7 +11,7 @@ function ViewRequests() {
   }, []);
 
   function getRequests() {
-    fetch(`http://localhost:8080/doctor/viewRequests/${localStorage.getItem('id')}`, {
+    fetch(`http://localhost:8080/patient/viewMyRequests/${localStorage.getItem('id')}`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
@@ -69,13 +68,9 @@ function ViewRequests() {
     cursor: "pointer",
   };
 
-  function info(){
-    toast.info("to be implemented")
-  }
-
   return (
     <div>
-      <MedicNavBar></MedicNavBar>
+    <PatientNavBar></PatientNavBar>
       <h1>Requests</h1>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {requestList.map((request) => (
@@ -83,8 +78,6 @@ function ViewRequests() {
             <div>
               <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
               <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-              <button style={btnInfoStyle} onClick={info}>Accept</button>
-              <button style={btnDangerStyle} onClick={info}>Decline</button>
             </div>
           </div>
         ))}
@@ -93,4 +86,4 @@ function ViewRequests() {
   );
 }
 
-export default ViewRequests;
+export default ViewRequestsP;

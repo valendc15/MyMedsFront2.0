@@ -15,6 +15,7 @@ function PatientRequest() {
 
   const patientId = localStorage.getItem("id");
 
+
   useEffect(() => {
     getDoctors();
   }, []);
@@ -41,6 +42,7 @@ function PatientRequest() {
             throw Error("Error");
           }
           toast.success("Request sent!");
+          navigate("/viewRequestsP")
         })
         .catch((err) => {
           toast.error("Failed to send request!");

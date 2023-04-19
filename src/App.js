@@ -9,6 +9,7 @@ import Search from './Components/Seacrh';
 import ViewPatients from './Components/viewPatients';
 import PatientRequest from './Components/PatientRequest';
 import ViewRequests from './Components/viewRequests';
+import ViewRequestsP from './Components/viewRequestsP';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Route exact path='/viewPatients' element={<ViewPatients></ViewPatients>}/>
         <Route exact path='/requestsP' element={<PatientRequest></PatientRequest>}/>
         <Route exact path='/viewRequests' element={<ViewRequests></ViewRequests>}/>
+        <Route exact path='/lol' element={<ViewRequestsP></ViewRequestsP>}/>
       </Routes>
     </Router>
     </div>
