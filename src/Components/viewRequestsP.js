@@ -11,7 +11,7 @@ function ViewRequestsP() {
   }, []);
 
   function getRequests() {
-    fetch(`http://localhost:8080/patient/viewMyRequests/${localStorage.getItem('id')}`, {
+    fetch(`http://localhost:8080/patient/viewRequests/${localStorage.getItem('id')}`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
@@ -76,7 +76,7 @@ function ViewRequestsP() {
         {requestList.map((request) => (
           <div key={request.id} style={cardStyle}>
             <div>
-              <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
+              <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
               <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
             </div>
           </div>
