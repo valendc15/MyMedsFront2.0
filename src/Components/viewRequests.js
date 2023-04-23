@@ -83,8 +83,6 @@ function ViewRequests() {
             <div>
               <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
               <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-              <button style={btnInfoStyle} onClick={info}>Accept</button>
-              <button style={btnDangerStyle} onClick={info}>Decline</button>
             </div>
           </div>
         ))}
