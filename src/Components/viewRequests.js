@@ -98,19 +98,24 @@ function ViewRequests() {
     <div>
       <MedicNavBar></MedicNavBar>
       <h1 className="text-center">Requests</h1>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {requestList.map((request) => (
-          <div key={request.requestID} style={cardStyle}>
-            <div>
-              <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
-              <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-              <button className="btn btn-warning"onClick={() =>rejectRequest(request.requestID)}>Reject</button>
+      {requestList.length === 0 ? (
+        <h3 className="flex">There are no pending requests!</h3>
+      ) : (
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {requestList.map((request) => (
+            <div key={request.requestID} style={cardStyle}>
+              <div>
+                <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
+                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+                <button className="btn btn-warning" onClick={() => rejectRequest(request.requestID)}>Reject</button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
+  
 }
 
 export default ViewRequests;
