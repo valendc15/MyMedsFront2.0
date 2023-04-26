@@ -76,7 +76,7 @@ function ViewRequests() {
   return (
     <div>
       <MedicNavBar></MedicNavBar>
-      <h1>Requests</h1>
+      <h1 className="text-center">Requests</h1>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {requestList.map((request) => (
           <div key={request.id} style={cardStyle}>
