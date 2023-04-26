@@ -73,9 +73,9 @@ function ViewRequestsP() {
       <PatientNavBar></PatientNavBar>
       <h1 className="text-center">Requests</h1>
       {requestList.length === 0 ? (
-        <p style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           No requests found.
-        </p>
+        </h3>
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {requestList.map((request) => (
