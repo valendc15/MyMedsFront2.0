@@ -99,7 +99,7 @@ function ViewRequests() {
       <MedicNavBar></MedicNavBar>
       <h1 className="text-center">Requests</h1>
       {requestList.length === 0 ? (
-        <h3 className="flex" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>There are no pending requests!</h3>
+        <h3 className="flex" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>There are no pending requests!</h3>
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {requestList.map((request) => (
