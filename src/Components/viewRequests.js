@@ -73,16 +73,38 @@ function ViewRequests() {
     toast.info("to be implemented")
   }
 
+
+  function rejectRequest(id) {
+    const token = localStorage.getItem("token");
+    fetch(`http://localhost:8080/doctor/deleteRequest/${localStorage.getItem("id")}`, {
+      method: "DELETE",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(id),
+    })
+      .then((result) => {
+        console.log(result);
+        if (!result.ok) {
+          throw Error("Error");
+        }
+        window.location.reload(false);
+        return result.json();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <div>
       <MedicNavBar></MedicNavBar>
       <h1 className="text-center">Requests</h1>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {requestList.map((request) => (
-          <div key={request.id} style={cardStyle}>
+          <div key={request.requestID} style={cardStyle}>
             <div>
               <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
               <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+              <button className="btn btn-warning"onClick={() =>rejectRequest(request.requestID)}>Reject</button>
             </div>
           </div>
         ))}
