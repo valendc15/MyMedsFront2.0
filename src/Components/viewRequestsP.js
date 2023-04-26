@@ -70,20 +70,27 @@ function ViewRequestsP() {
 
   return (
     <div>
-    <PatientNavBar></PatientNavBar>
+      <PatientNavBar></PatientNavBar>
       <h1 className="text-center">Requests</h1>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {requestList.map((request) => (
-          <div key={request.id} style={cardStyle}>
-            <div>
-              <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
-              <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+      {requestList.length === 0 ? (
+        <p style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+          No requests found.
+        </p>
+      ) : (
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {requestList.map((request) => (
+            <div key={request.id} style={cardStyle}>
+              <div>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
+                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
+  
 }
 
 export default ViewRequestsP;
