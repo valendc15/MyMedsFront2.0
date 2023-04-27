@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import MedicNavBar from "./MedicNavBar";
 import { toast } from "react-toastify";
-import Popup2 from "./PopUp2";
+import Popup from "./PopUp";
 
 function ViewRequests() {
   const [requestList, setRequestList] = useState([]);
   const [popUpState, setpopUpState]=useState(false)
+  const [docSignature,setDocSignature]=useState("")
+  const [pharmacyID, setPharmacyID]=useState("")
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,6 +98,28 @@ function ViewRequests() {
       });
   }
 
+
+  function handlesubmit(drugname){
+    const token = localStorage.getItem("token");
+    let obj={docSignature, drugname, pharmacyID}
+    fetch(`http://localhost:8080/doctor/createRecipe/${localStorage.getItem("id")}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(obj),
+    })
+      .then((result) => {
+        console.log(result);
+        if (!result.ok) {
+          throw Error("Error");
+        }
+        return result.json();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  
+
   return (
     <div>
       <MedicNavBar></MedicNavBar>
@@ -109,13 +133,56 @@ function ViewRequests() {
               <div>
                 <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-                <button className="btn btn-warning" onClick={() => rejectRequest(request.requestID)}>Reject</button>
-                <button className="btn btn-success" onClick={() =>setpopUpState(true)}>Accept</button>
-                <Popup2 trigger={popUpState} setTrigger={setpopUpState}></Popup2>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setpopUpState(true)}
+                  style={{
+                    backgroundColor: "#17a2b8",
+                    borderColor: "#17a2b8",
+                    marginRight: "10px",
+                  }}
+                >
+                  Accept
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => rejectRequest(request.requestID)}
+                  style={{
+                    backgroundColor: "#dc3545",
+                    borderColor: "#dc3545",
+                  }}
+                >
+                  Reject
+                </button>
+
               </div>
+              <Popup trigger={popUpState} setTrigger={setpopUpState}>
+            <div>
+            <h3>
+Please complete the Prescripiton form
+</h3>
+            <form onSubmit={()=>handlesubmit(request.drugName)} >
+            <div class="mb-3">
+    <label class="form-label">Please write down your name as confirmation</label>
+    <input type="text" class="form-control"
+        value={docSignature}
+        onChange={(e)=>setDocSignature(e.target.value)}/>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Pharmacy ID</label>
+    <input type="number" class="form-control"
+        value={pharmacyID}
+        onChange={(e)=>setPharmacyID(e.target.value)}/> 
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+            </div>
+          </Popup>
             </div>
           ))}
         </div>
+        
       )}
     </div>
   );

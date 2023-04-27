@@ -39,10 +39,10 @@ function PatientNavBar(){
     }
     
     return(
-        <nav>
-            <img src={Logo} ></img>
+        <nav className="d-flex align-items-center">
+            <img src={Logo} style={{width:200}} ></img>
             <div>
-                <ul id="navbar">
+                <ul id="navbar" className="mb-1">
                     <li><Link to="/home" className="link" onClick={checkToken}>Info</Link></li>
                     <li><Link to="/requestsP" className="link" onClick={checkToken}>Request Prescripiton</Link></li>
                     <li><Link to="/viewRequestsP" className="link" onClick={checkToken}>View sent requests</Link></li>

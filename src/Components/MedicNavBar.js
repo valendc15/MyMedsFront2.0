@@ -37,12 +37,11 @@ function MedicNavBar(){
         localStorage.removeItem('id')
     }
     
-    
     return(
-        <nav>
-            <img src={Logo} ></img>
-            <div>
-                <ul id="navbar">
+        <nav className="d-flex align-items-center">
+        <img src={Logo} style={{width:200}} ></img>
+        <div>
+            <ul id="navbar" className="mb-1">
                     <li><Link to="/home" className="link" onClick={checkToken}>Info</Link></li>
                     <li><Link to="/search" className="link" onClick={checkToken}>Search Patient</Link></li>
                     <li><Link to="/viewPatients" className="link" onClick={checkToken}>View Patients</Link></li>
@@ -52,6 +51,8 @@ function MedicNavBar(){
             </div>
         </nav>
     )
+    
+
 }
 
 
