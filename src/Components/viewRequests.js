@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import MedicNavBar from "./MedicNavBar";
 import { toast } from "react-toastify";
+import Popup2 from "./PopUp2";
 
 function ViewRequests() {
   const [requestList, setRequestList] = useState([]);
+  const [popUpState, setpopUpState]=useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -108,6 +110,8 @@ function ViewRequests() {
                 <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
                 <button className="btn btn-warning" onClick={() => rejectRequest(request.requestID)}>Reject</button>
+                <button className="btn btn-success" onClick={setpopUpState(true)}>Accept</button>
+                <Popup2 trigger={popUpState} setTrigger={setpopUpState}></Popup2>
               </div>
             </div>
           ))}
