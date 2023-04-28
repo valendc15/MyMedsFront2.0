@@ -43,6 +43,7 @@ function ViewRequests() {
     padding: "10px",
     margin: "10px",
     width: "300px",
+    zIndex:"1"
   };
 
   const cardTitleStyle = {
@@ -129,7 +130,7 @@ function ViewRequests() {
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {requestList.map((request) => (
-            <div key={request.requestID} style={{cardStyle,zIndex:1}}>
+            <div key={request.requestID} style={cardStyle}>
               <div>
                 <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
