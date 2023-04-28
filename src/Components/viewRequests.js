@@ -156,7 +156,18 @@ function ViewRequests() {
                 </button>
 
               </div>
-              <Popup trigger={popUpState} setTrigger={setpopUpState}>
+              <Popup style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }} trigger={popUpState} setTrigger={setpopUpState}>
             <div>
             <h3>
 Please complete the Prescripiton form
