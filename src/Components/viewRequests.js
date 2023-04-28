@@ -129,7 +129,7 @@ function ViewRequests() {
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {requestList.map((request) => (
-            <div key={request.requestID} style={cardStyle}>
+            <div key={request.requestID} style={{cardStyle,zIndex:1}}>
               <div>
                 <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
