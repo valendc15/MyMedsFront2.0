@@ -9,11 +9,15 @@ function ViewRequests() {
   const [popUpState, setpopUpState]=useState(false)
   const [docSignature,setDocSignature]=useState("")
   const [pharmacyID, setPharmacyID]=useState("")
+  const [triggerUse, setTriggerUse] =useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
+    if(triggerUse){
     getRequests();
-  }, []);
+    setTriggerUse(false)
+    }
+  }, [triggerUse]);
 
   function getRequests() {
     fetch(`http://localhost:8080/doctor/viewRequests/${localStorage.getItem('id')}`, {
@@ -91,7 +95,7 @@ function ViewRequests() {
         if (!result.ok) {
           throw Error("Error");
         }
-        window.location.reload(false);
+        setTriggerUse(true)
         return result.json();
       })
       .catch((error) => {
@@ -100,9 +104,9 @@ function ViewRequests() {
   }
 
 
-  function handlesubmit(drugname){
+  function handlesubmit(drugName,id){
     const token = localStorage.getItem("token");
-    let obj={docSignature, drugname, pharmacyID}
+    let obj={docSignature, drugName, pharmacyID}
     fetch(`http://localhost:8080/doctor/createRecipe/${localStorage.getItem("id")}`, {
       method: "POST",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
@@ -113,6 +117,7 @@ function ViewRequests() {
         if (!result.ok) {
           throw Error("Error");
         }
+        setTriggerUse(true)
         return result.json();
       })
       .catch((error) => {
@@ -173,7 +178,7 @@ function ViewRequests() {
             <h3>
 Please complete the Prescripiton form
 </h3>
-            <form onSubmit={()=>handlesubmit(request.drugName)} >
+            <form onSubmit={()=>handlesubmit(request.drugName, request.requestID)} >
             <div class="mb-3">
     <label class="form-label">Please write down your name as confirmation</label>
     <input type="text" class="form-control"
