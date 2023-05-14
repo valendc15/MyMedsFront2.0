@@ -11,7 +11,7 @@ function ViewRequestsP() {
   }, []);
 
   function getRequests() {
-    fetch(`http://localhost:8080/patient/viewRequests/${localStorage.getItem('id')}`, {
+    fetch(`http://localhost:8080/patient/viewRecipes/${localStorage.getItem('id')}?status=IN_PROGRESS`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
@@ -23,6 +23,7 @@ function ViewRequestsP() {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         if (data != null || data != undefined) {
           setRequestList(data);
         } else {
@@ -81,7 +82,7 @@ function ViewRequestsP() {
           {requestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
               </div>
             </div>

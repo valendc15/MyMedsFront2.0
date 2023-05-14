@@ -9,7 +9,7 @@ function ViewRequests() {
   const [popUpState, setpopUpState]=useState(false)
   const [docSignature,setDocSignature]=useState("")
   const [pharmacyID, setPharmacyID]=useState("")
-  const [triggerUse, setTriggerUse] =useState(false)
+  const [triggerUse, setTriggerUse] =useState(true)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,8 +19,9 @@ function ViewRequests() {
     }
   }, [triggerUse]);
 
+
   function getRequests() {
-    fetch(`http://localhost:8080/doctor/viewRequests/${localStorage.getItem('id')}`, {
+    fetch(`http://localhost:8080/doctor/viewRecipes/${localStorage.getItem('id')}?status=IN_PROGRESS`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
@@ -85,8 +86,8 @@ function ViewRequests() {
 
   function rejectRequest(id) {
     const token = localStorage.getItem("token");
-    fetch(`http://localhost:8080/doctor/deleteRequest/${localStorage.getItem("id")}`, {
-      method: "DELETE",
+    fetch(`http://localhost:8080/doctor/DeclineRecipe/${id}`, {
+      method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(id),
     })
@@ -104,11 +105,12 @@ function ViewRequests() {
   }
 
 
-  function handlesubmit(drugName,id){
+  function handlesubmit(drugName,recipeID){
     const token = localStorage.getItem("token");
-    let obj={docSignature, drugName, pharmacyID}
-    fetch(`http://localhost:8080/doctor/createRecipe/${localStorage.getItem("id")}`, {
-      method: "POST",
+    let obj={pharmacyID, recipeID, docSignature}
+    console.log(obj);
+    fetch(`http://localhost:8080/doctor/AproveRecipe/${localStorage.getItem("id")}`, {
+      method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(obj),
     })
@@ -135,9 +137,9 @@ function ViewRequests() {
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {requestList.map((request) => (
-            <div key={request.requestID} style={cardStyle}>
+            <div key={request.recipeID} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
+                <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
                 <button
                   className="btn btn-primary"
@@ -152,7 +154,7 @@ function ViewRequests() {
                 </button>
                 <button
                   className="btn btn-danger"
-                  onClick={() => rejectRequest(request.requestID)}
+                  onClick={() => rejectRequest(request.recipeID)}
                   style={{
                     backgroundColor: "#dc3545",
                     borderColor: "#dc3545",
@@ -178,7 +180,7 @@ function ViewRequests() {
             <h3>
 Please complete the Prescripiton form
 </h3>
-            <form onSubmit={()=>handlesubmit(request.drugName, request.requestID)} >
+            <form onSubmit={()=>handlesubmit(request.drugName, request.recipeID)} >
             <div class="mb-3">
     <label class="form-label">Please write down your name as confirmation</label>
     <input type="text" class="form-control"

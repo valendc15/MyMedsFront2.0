@@ -30,7 +30,7 @@ function PatientRequest() {
     } else {
       const token = localStorage.getItem("token");
       let obj = { docId: parseInt(docId), drugName };
-      fetch(`http://localhost:8080/patient/${patientId}/makeRequest`, {
+      fetch(`http://localhost:8080/patient/${patientId}/makeRecipe`, {
         method: "PUT",
         headers: {
           "content-type": "application/json",
