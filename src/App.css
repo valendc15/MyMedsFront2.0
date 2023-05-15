@@ -333,17 +333,16 @@ nav{
 
 .welcome {
   position: absolute;
-  margin-top: 50vh; /* Adjust the margin-top value to position the text lower */
-  font-size: 200px;
+  margin-top: 5%; /* Adjust the margin-top value to position the text lower */
+  font-size: 50px;
   left: 10%;
-  width: 2000px;
-  text-align: center; /* Add this line to center the welcome message */
+  width: 500px; /* Add this line to center the welcome message */
 }
 
 .button-6 {
   position: absolute;
   left: 10%;
-  margin-top: 55vh; /* Adjust the margin-top value to position the button lower */
+  margin-top: 10%; /* Adjust the margin-top value to position the button lower */
   align-items: center;
   background-color: #FFFFFF;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -354,7 +353,7 @@ nav{
   cursor: pointer;
   display: inline-flex;
   font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 100px;
+  font-size: 20px;
   font-weight: 600;
   justify-content: center;
   line-height: 1.25;
@@ -367,7 +366,7 @@ nav{
   touch-action: manipulation;
   vertical-align: baseline;
   /* Adjust width to match the width of the welcome message */
-  width: 2000px;
+  width: 200px;
 }
 
 
