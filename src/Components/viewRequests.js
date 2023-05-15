@@ -10,11 +10,13 @@ function ViewRequests() {
   const [docSignature,setDocSignature]=useState("")
   const [pharmacyID, setPharmacyID]=useState("")
   const [triggerUse, setTriggerUse] =useState(true)
+  const [pharmacyList, setPharmacyList] = useState([])
   const navigate = useNavigate();
 
   useEffect(() => {
     if(triggerUse){
     getRequests();
+    getPharmacy();
     setTriggerUse(false)
     }
   }, [triggerUse]);
@@ -40,6 +42,32 @@ function ViewRequests() {
         }
       });
   }
+
+  function getPharmacy() {
+    fetch('http://localhost:8080/doctor/getAllPharmacys', {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then((response) => {
+      if (response.status === 401) {
+        localStorage.clear();
+        navigate("/login");
+      } else {
+        return response.json().then((data) => {
+          console.log(data);
+          if (Array.isArray(data)) {
+            setPharmacyList(data);
+          } else {
+            setPharmacyList([]);
+          }
+        });
+      }
+    });
+  }
+  
 
   const cardStyle = {
     backgroundColor: "#f8f9fa",
@@ -189,9 +217,18 @@ Please complete the Prescripiton form
   </div>
   <div class="mb-3">
     <label class="form-label">Pharmacy ID</label>
-    <input type="number" class="form-control"
-        value={pharmacyID}
-        onChange={(e)=>setPharmacyID(e.target.value)}/> 
+    <select
+              className="form-control"
+              onChange={(event) => setPharmacyID(event.target.value)}
+              value={pharmacyID} // Set the value of the select field to docId
+            >
+              <option value="">Select Pharmacy</option>
+              {pharmacyList.map((phar) => (
+                <option key={phar.pharmacyUsername} value={phar.pharmacyID}>
+                  {phar.pharmacyName} :{phar.pharmacyID}
+                </option>
+              ))}
+            </select>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>

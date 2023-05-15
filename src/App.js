@@ -1,6 +1,7 @@
 import Card from './Components/CardP';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import hola from './Components/frontPage';
 import Register from './Register';
 import Login from './Components/Login';
 import { ToastContainer } from 'react-toastify';
@@ -11,26 +12,29 @@ import PatientRequest from './Components/PatientRequest';
 import ViewRequests from './Components/viewRequests';
 import ViewRequestsP from './Components/viewRequestsP';
 
-function App() {
 
+
+function App() {
   return (
     <div>
-    <ToastContainer></ToastContainer>
-    <Router>
-      <Routes>
-        <Route exact path="/login" element={<Login/>} />
-        <Route exact path="/Register" element={<Register></Register>}/>
-        <Route exact path='/home' element={<InfoPage></InfoPage>}/>
-        <Route exact path='/search' element={<Search></Search>}/>
-        <Route exact path='/viewPatients' element={<ViewPatients></ViewPatients>}/>
-        <Route exact path='/requestsP' element={<PatientRequest/>}/>
-        <Route exact path='/viewRequests' element={<ViewRequests></ViewRequests>}/>
-        <Route exact path='/viewRequestsP' element={<ViewRequestsP></ViewRequestsP>}/>
-      </Routes>
-    </Router>
+      <ToastContainer></ToastContainer>
+      <Router>
+        <Routes>
+          <Route path='' Component={hola}></Route>
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/Register" element={<Register />} />
+          <Route exact path="/home" element={<InfoPage />} />
+          <Route exact path="/search" element={<Search />} />
+          <Route exact path="/viewPatients" element={<ViewPatients />} />
+          <Route exact path="/requestsP" element={<PatientRequest />} />
+          <Route exact path="/viewRequests" element={<ViewRequests />} />
+          <Route exact path="/viewRequestsP" element={<ViewRequestsP />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
+
 
 export default App;
 
