@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import PatientNavBar from "./PatientNavBar";
+import { Collapse } from 'antd';
+
+const { Panel } = Collapse;
+
 
 function ViewRequestsP() {
   const [requestList, setRequestList] = useState([]);
+  const [acceptedRequestList, setAcceptedRequestList]=useState([]);
+  const [declinedRequestList, setDeclinedRequestList]=useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     getRequests();
+    getAcceptedRequests();
+    getDeclinedRequests();
   }, []);
 
   function getRequests() {
@@ -28,6 +36,50 @@ function ViewRequestsP() {
           setRequestList(data);
         } else {
           setRequestList([]);
+        }
+      });
+  }
+
+  function getAcceptedRequests() {
+    fetch(`http://localhost:8080/patient/viewRecipes/${localStorage.getItem('id')}?status=APPROVED`, {
+      method: "GET",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          localStorage.clear();
+          navigate("/login");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data != null || data != undefined) {
+          setAcceptedRequestList(data)
+        } else {
+          setAcceptedRequestList([])
+        }
+      });
+  }
+
+  function getDeclinedRequests() {
+    fetch(`http://localhost:8080/patient/viewRecipes/${localStorage.getItem('id')}?status=DECLINED`, {
+      method: "GET",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          localStorage.clear();
+          navigate("/login");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data != null || data != undefined) {
+          setDeclinedRequestList(data)
+        } else {
+          setDeclinedRequestList([])
         }
       });
   }
@@ -73,6 +125,8 @@ function ViewRequestsP() {
     <div>
       <PatientNavBar></PatientNavBar>
       <h1 className="text-center">Requests</h1>
+      <Collapse>
+      <Panel header='Show requests in progress'>
       {requestList.length === 0 ? (
         <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           No requests found.
@@ -89,6 +143,44 @@ function ViewRequestsP() {
           ))}
         </div>
       )}
+      </Panel>
+      <Panel header='Show requests accepted by your doctor'>
+      {acceptedRequestList.length === 0 ? (
+        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
+          No requests found.
+        </h3>
+      ) : (
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {acceptedRequestList.map((request) => (
+            <div key={request.id} style={cardStyle}>
+              <div>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      </Panel>
+      <Panel header='Show requests declined by your doctor'>
+      {declinedRequestList.length === 0 ? (
+        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
+          No requests found.
+        </h3>
+      ) : (
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {declinedRequestList.map((request) => (
+            <div key={request.id} style={cardStyle}>
+              <div>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      </Panel>
+      </Collapse>
     </div>
   );
   

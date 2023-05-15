@@ -42,7 +42,7 @@ function Login(){
     }
     else if(decodedToken.Role==="PATIENT") navigate('/requestsP')
     else{
-      navigate('/home')
+      navigate('/pharmacyRequest')
     }
   }).catch(error=>{
     toast.error('Failed to log in');

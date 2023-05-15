@@ -11,6 +11,8 @@ import ViewPatients from './Components/viewPatients';
 import PatientRequest from './Components/PatientRequest';
 import ViewRequests from './Components/viewRequests';
 import ViewRequestsP from './Components/viewRequestsP';
+import PharmacyRequest from './Components/PharmacyRequests';
+import PharmacyHistory from './Components/PharmacyHistory';
 
 
 
@@ -29,6 +31,8 @@ function App() {
           <Route exact path="/requestsP" element={<PatientRequest />} />
           <Route exact path="/viewRequests" element={<ViewRequests />} />
           <Route exact path="/viewRequestsP" element={<ViewRequestsP />} />
+          <Route exact path="/history" element={<PharmacyHistory></PharmacyHistory>}/>
+          <Route exact path="/pharmacyRequest" element={<PharmacyRequest></PharmacyRequest>}/>
         </Routes>
       </Router>
     </div>
