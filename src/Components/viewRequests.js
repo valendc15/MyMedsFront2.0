@@ -57,7 +57,6 @@ function ViewRequests() {
         navigate("/login");
       } else {
         return response.json().then((data) => {
-          console.log(data);
           if (Array.isArray(data)) {
             setPharmacyList(data);
           } else {
@@ -140,7 +139,7 @@ function ViewRequests() {
     fetch(`http://localhost:8080/doctor/AproveRecipe/${localStorage.getItem("id")}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(obj),
+      body: JSON.stringify(pharmacyID, recipeID, docSignature),
     })
       .then((result) => {
         console.log(result);
@@ -167,7 +166,8 @@ function ViewRequests() {
           {requestList.map((request) => (
             <div key={request.recipeID} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
+                <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
+                <h6>DNI:{request.patientID}</h6>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
                 <button
                   className="btn btn-primary"

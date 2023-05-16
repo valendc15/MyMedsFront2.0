@@ -136,7 +136,7 @@ function ViewRequestsP() {
           {requestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
               </div>
             </div>
@@ -154,7 +154,7 @@ function ViewRequestsP() {
           {acceptedRequestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
               </div>
             </div>
@@ -172,7 +172,7 @@ function ViewRequestsP() {
           {declinedRequestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
               </div>
             </div>
