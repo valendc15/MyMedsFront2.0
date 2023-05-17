@@ -60,9 +60,9 @@ function PharmacyHistory(){
       .then((data) => {
         console.log(data);
         if (data != null || data != undefined) {
-          setAcceptedRequestList(data)
+          setDispensedRequestList(data)
         } else {
-          setAcceptedRequestList([])
+          setDispensedRequestList([])
         }
       });
       }
