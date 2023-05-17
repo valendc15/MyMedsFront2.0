@@ -138,6 +138,7 @@ function ViewRequestsP() {
               <div>
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+                <p style={cardTextStyle}> Request ID: {request.recipeID}</p>
               </div>
             </div>
           ))}
@@ -156,6 +157,7 @@ function ViewRequestsP() {
               <div>
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+                <p style={cardTextStyle}>Pharmacy: {request.pharmacyName}</p>
               </div>
             </div>
           ))}
