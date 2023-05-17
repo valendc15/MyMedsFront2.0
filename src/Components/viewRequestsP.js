@@ -125,7 +125,7 @@ function ViewRequestsP() {
     <div>
       <PatientNavBar></PatientNavBar>
       <h1 className="text-center">Requests</h1>
-      <Collapse>
+      <Collapse defaultActiveKey={['0']}>
       <Panel header='Show requests in progress'>
       {requestList.length === 0 ? (
         <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
@@ -136,7 +136,7 @@ function ViewRequestsP() {
           {requestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
                 <p style={cardTextStyle}> Request ID: {request.recipeID}</p>
               </div>
@@ -155,9 +155,10 @@ function ViewRequestsP() {
           {acceptedRequestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
                 <p style={cardTextStyle}>Pharmacy: {request.pharmacyName}</p>
+                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
               </div>
             </div>
           ))}
@@ -174,8 +175,9 @@ function ViewRequestsP() {
           {declinedRequestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorUsername}</h5>
+                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
               </div>
             </div>
           ))}
