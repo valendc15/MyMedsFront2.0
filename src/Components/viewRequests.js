@@ -139,7 +139,7 @@ function ViewRequests() {
     fetch(`http://localhost:8080/doctor/AproveRecipe/${localStorage.getItem("id")}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(pharmacyID, recipeID, docSignature),
+      body: JSON.stringify(obj),
     })
       .then((result) => {
         console.log(result);
