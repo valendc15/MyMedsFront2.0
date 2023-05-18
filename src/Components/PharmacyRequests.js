@@ -7,6 +7,11 @@ function PharmacyRequest() {
 
     const [requestList, setRequestList] = useState([]);
     const [triggerUse, setTriggerUse] =useState(true)
+    const [nameFilter, setNameFilter]=useState('')
+    const [dniFilter, setDniFilter]=useState('')
+    const [records, setRecords] = useState([])
+
+    
 
     useEffect(() => {
         if(triggerUse){
@@ -54,6 +59,7 @@ function PharmacyRequest() {
         console.log(data);
         if (data != null || data != undefined) {
           setRequestList(data)
+          setRecords(data)
         } else {
           setRequestList([])
         }
@@ -73,18 +79,23 @@ function PharmacyRequest() {
             return response.json();
           }).then(setTriggerUse(true));
       }
+
+      const Filter = (event) =>{
+        setRecords(requestList.filter(f=>f.patientID.includes(event.target.value)))
+      }
       
 
     return(
         <div>
             <PharmacyNavBar></PharmacyNavBar>
+            <input type="text" className="form-control" onChange={Filter} placeholder="Search by patient DNI"/>
             {requestList.length === 0 ? (
         <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           No Recipes found.
         </h3>
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {requestList.map((request) => (
+          {records.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
