@@ -166,7 +166,7 @@ function ViewRequests() {
           {requestList.map((request) => (
             <div key={request.recipeID} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Patient: {request.patientUsername}</h5>
+                <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
                 <h6>DNI:{request.patientID}</h6>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
                 <button
