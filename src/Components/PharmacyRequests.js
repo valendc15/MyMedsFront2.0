@@ -10,7 +10,6 @@ function PharmacyRequest() {
     const [nameFilter, setNameFilter]=useState('')
     const [dniFilter, setDniFilter]=useState('')
     const [records, setRecords] = useState([])
-
     
 
     useEffect(() => {
@@ -80,15 +79,35 @@ function PharmacyRequest() {
           }).then(setTriggerUse(true));
       }
 
-      const Filter = (event) =>{
-        setRecords(requestList.filter(f=>f.patientID.includes(event.target.value)))
+
+      const Filter=(event)=>{
+
+        if(event.target.value!=''){
+        setRecords(requestList.filter(f=>f.patientID == event.target.value ))
+        }
+        else{
+          setRecords(requestList)
+        }
       }
+
+      const Filter2=(event)=>{
+        if(event.target.value!=''){
+        setRecords(requestList.filter(f=>f.doctorName.match(new RegExp(event.target.value,'i'))))
+        }
+        else{
+          setRecords(requestList)
+        }
+      }
+
+      
       
 
     return(
         <div>
             <PharmacyNavBar></PharmacyNavBar>
             <input type="text" className="form-control" onChange={Filter} placeholder="Search by patient DNI"/>
+            <input type="text" className="form-control" onChange={Filter2} placeholder="Search by doctor name"/>
+
             {requestList.length === 0 ? (
         <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           No Recipes found.
