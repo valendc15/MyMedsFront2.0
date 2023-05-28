@@ -1,5 +1,4 @@
 import React from 'react';
-import './SuccessPage.css'; // Import the CSS file for styling
 
 const SuccessPage = () => {
   return (
