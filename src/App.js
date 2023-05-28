@@ -13,6 +13,9 @@ import ViewRequests from './Components/viewRequests';
 import ViewRequestsP from './Components/viewRequestsP';
 import PharmacyRequest from './Components/PharmacyRequests';
 import PharmacyHistory from './Components/PharmacyHistory';
+import Scanner from './Components/Scanner';
+import SuccessMessage from './Components/SuccessMessage';
+import FailureMessage from './Components/FailureMessage';
 
 
 
@@ -33,6 +36,9 @@ function App() {
           <Route exact path="/viewRequestsP" element={<ViewRequestsP />} />
           <Route exact path="/history" element={<PharmacyHistory></PharmacyHistory>}/>
           <Route exact path="/pharmacyRequest" element={<PharmacyRequest></PharmacyRequest>}/>
+          <Route exact path='/Scanner'element={<Scanner></Scanner>}/>
+          <Route exact path='Success' element={<SuccessMessage></SuccessMessage>}/>
+          <Route exact path='failure' element={<FailureMessage></FailureMessage>}/>
         </Routes>
       </Router>
     </div>
