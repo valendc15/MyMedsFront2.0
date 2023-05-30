@@ -6,7 +6,7 @@ import SuccessPage from "./SuccessMessage";
 import FailurePage from "./FailureMessage";
 
 function Scanner() {
-  const [scanResult, setScanResult] = useState(null);
+  const [scanResult2, setScanResult2] = useState("");
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -22,9 +22,8 @@ function Scanner() {
     scanner.render(success, error);
 
     function success(result) {
-      scanner.clear();
-      setScanResult(result);
-      sendResult(); // Call sendResult function when the scan is successful
+      setScanResult2(result)
+      sendResult(result)
     }
 
     function error(err) {
@@ -32,7 +31,7 @@ function Scanner() {
     }
   }, []);
 
-  function sendResult() {
+  function sendResult(scanResult) {
     fetch(`http://localhost:8080/pharmacy/verifyByQr/${scanResult}`, {
       method: "GET",
       headers: {
@@ -50,7 +49,7 @@ function Scanner() {
       .then((data) => {
         console.log(data);
         if (data === true) {
-          dispense();
+          dispense(scanResult);
           setSuccess(true);
         } else {
           setSuccess(false)
@@ -58,7 +57,7 @@ function Scanner() {
       });
   }
 
-  function dispense() {
+  function dispense(scanResult) {
     fetch(`http://localhost:8080/pharmacy/markRecipe/${scanResult}`, {
       method: "PUT",
       headers: {
@@ -67,7 +66,7 @@ function Scanner() {
       },
     })
       .then((response) => {
-        if (response.status === 401) {
+        if (response.status == 401) {
           localStorage.clear();
           navigate("/login");
         }
@@ -78,15 +77,16 @@ function Scanner() {
   return (
     <div>
       <h1>Scan a QR code</h1>
-      {scanResult ? (
+      {scanResult2 ? (
         success ? (
-          <SuccessPage />
+          <SuccessPage></SuccessPage>
         ) : (
-          <FailurePage />
+          <FailurePage></FailurePage>
         )
       ) : (
         <div id="reader"></div>
       )}
+      <div id="reader"></div>
     </div>
   );
 }
