@@ -4,35 +4,41 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import SuccessPage from "./SuccessMessage";
 import FailurePage from "./FailureMessage";
+import PharmacyNavBar from "./PharmacyNavBar"
 
 function Scanner() {
-  const [scanResult, setScanResult] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [scanResult2, setScanResult2] = useState(null);
+  const [successSt, setSuccess] = useState(false)
+  const [ready, setReady]=useState(false)
   const navigate = useNavigate();
 
-  useEffect(() => {
+   useEffect(() => {
     const scanner = new Html5QrcodeScanner("reader", {
       qrbox: {
         width: 250,
         height: 250,
       },
       fps: 5,
-    });
+    })
 
-    scanner.render(success, error);
-
+    scanner.clear()
+  
     function success(result) {
-      scanner.clear();
-      setScanResult(result);
-      sendResult(); // Call sendResult function when the scan is successful
+      scanner.clear()
+      setScanResult2(result);
+      sendResult(result); // Call sendResult function when the scan is successful
     }
 
     function error(err) {
-      toast.error(err);
+      // toast.error(err);
     }
-  }, []);
 
-  function sendResult() {
+    scanner.render(success, error);
+
+    
+   }, []);
+
+  function sendResult(scanResult) {
     fetch(`http://localhost:8080/pharmacy/verifyByQr/${scanResult}`, {
       method: "GET",
       headers: {
@@ -50,16 +56,18 @@ function Scanner() {
       .then((data) => {
         console.log(data);
         if (data === true) {
-          dispense();
+          dispense(scanResult);
           setSuccess(true);
+          setReady(true)
         } else {
           setSuccess(false)
+          setReady(true)
         }
       });
   }
 
-  function dispense() {
-    fetch(`http://localhost:8080/pharmacy/markRecipe/${scanResult}`, {
+  function dispense(recipeID) {
+    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -68,6 +76,7 @@ function Scanner() {
     })
       .then((response) => {
         if (response.status === 401) {
+ 
           localStorage.clear();
           navigate("/login");
         }
@@ -77,9 +86,11 @@ function Scanner() {
   
   return (
     <div>
+      <PharmacyNavBar></PharmacyNavBar>
       <h1>Scan a QR code</h1>
-      {scanResult ? (
-        success ? (
+    
+      {scanResult2 && ready===true ? (
+        successSt ? (
           <SuccessPage />
         ) : (
           <FailurePage />
