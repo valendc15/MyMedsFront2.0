@@ -1,6 +1,5 @@
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import SuccessPage from "./SuccessMessage";
 import FailurePage from "./FailureMessage";
@@ -12,33 +11,25 @@ function Scanner() {
   const [ready, setReady]=useState(false)
   const navigate = useNavigate();
 
-   useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
-      qrbox: {
-        width: 250,
-        height: 250,
+  const dispense = useCallback((recipeID) => {
+    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      fps: 5,
     })
+      .then((response) => {
+        if (response.status === 401) {
+ 
+          localStorage.clear();
+          navigate("/login");
+        }
+        return response.json();
+      });
+  }, [navigate])
 
-    scanner.clear()
-  
-    function success(result) {
-      scanner.clear()
-      setScanResult2(result);
-      sendResult(result); // Call sendResult function when the scan is successful
-    }
-
-    function error(err) {
-      // toast.error(err);
-    }
-
-    scanner.render(success, error);
-
-    
-   }, []);
-
-  function sendResult(scanResult) {
+  const sendResult = useCallback((scanResult) => {
     fetch(`http://localhost:8080/pharmacy/verifyByQr/${scanResult}`, {
       method: "GET",
       headers: {
@@ -64,25 +55,40 @@ function Scanner() {
           setReady(true)
         }
       });
-  }
+  }, [dispense, navigate])
 
-  function dispense(recipeID) {
-    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+   useEffect(() => {
+    console.log("HOJOHOHOHOHOOHOHOO")
+    const scanner = new Html5QrcodeScanner("reader", {
+      qrbox: {
+        width: 250,
+        height: 250,
       },
+      fps: 5,
     })
-      .then((response) => {
-        if (response.status === 401) {
- 
-          localStorage.clear();
-          navigate("/login");
-        }
-        return response.json();
+
+    scanner.clear()
+  
+    function success(result) {
+      scanner.clear()
+      setScanResult2(result);
+      scanner.stop().then((ignore)=>{
       });
-  }
+      sendResult(result); // Call sendResult function when the scan is successful
+    }
+
+    function error(err) {
+      // toast.error(err);
+    }
+
+    scanner.render(success, error);
+
+    return function cleanup() {
+      scanner.clear()
+    }
+   }, [sendResult]);
+
+  
   
   return (
     <div>

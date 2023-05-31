@@ -1,4 +1,3 @@
-import Card from './Components/CardP';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import hola from './Components/frontPage';
@@ -14,8 +13,6 @@ import ViewRequestsP from './Components/viewRequestsP';
 import PharmacyRequest from './Components/PharmacyRequests';
 import PharmacyHistory from './Components/PharmacyHistory';
 import Scanner from './Components/Scanner';
-import SuccessMessage from './Components/SuccessMessage';
-import FailureMessage from './Components/FailureMessage';
 
 
 
@@ -25,7 +22,7 @@ function App() {
       <ToastContainer></ToastContainer>
       <Router>
         <Routes>
-          <Route path='' Component={hola}></Route>
+          // <Route path='' Component={hola}></Route>
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/Register" element={<Register />} />
           <Route exact path="/home" element={<InfoPage />} />
@@ -37,8 +34,6 @@ function App() {
           <Route exact path="/history" element={<PharmacyHistory></PharmacyHistory>}/>
           <Route exact path="/pharmacyRequest" element={<PharmacyRequest></PharmacyRequest>}/>
           <Route exact path='/Scanner'element={<Scanner></Scanner>}/>
-          <Route exact path='Success' element={<SuccessMessage></SuccessMessage>}/>
-          <Route exact path='failure' element={<FailureMessage></FailureMessage>}/>
         </Routes>
       </Router>
     </div>
