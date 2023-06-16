@@ -107,7 +107,8 @@ function PharmacyHistory(){
               <div>
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-                <p style={cardTextStyle}> Request ID: {request.recipeID}</p>
+                <p style={cardTextStyle}>Patient ID: {request.patientID}</p>
+                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
               </div>
             </div>
           ))}
@@ -126,6 +127,7 @@ function PharmacyHistory(){
               <div>
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+                <p style={cardTextStyle}>Patient ID: {request.patientID}</p>
                 <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
               </div>
             </div>

@@ -7,6 +7,7 @@ import Popup from "./PopUp";
 function ViewRequests() {
   const [requestList, setRequestList] = useState([]);
   const [popUpState, setpopUpState]=useState(false)
+  const [popUpState2,setpopUpState2]=useState(false)
   const [docSignature,setDocSignature]=useState("")
   const [pharmacyID, setPharmacyID]=useState("")
   const [triggerUse, setTriggerUse] =useState(true)
@@ -182,7 +183,7 @@ function ViewRequests() {
                 </button>
                 <button
                   className="btn btn-danger"
-                  onClick={() => rejectRequest(request.recipeID)}
+                  onClick={() => setpopUpState2(true)}
                   style={{
                     backgroundColor: "#dc3545",
                     borderColor: "#dc3545",
@@ -235,7 +236,30 @@ Please complete the Prescripiton form
 
             </div>
           </Popup>
+          <Popup style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }} trigger={popUpState2} setTrigger={setpopUpState2}>
+ <div>
+ <div>
+  <h4>Are you sure you want to reject this request?</h4>
+  <button className="btn btn-danger reject-button" onClick={() => setpopUpState2(false)}>No</button>
+  <button className="btn btn-success accept-button" onClick={() => rejectRequest(request.recipeID)}>Yes</button>
+</div>
+
+</div>
+
+    </Popup>
             </div>
+            
           ))}
         </div>
         

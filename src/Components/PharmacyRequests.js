@@ -2,6 +2,7 @@ import PharmacyNavBar from "./PharmacyNavBar"
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Popup from "./PopUp";
 
 function PharmacyRequest() {
 
@@ -10,6 +11,7 @@ function PharmacyRequest() {
     const [nameFilter, setNameFilter]=useState('')
     const [dniFilter, setDniFilter]=useState('')
     const [records, setRecords] = useState([])
+    const [popUpState, setpopUpState]= useState(false)
     
 
     useEffect(() => {
@@ -75,8 +77,10 @@ function PharmacyRequest() {
               localStorage.clear();
               navigate("/login");
             }
+            setTriggerUse(true)
+            setpopUpState(false)
             return response.json();
-          }).then(setTriggerUse(true));
+          });
       }
 
 
@@ -120,12 +124,36 @@ function PharmacyRequest() {
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
                 <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
                 <p style={cardTextStyle}> Request ID: {request.recipeID}</p>
-                <button className="btn btn-success" onClick={() =>dispense(request.recipeID)}>Dispensed</button>
+                <p style={cardTextStyle}> Patient ID: {request.patientID}</p>
+                <button className="btn btn-success" onClick={()=>setpopUpState(true)}>Dispensed</button>
+                <Popup style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }} trigger={popUpState} setTrigger={setpopUpState}>
+ <div>
+ <div>
+  <h4>Do you want to mark this recipe as dispensed?</h4>
+  <button className="btn btn-danger reject-button" onClick={() => setpopUpState(false)}>No</button>
+  <button className="btn btn-success accept-button" onClick={() =>dispense(request.recipeID)}>Yes</button>
+</div>
+
+</div>
+
+    </Popup>
               </div>
             </div>
           ))}
         </div>
       )}
+         
         </div>
     )
 }
