@@ -72,7 +72,7 @@ function PatientInfo(props) {
 
   return (
 <div style={{ backgroundColor: '#78e3c4', paddingBottom: 0, minHeight: '100vh', position: 'relative' }}>
-  {location.state && location.state.name && location.state.dni ? (
+  {location.state?.name || location.state?.dni ? (
     <div className="gradient-custom-2" style={{ backgroundColor: '#78e3c4', minHeight: '100vh' }}>
       <MDBContainer className="py-5">
         <MDBRow className="justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
@@ -124,7 +124,7 @@ function PatientInfo(props) {
                           <div>
                             <h5 style={cardTitleStyle}>Name: {capitalizeFirstLetter(drug.brandName)}</h5>
                             <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
-                            <p> style={cardTextStyle}Method: {capitalizeFirstLetter(drug.strength)}</p>
+                            <p style={cardTextStyle}>Method: {capitalizeFirstLetter(drug.strength)}</p>
                           </div>
                         </div>
                     ))}
@@ -132,7 +132,6 @@ function PatientInfo(props) {
                   <div className="d-flex justify-content-center mt-3">
   <button className="btn btn-info" onClick={() => addDrugs()}>Asign new medication</button>
 </div>
-
                 </MDBCardBody>
               </div>
             </MDBCard>
