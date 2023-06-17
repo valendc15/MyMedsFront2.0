@@ -399,3 +399,11 @@ nav{
 .accept-button {
   margin-left: 10px;
 }
+
+.circle {
+  background: rgb(7, 239, 173);
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
