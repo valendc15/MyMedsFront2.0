@@ -39,6 +39,11 @@ function PatientInfo(props) {
     getPatientMeds();
   }, [location.state, navigate]);
 
+  function capitalizeFirstLetter(string) 
+{
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 
   function getPatientMeds() {
     fetch(`http://localhost:8080/doctor/getPatientDrugs/${localStorage.getItem('id')}?patientID=${location.state.dni}`,{
@@ -113,18 +118,17 @@ function PatientInfo(props) {
                     <MDBCardText className="mb-0">
                     </MDBCardText>
                   </div>
-                  <MDBRow>
+                  <div style={{ display: "flex", flexWrap: "wrap" }}>
                     {drugList.map((drug) => (
-                      <MDBCol md="4" key={drug.drugID}>
-                        <div style={cardStyle}>
+                        <div key={drug.drugID} style={cardStyle}>
                           <div>
-                            <h5 style={cardTitleStyle}>Name: {drug.brandName}</h5>
+                            <h5 style={cardTitleStyle}>Name: {capitalizeFirstLetter(drug.brandName)}</h5>
                             <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+                            <p> style={cardTextStyle}Method: {capitalizeFirstLetter(drug.strength)}</p>
                           </div>
                         </div>
-                      </MDBCol>
                     ))}
-                  </MDBRow>
+                    </div>
                   <div className="d-flex justify-content-center mt-3">
   <button className="btn btn-info" onClick={() => addDrugs()}>Asign new medication</button>
 </div>
