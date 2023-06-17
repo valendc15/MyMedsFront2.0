@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import MedicNavBar from "./MedicNavBar";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function ViewPatients() {
   const [patientList, setPatientList] = useState([]);
@@ -33,6 +34,12 @@ function ViewPatients() {
           setPatientList([]);
         }
       });
+  }
+  
+  function goToInfo(dni,name){
+    localStorage.setItem('info', 1)
+    navigate('/patientInfo', {state:{ dni:dni, name:name}})
+
   }
 
   function dismisP(dni) {
@@ -76,6 +83,7 @@ function ViewPatients() {
                 <div className="card-body">
                   <h5 className="card-title">Name: {patient.username}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">DNI: {patient.dni}</h6>
+                  <button className="btn btn-info float-start" onClick={()=> goToInfo(patient.dni, patient.username)} >Info</button>
                   <button className="btn btn-danger float-end" onClick={() => dismisP(patient.dni)}>
                     Dismiss Patient
                   </button>

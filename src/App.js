@@ -1,6 +1,7 @@
 import Card from './Components/CardP';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import hola from './Components/frontPage';
 import Register from './Register';
 import Login from './Components/Login';
@@ -13,6 +14,8 @@ import ViewRequests from './Components/viewRequests';
 import ViewRequestsP from './Components/viewRequestsP';
 import PharmacyRequest from './Components/PharmacyRequests';
 import PharmacyHistory from './Components/PharmacyHistory';
+import Scanner from './Components/scanner';
+import PatientInfo from './Components/patientInfo';
 
 
 
@@ -33,6 +36,8 @@ function App() {
           <Route exact path="/viewRequestsP" element={<ViewRequestsP />} />
           <Route exact path="/history" element={<PharmacyHistory></PharmacyHistory>}/>
           <Route exact path="/pharmacyRequest" element={<PharmacyRequest></PharmacyRequest>}/>
+          <Route exact path='/Scanner'element={<Scanner></Scanner>}/>
+          <Route exact path='/patientInfo'element={<PatientInfo></PatientInfo>}/>
         </Routes>
       </Router>
     </div>
