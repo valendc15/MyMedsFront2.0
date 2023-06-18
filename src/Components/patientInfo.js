@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 import banner from "./imageBanner.webp"
 import Popup from "./PopUp";
+import { toast } from "react-toastify";
 
 function PatientInfo(props) {
   const navigate = useNavigate();
@@ -98,6 +99,10 @@ function PatientInfo(props) {
   }
 
   function search(){
+    if (searched.trim() === "") {
+      toast.warning("No search input")
+      return;
+    }
     fetch(`http://localhost:8080/doctor/filterDrugByBrandName/${searched}`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -112,6 +117,7 @@ function PatientInfo(props) {
            setSDrugList(data)
           } else {
            setSDrugList([])
+           toast.error('No medications found')
           }
         });
       }
@@ -218,9 +224,11 @@ function PatientInfo(props) {
                           display: "flex",
                           justifyContent: "center",
                           alignItems: "center"
+                        
                         }}
                         trigger={popUpState}
                         setTrigger={setpopUpState}
+                        
                       >
                         <div>
                           <div className="mb-3">
