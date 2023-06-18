@@ -151,10 +151,20 @@ function PatientRequest() {
               Select Medications:
             </label>
             {medsList.map((meds) => (
-              <input type="checkbox" value={meds.drugID} onChange={handleChange}> Medication Name: {meds.brandName} <br></br> Dosage: {meds.strength} </input>
-            )
-              
-              )}
+  <label className="checkbox-label" key={meds.drugID}>
+    <input
+      type="checkbox"
+      value={meds.drugID}
+      onChange={handleChange}
+      className="checkbox-input"
+    />
+    <span className="medication-info">
+      Medication Name: {meds.brandName} <br />
+      Dosage: {meds.strength}
+    </span>
+  </label>
+))}
+
           </div>
           {error && ( // Render error message if error state is not empty
             <div className="alert alert-danger" role="alert">

@@ -407,3 +407,16 @@ nav{
   height: 100px;
 }
 
+.checkbox-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.checkbox-input {
+  margin-right: 5px;
+}
+
+.medication-info {
+  font-size: 14px;
+  margin-left: 5px;
+}
