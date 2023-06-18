@@ -18,7 +18,7 @@ function PatientInfo(props) {
   const [sdrugList, setSDrugList]=useState([])
   const [triggerUse, setTriggerUse] =useState(false)
   const [noMatchFound, setNoMatchFound] = useState(false);
-
+  const [triggerUse2,setTriggerUse2]=useState(true);
   const cardStyle = {
     backgroundColor: "#f8f9fa",
     borderRadius: "10px",
@@ -40,20 +40,24 @@ function PatientInfo(props) {
   };
 
   useEffect(() => {
-    if (!location.state || !location.state.name || !location.state.dni) {
-      localStorage.clear();
-      navigate('/');
-    } else {
-      setDni(location.state.dni);
-      setName(location.state.name);
-      getPatientMeds();
-    }
-    if(triggerUse){
-      setSDrugList([])
-      setSearched("")
-      setTriggerUse(false)
+    if(triggerUse2){
+      if (!location.state || !location.state.name || !location.state.dni) {
+        localStorage.clear();
+        navigate('/');
+      } else {
+        setDni(location.state.dni);
+        setName(location.state.name);
+        getPatientMeds();
       }
-  }, [location.state, navigate,triggerUse]);
+      if(triggerUse){
+        setSDrugList([])
+        setSearched("")
+        setTriggerUse(false)
+        }
+      setTriggerUse2(false)
+    }
+  
+  }, [location.state, navigate,triggerUse,triggerUse2]);
 
   function closePopUp() {
     setpopUpState(false);
@@ -92,18 +96,22 @@ function PatientInfo(props) {
     fetch(`http://localhost:8080/doctor/addDrugToPatient/${localStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(id),
     })
       .then((result) => {
         console.log(result);
+        if (result.status==409){
+          toast.warning("Medicine already asigned.")
+          return;
+        }
         if (!result.ok) {
           throw Error("Error");
         }
         setpopUpState(false)
+        setTriggerUse2(true)
         return result.json();
       })
       .catch((error) => {
-        console.log(error);
+        toast.warning(error)
       });
   }
 
