@@ -17,7 +17,7 @@ function PatientInfo(props) {
   const [searched, setSearched]=useState("")
   const [sdrugList, setSDrugList]=useState([])
   const [triggerUse, setTriggerUse] =useState(false)
-
+  const [noMatchFound, setNoMatchFound] = useState(false);
 
   const cardStyle = {
     backgroundColor: "#f8f9fa",
@@ -130,6 +130,7 @@ function PatientInfo(props) {
            setSDrugList([])
            toast.error('No medications found')
           }
+          setNoMatchFound(data.length===0)
         });
       }
     });
@@ -268,6 +269,9 @@ function PatientInfo(props) {
                           </div>
                           <div className="mb-3">
                             <label className="form-label">Results:</label>
+                            {noMatchFound && searched.trim() !== "" && (
+                            <div>No medications found</div> // Display message when no drugs are found after searching
+                            )}
                             <div style={{ display: "flex", flexWrap: "wrap" }}>
                               {Array.isArray(sdrugList) && sdrugList.map((drug) => (
                                 <div key={drug.drugID} style={cardStyle}>
