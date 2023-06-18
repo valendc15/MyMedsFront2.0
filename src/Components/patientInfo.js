@@ -16,6 +16,7 @@ function PatientInfo(props) {
   const [popUpState, setpopUpState]=useState(false)
   const [searched, setSearched]=useState("")
   const [sdrugList, setSDrugList]=useState([])
+  const [triggerUse, setTriggerUse] =useState(false)
 
 
   const cardStyle = {
@@ -47,7 +48,17 @@ function PatientInfo(props) {
       setName(location.state.name);
       getPatientMeds();
     }
-  }, [location.state, navigate]);
+    if(triggerUse){
+      setSDrugList([])
+      setSearched("")
+      setTriggerUse(false)
+      }
+  }, [location.state, navigate,triggerUse]);
+
+  function closePopUp() {
+    setpopUpState(false);
+    setTriggerUse(true);
+  }
 
   function capitalizeFirstLetter(string) 
 {
@@ -227,8 +238,8 @@ function PatientInfo(props) {
                         
                         }}
                         trigger={popUpState}
-                        setTrigger={setpopUpState}
-                        
+                        setTrigger={closePopUp}
+
                       >
                         <div>
                           <div className="mb-3">
