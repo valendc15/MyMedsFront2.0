@@ -10,11 +10,13 @@ import { useNavigate } from "react-router-dom";
 function PatientRequest() {
   const [drugName, setMedicine] = useState([]);
   const [docId, setDoctorID] = useState("");
+  const [pharmacyID, setPharmacyID] = useState('')
   const userName = localStorage.getItem("username");
   const [doclist, setDoclist] = useState([]);
   const [error, setError] = useState(""); // Added state for error message
   const navigate = useNavigate();
   const [medsList, setMedList]=useState([])
+  const [pharmacyList, setPharmacyList] = useState([])
 
   const patientId = localStorage.getItem("id");
 
@@ -22,14 +24,15 @@ function PatientRequest() {
   useEffect(() => {
     getDoctors();
     getMeds();
+    getPharmacies();
   }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
 
     // Check for empty medicine name and selected doctor
-    if (drugName === [] || docId === "") {
-      setError("Please select a doctor and enter medicine name.");
+    if (drugName === [] || docId === "" || pharmacyID=='') {
+      setError("Please select a doctor, enter medicine name and pharmacy name.");
     } else {
       const token = localStorage.getItem("token");
       let obj = { docId: parseInt(docId), drugName };
@@ -39,7 +42,7 @@ function PatientRequest() {
           "content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(obj),
+        body: JSON.stringify(),
       })
         .then((data) => {
           if (data.status === 404) {
@@ -65,12 +68,10 @@ function PatientRequest() {
         return [...pre.filter(drug=> drug!==value)]
       })
     }
-
-    console.log(drugName)
   }
 
   function getDoctors() {
-    fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
+    fetch(`http://localhost:8080/patient/getAllPharmacys`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -88,6 +89,31 @@ function PatientRequest() {
               setDoclist(data);
             } else {
               setDoclist([]);
+            }
+          });
+        }
+      });
+  }
+
+  function getPharmacies() {
+    fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          localStorage.clear();
+          navigate("/login");
+        } else {
+          return response.json().then((data) => {
+            console.log(data);
+            if (Array.isArray(data)) {
+              setPharmacyList(data)
+            } else {
+             setPharmacyList([])
             }
           });
         }
@@ -140,6 +166,24 @@ function PatientRequest() {
               {doclist.map((doc) => (
                 <option key={doc.doctorUsername} value={doc.doctorID}>
                   {doc.doctorUsername} :{doc.doctorID}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="inputPassword4" className="form-label">
+              Choose a Pharmacy
+            </label>
+            <select
+              className="form-control"
+              onChange={(event) => setPharmacyID(event.target.value)}
+              value={pharmacyID} // Set the value of the select field to docId
+            >
+              <option value="">Select Pharmacy</option>
+              {doclist.map((pharmacy) => (
+                <option key={pharmacy.pharmacyName} value={pharmacy.pharmacyID}>
+                  {pharmacy.pharmacyName} :{pharmacy.pharmacyID}
                 </option>
               ))}
             </select>
