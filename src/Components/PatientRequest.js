@@ -45,6 +45,11 @@ function PatientRequest() {
         body: JSON.stringify(),
       })
         .then((data) => {
+          if(data.sucess ==false){
+            data.drugDTOS.forEach((drug) => {
+              toast.error(`${drug.brandName} is out of stock`);
+        });}
+        
           if (data.status === 404) {
             throw Error("Error");
           }
