@@ -14,6 +14,8 @@ function PatientInfo(props) {
   const [popUpState2,setpopUpState2]=useState(false)
   const [popUpState, setpopUpState]=useState(false)
   const [searched, setSearched]=useState("")
+  const [sdrugList, setSDrugList]=useState([])
+
 
   const cardStyle = {
     backgroundColor: "#f8f9fa",
@@ -78,159 +80,202 @@ function PatientInfo(props) {
     
   }
 
-  function deleteDrug(){
-
+  function deleteDrug(did){
+    fetch(`http://localhost:8080/doctor/removePatientDrug/${localStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+      .then((result) => {
+        console.log(result);
+        if (!result.ok) {
+          throw Error("Error");
+        }
+        return result.json();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function search(){
-
+    fetch(`http://localhost:8080/doctor/filterDrugByBrandName/${searched}`, {
+      method: "GET",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+    .then((response) => {
+      if (response.status === 401) {
+        localStorage.clear();
+        navigate("/login");
+      } else {
+        return response.json().then((data) => {
+          if (Array.isArray(data)) {
+           setSDrugList(data)
+          } else {
+           setSDrugList([])
+          }
+        });
+      }
+    });
   }
 
   return (
-<div style={{ backgroundColor: '#78e3c4', paddingBottom: 0, minHeight: '100vh', position: 'relative' }}>
-  {location.state?.name && location.state?.dni ? (
-    <div className="gradient-custom-2" style={{ backgroundColor: '#78e3c4', minHeight: '100vh' }}>
-      <MDBContainer className="py-5">
-        <MDBRow className="justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-          <MDBCol lg="9" xl="7">
-            <MDBCard>
-              <div className="position-relative">
-                <div
-                  className="rounded-top text-white d-flex flex-row justify-content-center align-items-center position-relative"
-                  style={{
-                    backgroundImage: `url(${banner})`,
-                    height: '200px',
-                  }}
-                >
-                  <button
-                    className="close-btn btn btn-danger float-end"
-                    onClick={() => navigate('/viewPatients')}
-                    style={{ position: 'absolute', top: 0, right: 0 }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-x-lg"
-                      viewBox="0 0 16 16"
+    <div style={{ backgroundColor: '#78e3c4', paddingBottom: 0, minHeight: '100vh', position: 'relative' }}>
+      {location.state?.name && location.state?.dni ? (
+        <div className="gradient-custom-2" style={{ backgroundColor: '#78e3c4', minHeight: '100vh' }}>
+          <MDBContainer className="py-5">
+            <MDBRow className="justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+              <MDBCol lg="9" xl="7">
+                <MDBCard>
+                  <div className="position-relative">
+                    <div
+                      className="rounded-top text-white d-flex flex-row justify-content-center align-items-center position-relative"
+                      style={{
+                        backgroundImage: `url(${banner})`,
+                        height: '200px',
+                      }}
                     >
-                      <path
-                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <MDBCardBody className="text-black p-4">
-                  <div className="mb-5">
-                    <p className="lead fw-normal mb-1">About</p>
-                    <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-                      <MDBCardText className="font-italic mb-1">Name: {name}</MDBCardText>
-                      <MDBCardText className="font-italic mb-1">DNI: {dni}</MDBCardText>
+                      <button
+                        className="close-btn btn btn-danger float-end"
+                        onClick={() => navigate('/viewPatients')}
+                        style={{ position: 'absolute', top: 0, right: 0 }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-x-lg"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+                          />
+                        </svg>
+                      </button>
                     </div>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <MDBCardText className="lead fw-normal mb-0">Asigned Medication:</MDBCardText>
-                    <MDBCardText className="mb-0">
-                    </MDBCardText>
-                  </div>
-                  <div style={{ display: "flex", flexWrap: "wrap" }}>
-                    {Array.isArray(drugList) && drugList.map((drug) => (
-                        <div key={drug.drugID} style={cardStyle}>
-                          <div>
-                            <h5 style={cardTitleStyle}>Name: {capitalizeFirstLetter(drug.brandName)}</h5>
-                            <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
-                            <p style={cardTextStyle}>Method: {capitalizeFirstLetter(drug.strength)}</p>
-                            <button className="btn btn-danger" onClick={()=>setpopUpState2(true)}></button>
-
-                            <Popup style={{
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 9999,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  }} trigger={popUpState2} setTrigger={setpopUpState2}>
- <div>
- <div>
-  <h4>Are you sure you want to dissasociate this medication?</h4>
-  <button className="btn btn-danger reject-button" onClick={() => setpopUpState2(false)}>No</button>
-  <button className="btn btn-success accept-button" onClick={() => deleteDrug(drug.drugID)}>Yes</button>
-</div>
-
-</div>
-
-    </Popup>
+                    <MDBCardBody className="text-black p-4">
+                      <div className="mb-5">
+                        <p className="lead fw-normal mb-1">About</p>
+                        <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
+                          <MDBCardText className="font-italic mb-1">Name: {name}</MDBCardText>
+                          <MDBCardText className="font-italic mb-1">DNI: {dni}</MDBCardText>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center mb-4">
+                        <MDBCardText className="lead fw-normal mb-0">Assigned Medication:</MDBCardText>
+                        <MDBCardText className="mb-0"></MDBCardText>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap" }}>
+                        {Array.isArray(drugList) && drugList.map((drug) => (
+                          <div key={drug.drugID} style={cardStyle}>
+                            <div>
+                              <h5 style={cardTitleStyle}>Name: {capitalizeFirstLetter(drug.brandName)}</h5>
+                              <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+                              <p style={cardTextStyle}>Method: {capitalizeFirstLetter(drug.strength)}</p>
+                              <button className="btn btn-danger" onClick={() => setpopUpState2(true)}>Delete</button>
+  
+                              <Popup
+                                style={{
+                                  position: "fixed",
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  zIndex: 9999,
+                                  backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center"
+                                }}
+                                trigger={popUpState2}
+                                setTrigger={setpopUpState2}
+                              >
+                                <div>
+                                  <div>
+                                    <h4>Are you sure you want to disassociate this medication?</h4>
+                                    <button className="btn btn-danger reject-button" onClick={() => setpopUpState2(false)}>No</button>
+                                    <button className="btn btn-success accept-button" onClick={() => deleteDrug(drug.drugID)}>Yes</button>
+                                  </div>
+                                </div>
+                              </Popup>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="d-flex justify-content-center mt-3">
+                        <button className="btn btn-info" onClick={() => setpopUpState(true)}>Assign new medication</button>
+                      </div>
+  
+                      <Popup
+                        style={{
+                          position: "fixed",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          zIndex: 9999,
+                          backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                        trigger={popUpState}
+                        setTrigger={setpopUpState}
+                      >
+                        <div>
+                          <div className="mb-3">
+                            <h2>Medication searcher</h2>
+                            <div className="d-flex align-items-center">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={searched}
+                                onChange={(e) => setSearched(e.target.value)}
+                              />
+  
+                              <button className="btn btn-primary" onClick={() => search()}>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-search"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          <div className="mb-3">
+                            <label className="form-label">Results:</label>
+                            <div style={{ display: "flex", flexWrap: "wrap" }}>
+                              {Array.isArray(sdrugList) && sdrugList.map((drug) => (
+                                <div key={drug.drugID} style={cardStyle}>
+                                  <div>
+                                    <h5 style={cardTitleStyle}>Name: {capitalizeFirstLetter(drug.brandName)}</h5>
+                                    <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+                                    <p style={cardTextStyle}>Method: {capitalizeFirstLetter(drug.strength)}</p>
+                                    <button className="btn btn-info" onClick={() => addDrugs()}>Add</button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </div>
-                    ))}
-                    </div>
-                  <div className="d-flex justify-content-center mt-3">
-  <button className="btn btn-info" onClick={() => setpopUpState(true)}>Asign new medication</button>
-</div>
-
-<Popup style={{
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 9999,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent black background
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  }} trigger={popUpState} setTrigger={setpopUpState}>
-            <div>
-            <div class="mb-3">
-              <h2>Medication searcher</h2>
-            <div className="d-flex align-items-center">
-  <input
-    type="text"
-    className="form-control"
-    value={searched}
-    onChange={(e) => setSearched(e.target.value)}
-  />
-  <button className="btn btn-primary" onClick={() => search()}>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      className="bi bi-search"
-      viewBox="0 0 16 16"
-    >
-      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-    </svg>
-  </button>
-</div>
-
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Results:</label>
-  </div>
-
-            </div>
-          </Popup>
-                </MDBCardBody>
-              </div>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
+                      </Popup>
+                    </MDBCardBody>
+                  </div>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+        </div>
+      ) : (
+        navigate('/')
+      )}
     </div>
-  ) : (
-    navigate('/')
-  )}
-</div>
-
-
-
-  );
-}
+  );}
+  
 
 export default PatientInfo;
