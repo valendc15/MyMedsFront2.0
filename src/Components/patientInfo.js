@@ -87,8 +87,25 @@ function PatientInfo(props) {
       });
   }
 
-  function addDrugs(){
-    
+  function addDrugs(did){
+    const token = localStorage.getItem("token");
+    fetch(`http://localhost:8080/doctor/addDrugToPatient/${localStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(id),
+    })
+      .then((result) => {
+        console.log(result);
+        if (!result.ok) {
+          throw Error("Error");
+        }
+
+        setpopUpState(false)
+        return result.json();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function deleteDrug(did){
@@ -279,7 +296,7 @@ function PatientInfo(props) {
                                     <h5 style={cardTitleStyle}>Name: {capitalizeFirstLetter(drug.brandName)}</h5>
                                     <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
                                     <p style={cardTextStyle}>Method: {capitalizeFirstLetter(drug.strength)}</p>
-                                    <button className="btn btn-info" onClick={() => addDrugs()}>Add</button>
+                                    <button className="btn btn-info" onClick={() => addDrugs(drug.drugID)}>Add</button>
                                   </div>
                                 </div>
                               ))}
