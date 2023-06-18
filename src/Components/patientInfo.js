@@ -99,7 +99,6 @@ function PatientInfo(props) {
         if (!result.ok) {
           throw Error("Error");
         }
-
         setpopUpState(false)
         return result.json();
       })
