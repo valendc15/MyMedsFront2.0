@@ -60,6 +60,11 @@ function PatientRequest() {
     if(checked) {
       setMedicine(pre => [...pre, value])
     }
+    else{
+      setMedicine(pre=> {
+        return [...pre.filter(drug=> drug!==value)]
+      })
+    }
 
     console.log(drugName)
   }
