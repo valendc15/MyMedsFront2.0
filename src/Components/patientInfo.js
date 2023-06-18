@@ -10,7 +10,7 @@ function PatientInfo(props) {
   const location = useLocation();
   const [drugList, setDrugList]= useState([])
   const [name,setName] = useState('')
-  const [dni, setDni]=useState('')
+  const [dni, setDni] = useState(location.state?.dni || '');
   const [popUpState2,setpopUpState2]=useState(false)
   const [popUpState, setpopUpState]=useState(false)
   const [searched, setSearched]=useState("")
@@ -39,12 +39,11 @@ function PatientInfo(props) {
 
   useEffect(() => {
     if (!location.state || !location.state.name || !location.state.dni) {
-        localStorage.clear()
+      localStorage.clear();
       navigate('/');
-    }
-    else{
-      setDni(location.state.dni)
-      setName(location.state.name)
+    } else {
+      setDni(location.state.dni);
+      setName(location.state.name);
       getPatientMeds();
     }
   }, [location.state, navigate]);
@@ -82,7 +81,7 @@ function PatientInfo(props) {
 
   function deleteDrug(did){
     fetch(`http://localhost:8080/doctor/removePatientDrug/${localStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
-      method: "PUT",
+      method: "DELETE",
       headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
       .then((result) => {
@@ -90,6 +89,7 @@ function PatientInfo(props) {
         if (!result.ok) {
           throw Error("Error");
         }
+        window.location.reload(false)
         return result.json();
       })
       .catch((error) => {
