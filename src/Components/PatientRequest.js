@@ -6,26 +6,29 @@ import lol from "./prescription.jpg";
 import { FaUser, FaUserMd, FaPrescriptionBottleAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+
 function PatientRequest() {
-  const [drugName, setMedicine] = useState("");
+  const [drugName, setMedicine] = useState([]);
   const [docId, setDoctorID] = useState("");
   const userName = localStorage.getItem("username");
   const [doclist, setDoclist] = useState([]);
   const [error, setError] = useState(""); // Added state for error message
   const navigate = useNavigate();
+  const [medsList, setMedList]=useState([])
 
   const patientId = localStorage.getItem("id");
 
 
   useEffect(() => {
     getDoctors();
+    getMeds();
   }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
 
     // Check for empty medicine name and selected doctor
-    if (drugName === "" || docId === "") {
+    if (drugName === [] || docId === "") {
       setError("Please select a doctor and enter medicine name.");
     } else {
       const token = localStorage.getItem("token");
@@ -51,6 +54,16 @@ function PatientRequest() {
     }
   }
 
+  function handleChange(event){
+    const {value, checked}=event.target
+
+    if(checked) {
+      setMedicine(pre => [...pre, value])
+    }
+
+    console.log(drugName)
+  }
+
   function getDoctors() {
     fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
       method: "GET",
@@ -70,6 +83,31 @@ function PatientRequest() {
               setDoclist(data);
             } else {
               setDoclist([]);
+            }
+          });
+        }
+      });
+  }
+
+  function getMeds(){
+    fetch(`http://localhost:8080/patient/getPatientDrugs/${patientId}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          localStorage.clear();
+          navigate("/login");
+        } else {
+          return response.json().then((data) => {
+            console.log(data);
+            if (Array.isArray(data)) {
+              setMedList(data)
+            } else {
+              setMedList([])
             }
           });
         }
@@ -105,16 +143,13 @@ function PatientRequest() {
           <div className="form-group">
             <label htmlFor="inputAddress" className="form-label">
             <FaPrescriptionBottleAlt className="icon" />
-              Medicine Name
+              Select Medications:
             </label>
-            <input
-              type="text"
-              className="form-control"
-              id="inputAddress"
-              placeholder="Enter Medicine Name"
-              value={drugName} // Set the value of the input field to drugName
-              onChange={(event) => setMedicine(event.target.value)}
-            />
+            {medsList.map((meds) => (
+              <input type="checkbox" value={meds.drugID} onChange={handleChange}> Medication Name: {meds.brandName} <br></br> Dosage: {meds.strength} </input>
+            )
+              
+              )}
           </div>
           {error && ( // Render error message if error state is not empty
             <div className="alert alert-danger" role="alert">
