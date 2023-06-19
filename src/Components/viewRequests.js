@@ -133,14 +133,11 @@ function ViewRequests() {
   }
 
 
-  function handlesubmit(drugName,recipeID){
+  function acceptRequest(recipeID){
     const token = localStorage.getItem("token");
-    let obj={pharmacyID, recipeID, docSignature}
-    console.log(obj);
-    fetch(`http://localhost:8080/doctor/AproveRecipe/${localStorage.getItem("id")}`, {
+    fetch(`http://localhost:8080/doctor/AproveRecipe/${localStorage.getItem("id")}?recipeID=${recipeID}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(obj),
     })
       .then((result) => {
         console.log(result);
@@ -216,35 +213,11 @@ function ViewRequests() {
     alignItems: "center"
   }} trigger={popUpState} setTrigger={setpopUpState}>
             <div>
-            <h3>
-Please complete the Prescripiton form
-</h3>
-            <form onSubmit={()=>handlesubmit(request.drugName, request.recipeID)} >
-            <div class="mb-3">
-    <label class="form-label">Please write down your name as confirmation</label>
-    <input type="text" class="form-control"
-        value={docSignature}
-        onChange={(e)=>setDocSignature(e.target.value)}/>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Pharmacy ID</label>
-    <select
-              className="form-control"
-              onChange={(event) => setPharmacyID(event.target.value)}
-              value={pharmacyID} // Set the value of the select field to docId
-            >
-              <option value="">Select Pharmacy</option>
-              {pharmacyList.map((phar) => (
-                <option key={phar.pharmacyUsername} value={phar.pharmacyID}>
-                  {phar.pharmacyName} :{phar.pharmacyID}
-                </option>
-              ))}
-            </select>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-            </div>
+  <h4>Are you sure you want to accept this request?</h4>
+  <button className="btn btn-danger reject-button" onClick={() => setpopUpState(false)}>No</button>
+  <button className="btn btn-success accept-button" onClick={() => acceptRequest(request.recipeID)}>Yes</button>
+</div>
+           
           </Popup>
           <Popup style={{
     position: "fixed",
