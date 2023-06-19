@@ -148,6 +148,7 @@ function ViewRequestsP() {
   ))}
 </ul>
 <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+<p style={cardTextStyle}>Pharmacy Name: {request.pharmacyName}</p>
 
               </div>
             </div>
@@ -177,6 +178,7 @@ function ViewRequestsP() {
   ))}
 </ul>
 <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+<p style={cardTextStyle}>Pharmacy Name: {request.pharmacyName}</p>
               </div>
             </div>
           ))}
@@ -205,6 +207,7 @@ function ViewRequestsP() {
   ))}
 </ul>
 <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+<p style={cardTextStyle}>Pharmacy Name: {request.pharmacyName}</p>
               </div>
             </div>
           ))}
