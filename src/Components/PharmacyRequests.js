@@ -122,7 +122,16 @@ function PharmacyRequest() {
             <div key={request.id} style={cardStyle}>
               <div>
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
-                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+                <p style={cardTextStyle}>Requested Medicines:</p>
+<ul>
+  {request.drug.map(drug => (
+    <li key={drug.brandName}>
+      <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
+      <p style={cardTextStyle}>Strength: {drug.strength}</p>
+      <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+    </li>
+  ))}
+</ul>
                 <p style={cardTextStyle}> Request ID: {request.recipeID}</p>
                 <p style={cardTextStyle}> Patient ID: {request.patientID}</p>
                 <button className="btn btn-success" onClick={()=>setpopUpState(true)}>Dispensed</button>

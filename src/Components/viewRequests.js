@@ -169,7 +169,16 @@ function ViewRequests() {
               <div>
                 <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
                 <h6>DNI:{request.patientID}</h6>
-                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
+                <p style={cardTextStyle}>Requested Medicines:</p>
+<ul>
+  {request.drug.map(drug => (
+    <li key={drug.brandName}>
+      <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
+      <p style={cardTextStyle}>Strength: {drug.strength}</p>
+      <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+    </li>
+  ))}
+</ul>
                 <button
                   className="btn btn-primary"
                   onClick={() => setpopUpState(true)}
