@@ -136,9 +136,19 @@ function ViewRequestsP() {
           {requestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
-                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-                <p style={cardTextStyle}> Request ID: {request.recipeID}</p>
+              <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+<p style={cardTextStyle}>Requested Medicines:</p>
+<ul>
+  {request.drugName.map(drug => (
+    <li key={drug.brandName}>
+      <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
+      <p style={cardTextStyle}>Strength: {drug.strength}</p>
+      <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+    </li>
+  ))}
+</ul>
+<p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+
               </div>
             </div>
           ))}
@@ -155,10 +165,18 @@ function ViewRequestsP() {
           {acceptedRequestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
-                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-                <p style={cardTextStyle}>Pharmacy: {request.pharmacyName}</p>
-                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+              <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+<p style={cardTextStyle}>Requested Medicines:</p>
+<ul>
+  {request.drugName.map(drug => (
+    <li key={drug.brandName}>
+      <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
+      <p style={cardTextStyle}>Strength: {drug.strength}</p>
+      <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+    </li>
+  ))}
+</ul>
+<p style={cardTextStyle}>Request ID: {request.recipeID}</p>
               </div>
             </div>
           ))}
@@ -175,9 +193,18 @@ function ViewRequestsP() {
           {declinedRequestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
-                <p style={cardTextStyle}>Requested Medicine: {request.drugName}</p>
-                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+              <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+<p style={cardTextStyle}>Requested Medicines:</p>
+<ul>
+  {request.drugName.map(drug => (
+    <li key={drug.brandName}>
+      <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
+      <p style={cardTextStyle}>Strength: {drug.strength}</p>
+      <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
+    </li>
+  ))}
+</ul>
+<p style={cardTextStyle}>Request ID: {request.recipeID}</p>
               </div>
             </div>
           ))}

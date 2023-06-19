@@ -1,4 +1,3 @@
-
 import PatientNavBar from "./PatientNavBar";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -29,38 +28,39 @@ function PatientRequest() {
 
   function handleSubmit(e) {
     e.preventDefault();
-
+  
     // Check for empty medicine name and selected doctor
-    if (drugName === [] || docId === "" || pharmacyID=='') {
+    if (drugName.length === 0 || docId === "" || pharmacyID === "") {
       setError("Please select a doctor, enter medicine name and pharmacy name.");
     } else {
+      console.log("docId:", docId);
+      console.log("pharmacyID:", pharmacyID);
+      console.log("drugName:", drugName)
       const token = localStorage.getItem("token");
-      let obj = { docId: parseInt(docId), drugName };
-      fetch(`http://localhost:8080/patient/${patientId}/makeRecipe`, {
+      fetch(`http://localhost:8080/patient/${patientId}/makeRecipe?doctorID=${docId}&pharmacyID=${pharmacyID}`, {
         method: "PUT",
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(),
+        body: JSON.stringify(drugName),
       })
-        .then((data) => {
-          if(data.sucess ==false){
-            data.drugDTOS.forEach((drug) => {
-              toast.error(`${drug.brandName} is out of stock`);
-        });}
-        
-          if (data.status === 404) {
-            throw Error("Error");
+        .then((response) => {
+          console.log(response);
+          if (response.status === 409) {
+            response.json().then((data) => {
+              data.drugDTOS.forEach((drug) => {
+                toast.error(`${drug.brandName} is out of stock`);
+              });
+            });
+          } else {
+            toast.success("Request sent!");
+            navigate("/viewRequestsP");
           }
-          toast.success("Request sent!");
-          navigate("/viewRequestsP")
         })
-        .catch((err) => {
-          toast.error("Failed to send request!");
-        });
     }
   }
+  
 
   function handleChange(event){
     const {value, checked}=event.target
@@ -76,6 +76,31 @@ function PatientRequest() {
   }
 
   function getDoctors() {
+      fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          localStorage.clear();
+          navigate("/login");
+        } else {
+          return response.json().then((data) => {
+            console.log(data);
+            if (Array.isArray(data)) {
+              setDoclist(data)
+            } else {
+             setDoclist([])
+            }
+          });
+        }
+      });
+  }
+
+  function getPharmacies() {
     fetch(`http://localhost:8080/patient/getAllPharmacys`, {
       method: "GET",
       headers: {
@@ -91,34 +116,9 @@ function PatientRequest() {
           return response.json().then((data) => {
             console.log(data);
             if (Array.isArray(data)) {
-              setDoclist(data);
+              setPharmacyList(data);
             } else {
-              setDoclist([]);
-            }
-          });
-        }
-      });
-  }
-
-  function getPharmacies() {
-    fetch(`http://localhost:8080/patient/viewDoctors/${patientId}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((response) => {
-        if (response.status === 401) {
-          localStorage.clear();
-          navigate("/login");
-        } else {
-          return response.json().then((data) => {
-            console.log(data);
-            if (Array.isArray(data)) {
-              setPharmacyList(data)
-            } else {
-             setPharmacyList([])
+              setPharmacyList([]);
             }
           });
         }
@@ -186,7 +186,7 @@ function PatientRequest() {
               value={pharmacyID} // Set the value of the select field to docId
             >
               <option value="">Select Pharmacy</option>
-              {doclist.map((pharmacy) => (
+              {pharmacyList.map((pharmacy) => (
                 <option key={pharmacy.pharmacyName} value={pharmacy.pharmacyID}>
                   {pharmacy.pharmacyName} :{pharmacy.pharmacyID}
                 </option>
@@ -195,26 +195,32 @@ function PatientRequest() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="inputAddress" className="form-label">
-            <FaPrescriptionBottleAlt className="icon" />
-              Select Medications:
-            </label>
-            {medsList.map((meds) => (
-  <label className="checkbox-label" key={meds.drugID}>
-    <input
-      type="checkbox"
-      value={meds.drugID}
-      onChange={handleChange}
-      className="checkbox-input"
-    />
-    <span className="medication-info">
-      Medication Name: {meds.brandName} <br />
-      Dosage: {meds.strength}
-    </span>
+  <label htmlFor="inputAddress" className="form-label">
+    <FaPrescriptionBottleAlt className="icon" />
+    Select Medications:
   </label>
-))}
+  {medsList.length > 0 ? (
+    medsList.map((meds) => (
+      <label className="checkbox-label" key={meds.drugID}>
+        <input
+          type="checkbox"
+          value={meds.drugID}
+          onChange={handleChange}
+          className="checkbox-input"
+        />
+        <span className="medication-info">
+          Medication Name: {meds.brandName} <br />
+          Type: {meds.strength}
+          <br />
+          Dosage: {meds.dosageForm}
+        </span>
+      </label>
+    ))
+  ) : (
+    <p>You have no assigned medications.</p>
+  )}
+</div>
 
-          </div>
           {error && ( // Render error message if error state is not empty
             <div className="alert alert-danger" role="alert">
               {error}
