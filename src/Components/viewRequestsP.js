@@ -139,7 +139,7 @@ function ViewRequestsP() {
               <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
 <p style={cardTextStyle}>Requested Medicines:</p>
 <ul>
-  {request.drugName.map(drug => (
+  {request.drug.map(drug => (
     <li key={drug.brandName}>
       <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
       <p style={cardTextStyle}>Strength: {drug.strength}</p>
@@ -168,7 +168,7 @@ function ViewRequestsP() {
               <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
 <p style={cardTextStyle}>Requested Medicines:</p>
 <ul>
-  {request.drugName.map(drug => (
+  {request.drug.map(drug => (
     <li key={drug.brandName}>
       <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
       <p style={cardTextStyle}>Strength: {drug.strength}</p>
@@ -196,7 +196,7 @@ function ViewRequestsP() {
               <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
 <p style={cardTextStyle}>Requested Medicines:</p>
 <ul>
-  {request.drugName.map(drug => (
+  {request.drug.map(drug => (
     <li key={drug.brandName}>
       <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
       <p style={cardTextStyle}>Strength: {drug.strength}</p>
