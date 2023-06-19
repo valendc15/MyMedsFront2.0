@@ -16,6 +16,7 @@ import PharmacyRequest from './Components/PharmacyRequests';
 import PharmacyHistory from './Components/PharmacyHistory';
 import Scanner from './Components/scanner';
 import PatientInfo from './Components/patientInfo';
+import MedicineSearch from './Components/medicineSearch';
 
 
 
@@ -38,6 +39,7 @@ function App() {
           <Route exact path="/pharmacyRequest" element={<PharmacyRequest></PharmacyRequest>}/>
           <Route exact path='/Scanner'element={<Scanner></Scanner>}/>
           <Route exact path='/patientInfo'element={<PatientInfo></PatientInfo>}/>
+          <Route exact path='/medicineSearch'element={<MedicineSearch></MedicineSearch>}/>
         </Routes>
       </Router>
     </div>
