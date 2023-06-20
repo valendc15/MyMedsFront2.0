@@ -17,7 +17,7 @@ import PharmacyHistory from './Components/PharmacyHistory';
 import Scanner from './Components/scanner';
 import PatientInfo from './Components/patientInfo';
 import MedicineSearch from './Components/medicineSearch';
-
+import PharmacyStock from './Components/PharmacyStock';
 
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
           <Route exact path='/Scanner'element={<Scanner></Scanner>}/>
           <Route exact path='/patientInfo'element={<PatientInfo></PatientInfo>}/>
           <Route exact path='/medicineSearch'element={<MedicineSearch></MedicineSearch>}/>
+          <Route exact path='pharmacyStock' element={<PharmacyStock></PharmacyStock>}/>
         </Routes>
       </Router>
     </div>

@@ -48,6 +48,7 @@ function PharmacyNavBar(){
                     <li><Link to="/history" className="link" onClick={checkToken}>History</Link></li>
                     <li><Link to="/Scanner" className="link" onClick={checkToken}>Scanner</Link></li>
                     <li><Link to="/medicineSearch" className="link" onClick={checkToken}>Add Medication</Link></li>
+                    <li><Link to="/pharmacyStock" className="link" onClick={checkToken}>Stock</Link></li>
                     <button className="btn btn-warning"onClick={logout}>LogOut</button>
                 </ul>
             </div>
