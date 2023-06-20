@@ -1,93 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
-import MedicNavBar from "./MedicNavBar";
-import { toast } from "react-toastify";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Popup from "./PopUp";
+import MedicNavBar from "./MedicNavBar";
 
-function ViewRequests() {
+function PharmacyRequest() {
   const [requestList, setRequestList] = useState([]);
+  const [triggerUse, setTriggerUse] = useState(true);
+  const [nameFilter, setNameFilter] = useState("");
+  const [dniFilter, setDniFilter] = useState("");
   const [popUpState, setPopUpState] = useState(false);
   const [popUpState2, setPopUpState2] = useState(false);
-  const [docSignature, setDocSignature] = useState("");
-  const [pharmacyID, setPharmacyID] = useState("");
-  const [triggerUse, setTriggerUse] = useState(true);
-  const [pharmacyList, setPharmacyList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAccepting, setIsAccepting] = useState(false);
-  const [items, setItems] = useState([]);
-  const [isLoading2, setIsLoading2] = useState(false);
-  const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const navigate = useNavigate();
+  const [isAccepting, setIsAccepting] = useState(false);
 
   useEffect(() => {
     if (triggerUse) {
-      fetchData()
-      setTriggerUse(false);
+      fetchData();
+      setPopUpState(false);
     }
-    
-  }, [triggerUse]);
+  }, []);
 
-  
-
-
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    setError(null);
-  
-    try {
-      const token = sessionStorage.getItem("token");
-      const doctorId = sessionStorage.getItem('id');
-      const url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${8}`;
-  
-      const response = await fetch(url, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      console.log(response)
-      if (!response.ok) {
-        throw new Error('Error fetching data');
-      }
-  
-      const data = await response.json();
-  
-      if (!Array.isArray(data)) {
-        throw new Error('Invalid data format');
-      }
-  
-      setRequestList(prevItems => [...prevItems, ...data]);
-      setPage(prevPage => prevPage + 1);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  
-
-  const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
-      return;
-    }
-    fetchData();
-  };
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isLoading]);
+  const navigate = useNavigate();
 
   const cardStyle = {
+    backgroundColor: "#f8f9fa",
     borderRadius: "10px",
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
     padding: "10px",
     margin: "10px",
     width: "300px",
-    zIndex: "1",
-    display: "flex",
-    flexDirection: "column",
   };
 
   const cardTitleStyle = {
@@ -100,6 +43,55 @@ function ViewRequests() {
     fontSize: "14px",
     marginBottom: "10px",
   };
+
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    try {
+      const token = sessionStorage.getItem("token");
+      const doctorId = sessionStorage.getItem("id");
+      const url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${8}`;
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error fetching data");
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid data format");
+      }
+
+      setRequestList((prevItems) => [...prevItems, ...data]);
+      setPage((prevPage) => prevPage + 1);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop !==
+        document.documentElement.offsetHeight ||
+      isLoading
+    ) {
+      return;
+    }
+    fetchData();
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLoading]);
 
   function rejectRequest(id) {
     const token = sessionStorage.getItem("token");
@@ -134,6 +126,9 @@ function ViewRequests() {
         if (!result.ok) {
           throw Error("Error");
         }
+        // Refresh the request list after accepting the request
+        fetchData();
+        setPopUpState(false);
         return result.json();
       })
       .catch((error) => {
@@ -143,21 +138,22 @@ function ViewRequests() {
 
   return (
     <div>
-      <MedicNavBar />
-      <h1 className="text-center">Requests</h1>
+      <MedicNavBar></MedicNavBar>
+
       {isLoading ? (
-        <h3 className="text-center">Updating...</h3>
+        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
+          Loading...
+        </h3>
       ) : requestList.length === 0 ? (
-        <h3 className="flex" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
-          There are no pending requests!
+        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
+          No Recipes found.
         </h3>
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {requestList.map((request) => (
-            <div key={request.recipeID} style={cardStyle}>
-              <div>
+            <div key={request.recipeID} style={{ ...cardStyle, display: "flex", flexDirection: "column" }}>
+              <div style={{ flexGrow: 1 }}>
                 <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
-                <h6>DNI:{request.patientID}</h6>
                 <p style={cardTextStyle}>Requested Medicines:</p>
                 <ul>
                   {request.drug.map((drug) => (
@@ -168,99 +164,83 @@ function ViewRequests() {
                     </li>
                   ))}
                 </ul>
-                <p style={cardTextStyle}>Pharmacy Name:{request.pharmacyName}</p>
+                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+                <p style={cardTextStyle}>Patient ID: {request.patientID}</p>
               </div>
-  
-              {/* Spacer */}
+
               <div style={{ flex: "1 0 auto" }}></div>
-  
-              {/* Buttons */}
+
               <div style={{ display: "flex" }}>
                 <button
-                  className={`btn ${(popUpState || popUpState2 || isAccepting) ? "disabled" : ""}`}
+                  className={`btn btn-success`}
                   onClick={() => setPopUpState(true)}
-                  style={{
-                    backgroundColor: (popUpState || popUpState2 || isAccepting) ? "#17a2b8" : "#17a2b8",
-                    borderColor: (popUpState || popUpState2 || isAccepting) ? "#17a2b8" : "#17a2b8",
-                    marginRight: "10px",
-                    color: "white",
-                  }}
-                  disabled={isAccepting} // Disable the button when isAccepting is true
+                  style={{ marginRight: "10px" }}
                 >
                   Accept
                 </button>
-                <button
-                  className={`btn btn-danger ${(popUpState || popUpState2 || isAccepting) ? "disabled" : ""}`}
-                  onClick={() => setPopUpState2(true)}
-                  style={{
-                    backgroundColor: (popUpState || popUpState2 || isAccepting) ? "#dc3545" : "",
-                    borderColor: (popUpState || popUpState2 || isAccepting) ? "#dc3545" : "",
-                  }}
-                  disabled={isAccepting} // Disable the button when isAccepting is true
-                >
+                <button className={`btn btn-danger`} onClick={() => setPopUpState2(true)}>
                   Reject
                 </button>
               </div>
-  
-              {/* Popups */}
-              {isAccepting && (
-                <div
-                  style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    background: "rgba(255, 255, 255, 255)",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    zIndex: 9999,
-                  }}
-                >
-                  <h4>Updating...</h4>
-                </div>
-              )}
-  
               <Popup
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 9999,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                }}
                 trigger={popUpState}
                 setTrigger={setPopUpState}
               >
                 <div>
-                  <h4>Are you sure you want to accept this request?</h4>
-                  <button
-                    className="btn btn-success"
-                    onClick={() => {
-                      acceptRequest(request.recipeID);
-                      setPopUpState(false);
-                    }}
-                  >
-                    Yes
-                  </button>
-                  <button className="btn btn-danger" onClick={() => setPopUpState(false)}>
-                    No
-                  </button>
+                  <div>
+                    <h4>Do you want to accept this request?</h4>
+                    {isAccepting ? (
+                      <p>Loading...</p>
+                    ) : (
+                      <>
+                        <button className="btn btn-success accept-button" onClick={() => acceptRequest(request.recipeID)}>
+                          Yes
+                        </button>
+                        <button className="btn btn-danger reject-button" onClick={() => setPopUpState(false)}>
+                          No
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </Popup>
-  
               <Popup
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 9999,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
                 trigger={popUpState2}
                 setTrigger={setPopUpState2}
               >
                 <div>
-                  <h4>Are you sure you want to reject this request?</h4>
-                  <button
-                    className="btn btn-success"
-                    onClick={() => {
-                      rejectRequest(request.recipeID);
-                      setPopUpState2(false);
-                    }}
-                  >
-                    Yes
-                  </button>
-                  <button className="btn btn-danger" onClick={() => setPopUpState2(false)}>
-                    No
-                  </button>
+                  <div>
+                    <h4>Do you want to reject this request?</h4>
+                    <button className="btn btn-success accept-button" onClick={() => rejectRequest(request.recipeID)}>
+                      Yes
+                    </button>
+                    <button className="btn btn-danger reject-button" onClick={() => setPopUpState2(false)}>
+                      No
+                    </button>
+                  </div>
                 </div>
               </Popup>
             </div>
@@ -269,8 +249,6 @@ function ViewRequests() {
       )}
     </div>
   );
-  
-  
-                  }  
+}
 
-export default ViewRequests;
+export default PharmacyRequest;
