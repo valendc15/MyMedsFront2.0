@@ -12,6 +12,8 @@ function ViewRequests() {
   const [pharmacyID, setPharmacyID] = useState("");
   const [triggerUse, setTriggerUse] = useState(true);
   const [pharmacyList, setPharmacyList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAccepting, setIsAccepting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,11 +25,13 @@ function ViewRequests() {
   }, [triggerUse]);
 
   function getRequests() {
+    setIsLoading(true);
     fetch(`http://localhost:8080/doctor/viewRecipes/${localStorage.getItem("id")}?status=IN_PROGRESS`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
       .then((response) => {
+        setIsLoading(false);
         if (response.status === 401) {
           localStorage.clear();
           navigate("/login");
@@ -110,12 +114,14 @@ function ViewRequests() {
   }
 
   function acceptRequest(recipeID) {
+    setIsAccepting(true);
     const token = localStorage.getItem("token");
     fetch(`http://localhost:8080/doctor/AproveRecipe/${localStorage.getItem("id")}?recipeID=${recipeID}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
     })
       .then((result) => {
+        setIsAccepting(false);
         setTriggerUse(true);
         if (!result.ok) {
           throw Error("Error");
@@ -129,9 +135,11 @@ function ViewRequests() {
 
   return (
     <div>
-      <MedicNavBar></MedicNavBar>
+      <MedicNavBar />
       <h1 className="text-center">Requests</h1>
-      {requestList.length === 0 ? (
+      {isLoading ? (
+        <h3 className="text-center">Updating...</h3>
+      ) : requestList.length === 0 ? (
         <h3 className="flex" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           There are no pending requests!
         </h3>
@@ -154,37 +162,58 @@ function ViewRequests() {
                 </ul>
                 <p style={cardTextStyle}>Pharmacy Name:{request.pharmacyName}</p>
               </div>
-
+  
               {/* Spacer */}
               <div style={{ flex: "1 0 auto" }}></div>
-
+  
               {/* Buttons */}
-              <div style={{ display: "flex", }}>
+              <div style={{ display: "flex" }}>
                 <button
-                  className={`btn ${(popUpState || popUpState2) ? "disabled" : ""}`}
+                  className={`btn ${(popUpState || popUpState2 || isAccepting) ? "disabled" : ""}`}
                   onClick={() => setPopUpState(true)}
                   style={{
-                    backgroundColor: (popUpState || popUpState2) ? "#17a2b8" : "#17a2b8",
-                    borderColor: (popUpState || popUpState2) ? "#17a2b8" : "#17a2b8",
+                    backgroundColor: (popUpState || popUpState2 || isAccepting) ? "#17a2b8" : "#17a2b8",
+                    borderColor: (popUpState || popUpState2 || isAccepting) ? "#17a2b8" : "#17a2b8",
                     marginRight: "10px",
-                    color:"white"
+                    color: "white",
                   }}
+                  disabled={isAccepting} // Disable the button when isAccepting is true
                 >
                   Accept
                 </button>
                 <button
-                  className={`btn btn-danger ${(popUpState || popUpState2) ? "disabled" : ""}`}
+                  className={`btn btn-danger ${(popUpState || popUpState2 || isAccepting) ? "disabled" : ""}`}
                   onClick={() => setPopUpState2(true)}
                   style={{
-                    backgroundColor: (popUpState || popUpState2) ? "#dc3545" : "",
-                    borderColor: (popUpState || popUpState2) ? "#dc3545" : "",
+                    backgroundColor: (popUpState || popUpState2 || isAccepting) ? "#dc3545" : "",
+                    borderColor: (popUpState || popUpState2 || isAccepting) ? "#dc3545" : "",
                   }}
+                  disabled={isAccepting} // Disable the button when isAccepting is true
                 >
                   Reject
                 </button>
               </div>
-
+  
               {/* Popups */}
+              {isAccepting && (
+                <div
+                  style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background: "rgba(255, 255, 255, 255)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 9999,
+                  }}
+                >
+                  <h4>Updating...</h4>
+                </div>
+              )}
+  
               <Popup
                 style={{
                   zIndex: "9999",
@@ -212,7 +241,7 @@ function ViewRequests() {
                   </button>
                 </div>
               </Popup>
-
+  
               <Popup
                 style={{
                   zIndex: "9999",
@@ -236,7 +265,7 @@ function ViewRequests() {
                     Yes
                   </button>
                   <button className="btn btn-danger" onClick={() => setPopUpState2(false)}>
-                   No
+                    No
                   </button>
                 </div>
               </Popup>
@@ -246,6 +275,8 @@ function ViewRequests() {
       )}
     </div>
   );
-}
+  
+  
+                  }  
 
 export default ViewRequests;
