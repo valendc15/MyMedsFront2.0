@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Popup from "./PopUp";
 import MedicNavBar from "./MedicNavBar";
@@ -7,8 +6,7 @@ import MedicNavBar from "./MedicNavBar";
 function PharmacyRequest() {
   const [requestList, setRequestList] = useState([]);
   const [triggerUse, setTriggerUse] = useState(true);
-  const [nameFilter, setNameFilter] = useState("");
-  const [dniFilter, setDniFilter] = useState("");
+  const [dniFilter, setDniFilter] = useState(0);
   const [popUpState, setPopUpState] = useState(false);
   const [popUpState2, setPopUpState2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,43 +44,50 @@ function PharmacyRequest() {
 
   const fetchData = async () => {
     setIsLoading(true);
-
     try {
       const token = sessionStorage.getItem("token");
       const doctorId = sessionStorage.getItem("id");
-      const url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${8}`;
-
+      let url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${8}`;
+  
+      if (dniFilter) {
+        url += `&patientID=${dniFilter}`;
+      }
+  
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (!response.ok) {
         throw new Error("Error fetching data");
       }
-
+  
       const data = await response.json();
-
+  
       if (!Array.isArray(data)) {
         throw new Error("Invalid data format");
       }
-
-      setRequestList((prevItems) => [...prevItems, ...data]);
-      setPage((prevPage) => prevPage + 1);
+  
+      setRequestList(data);
+      setPage(0);
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
   };
+  
+
+  const changeName = (event) => {
+    setDniFilter(event.target.value);
+  };
+  useEffect(() => {
+    fetchData();
+  }, [dniFilter]);
 
   const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
-      isLoading
-    ) {
+    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
       return;
     }
     fetchData();
@@ -129,7 +134,7 @@ function PharmacyRequest() {
         setPopUpState(false);
         setIsAccepting(false);
         setTriggerUse(true);
-        window.location.reload(false)
+        window.location.reload(false);
         return result.json();
       })
       .catch((error) => {
@@ -140,7 +145,7 @@ function PharmacyRequest() {
   return (
     <div>
       <MedicNavBar></MedicNavBar>
-
+      <input type="number" className="form-control" onChange={changeName} placeholder="Search by patient DNI" />
       {isLoading ? (
         <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           Loading...
@@ -151,8 +156,8 @@ function PharmacyRequest() {
         </h3>
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {requestList.map((request) => (
-            <div key={request.recipeID} style={{ ...cardStyle, display: "flex", flexDirection: "column" }}>
+          {requestList.map((request, index) => (
+            <div key={`${request.recipeID}-${index}`} style={{ ...cardStyle, display: "flex", flexDirection: "column" }}>
               <div style={{ flexGrow: 1 }}>
                 <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
                 <p style={cardTextStyle}>Requested Medicines:</p>
@@ -207,11 +212,11 @@ function PharmacyRequest() {
                       <p>Loading...</p>
                     ) : (
                       <>
-                        <button className="btn btn-success accept-button" onClick={() => acceptRequest(request.recipeID)}>
-                          Yes
+                        <button className="btn btn-success" onClick={() => acceptRequest(request.recipeID)}>
+                          Accept
                         </button>
-                        <button className="btn btn-danger reject-button" onClick={() => setPopUpState(false)}>
-                          No
+                        <button className="btn btn-danger" onClick={() => setPopUpState(false)}>
+                          Cancel
                         </button>
                       </>
                     )}
@@ -229,6 +234,7 @@ function PharmacyRequest() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
                 }}
                 trigger={popUpState2}
                 setTrigger={setPopUpState2}
@@ -236,11 +242,12 @@ function PharmacyRequest() {
                 <div>
                   <div>
                     <h4>Do you want to reject this request?</h4>
-                    <button className="btn btn-success accept-button" onClick={() => rejectRequest(request.recipeID)}>
-                      Yes
+                    <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
+                    <button className="btn btn-danger" onClick={() => rejectRequest(request.recipeID)}>
+                      Reject
                     </button>
-                    <button className="btn btn-danger reject-button" onClick={() => setPopUpState2(false)}>
-                      No
+                    <button className="btn btn-primary" onClick={() => setPopUpState2(false)}>
+                      Cancel
                     </button>
                   </div>
                 </div>
