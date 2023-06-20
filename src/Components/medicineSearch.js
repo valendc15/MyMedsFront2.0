@@ -17,9 +17,10 @@ function MedicineSearch() {
   const [drugInfo, setDrugInfo] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+
   useEffect(() => {
     getDrugList();
-  }, []);
+  }, [med]);
 
   const cardStyle = {
     backgroundColor: "#f8f9fa",
@@ -52,7 +53,7 @@ function MedicineSearch() {
   }
 
   function getDrugList() {
-    fetch("http://localhost:8080/pharmacy/getAllDrugsFromFDA", {
+    fetch(`http://localhost:8080/pharmacy/getDrugNameFromFDA/${med}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -65,7 +66,6 @@ function MedicineSearch() {
           navigate("/login");
         } else {
           return response.json().then((data) => {
-            console.log(data);
             if (Array.isArray(data)) {
               setDrugList(data);
             } else {
@@ -134,18 +134,18 @@ function MedicineSearch() {
     })
       .then((result) => {
         console.log(result);
-        if (result.status==409){
-          toast.warning("Medicine already added.")
+        if (result.status === 409){
+          toast.warning("Medicine already added.");
           return;
         }
         if (!result.ok) {
           throw Error("Error");
         }
-        setpopUpState(false)
+        setpopUpState(false);
         return result.json();
       })
       .catch((error) => {
-        toast.warning(error)
+        toast.warning(error);
       });
   }
 
@@ -181,7 +181,13 @@ function MedicineSearch() {
                 placeholder="Medicine Brandname"
                 value={med}
                 onChange={(e) => setMed(e.target.value)}
+                list="drugOptions" // Add list attribute
               />
+              <datalist id="drugOptions" className="drug-options">
+                {drugList.map((drug, index) => (
+                  <option key={index} value={drug} />
+                ))}
+              </datalist>
             </div>
             <div className="col-sm-2">
               <button type="submit" className="btn btn-primary">
@@ -201,38 +207,38 @@ function MedicineSearch() {
         </div>
 
         <Popup trigger={popUpState} setTrigger={setpopUpState}>
-        <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
-          <h1>{capitalizeFirstLetter(med)}</h1>
-          {isLoading ? (
-            <div>Loading...</div>
-          ) : (
-            <div style={cardContainerStyle}>
-              {Array.isArray(drugInfo) &&
-                drugInfo.map((drug) => (
-                  <div key={drug.drugID} style={cardStyle}>
-                    <div>
-                      <h5 style={cardTitleStyle}>
-                        Name: {capitalizeFirstLetter(drug.brandName)}
-                      </h5>
-                      <p style={cardTextStyle}>
-                        Dosage: {drug.dosageForm}
-                      </p>
-                      <p style={cardTextStyle}>
-                        Method: {capitalizeFirstLetter(drug.strength)}
-                      </p>
-                      <button
-                        className="btn btn-info"
-                        onClick={() => addDrugs(drug)}
-                      >
-                        Add
-                      </button>
+          <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
+            <h1>{capitalizeFirstLetter(med)}</h1>
+            {isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              <div style={cardContainerStyle}>
+                {Array.isArray(drugInfo) &&
+                  drugInfo.map((drug) => (
+                    <div key={drug.drugID} style={cardStyle}>
+                      <div>
+                        <h5 style={cardTitleStyle}>
+                          Name: {capitalizeFirstLetter(drug.brandName)}
+                        </h5>
+                        <p style={cardTextStyle}>
+                          Dosage: {drug.dosageForm}
+                        </p>
+                        <p style={cardTextStyle}>
+                          Method: {capitalizeFirstLetter(drug.strength)}
+                        </p>
+                        <button
+                          className="btn btn-info"
+                          onClick={() => addDrugs(drug)}
+                        >
+                          Add
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </div>
-          )}
-        </div>
-      </Popup>
+                  ))}
+              </div>
+            )}
+          </div>
+        </Popup>
       </div>
     </div>
   );
