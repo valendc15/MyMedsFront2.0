@@ -234,10 +234,10 @@ function ViewRequests() {
                       setPopUpState2(false);
                     }}
                   >
-                    No
+                    Yes
                   </button>
                   <button className="btn btn-danger" onClick={() => setPopUpState2(false)}>
-                    Cancel
+                   No
                   </button>
                 </div>
               </Popup>
