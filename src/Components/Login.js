@@ -34,9 +34,9 @@ function Login(){
     toast.success('Logged succesfully!')
     const token=data.token;
     const decodedToken=jwt(token);
-    localStorage.setItem('token',data.token)
-    localStorage.setItem('id',decodedToken.id)
-    localStorage.setItem('username',decodedToken.sub)
+    sessionStorage.setItem('token',data.token)
+    sessionStorage.setItem('id',decodedToken.id)
+    sessionStorage.setItem('username',decodedToken.sub)
     if(decodedToken.Role==="DOCTOR"){
       navigate('/search')
     }

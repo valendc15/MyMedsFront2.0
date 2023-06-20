@@ -10,14 +10,14 @@ function PatientRequest() {
   const [drugName, setMedicine] = useState([]);
   const [docId, setDoctorID] = useState("");
   const [pharmacyID, setPharmacyID] = useState('')
-  const userName = localStorage.getItem("username");
+  const userName = sessionStorage.getItem("username");
   const [doclist, setDoclist] = useState([]);
   const [error, setError] = useState(""); // Added state for error message
   const navigate = useNavigate();
   const [medsList, setMedList]=useState([])
   const [pharmacyList, setPharmacyList] = useState([])
 
-  const patientId = localStorage.getItem("id");
+  const patientId = sessionStorage.getItem("id");
 
 
   useEffect(() => {
@@ -36,7 +36,7 @@ function PatientRequest() {
       console.log("docId:", docId);
       console.log("pharmacyID:", pharmacyID);
       console.log("drugName:", drugName)
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       fetch(`http://localhost:8080/patient/${patientId}/makeRecipe?doctorID=${docId}&pharmacyID=${pharmacyID}`, {
         method: "PUT",
         headers: {
@@ -80,12 +80,12 @@ function PatientRequest() {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         } else {
           return response.json().then((data) => {
@@ -105,12 +105,12 @@ function PatientRequest() {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         } else {
           return response.json().then((data) => {
@@ -130,12 +130,12 @@ function PatientRequest() {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         } else {
           return response.json().then((data) => {
@@ -156,7 +156,7 @@ function PatientRequest() {
       <h1 className="h1request">Your request:</h1>
       <div className="request-container justify-content-center">
         <form className="requestForm" onSubmit={handleSubmit}>
-          <h2>Patient {localStorage.getItem("username")}: </h2>
+          <h2>Patient {sessionStorage.getItem("username")}: </h2>
           <div className="form-group">
             <label htmlFor="inputPassword4" className="form-label">
               <FaUserMd className="icon" />

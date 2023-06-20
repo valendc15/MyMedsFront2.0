@@ -23,13 +23,13 @@ function PharmacyHistory(){
 
 
     function getAcceptedRequests(){
-        fetch(`http://localhost:8080/pharmacy/getRecipesByStatus/${localStorage.getItem('id')}?status=APPROVED`, {
+        fetch(`http://localhost:8080/pharmacy/getRecipesByStatus/${sessionStorage.getItem('id')}?status=APPROVED`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
@@ -46,13 +46,13 @@ function PharmacyHistory(){
 
 
       function getDispensedRequests(){
-        fetch(`http://localhost:8080/pharmacy/getRecipesByStatus/${localStorage.getItem('id')}?status=DISPENSED`, {
+        fetch(`http://localhost:8080/pharmacy/getRecipesByStatus/${sessionStorage.getItem('id')}?status=DISPENSED`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();

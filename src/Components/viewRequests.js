@@ -26,14 +26,14 @@ function ViewRequests() {
 
   function getRequests() {
     setIsLoading(true);
-    fetch(`http://localhost:8080/doctor/viewRecipes/${localStorage.getItem("id")}?status=IN_PROGRESS`, {
+    fetch(`http://localhost:8080/doctor/viewRecipes/${sessionStorage.getItem("id")}?status=IN_PROGRESS`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     })
       .then((response) => {
         setIsLoading(false);
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
@@ -52,12 +52,12 @@ function ViewRequests() {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         } else {
           return response.json().then((data) => {
@@ -94,7 +94,7 @@ function ViewRequests() {
   };
 
   function rejectRequest(id) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     fetch(`http://localhost:8080/doctor/DeclineRecipe/${id}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
@@ -115,8 +115,8 @@ function ViewRequests() {
 
   function acceptRequest(recipeID) {
     setIsAccepting(true);
-    const token = localStorage.getItem("token");
-    fetch(`http://localhost:8080/doctor/AproveRecipe/${localStorage.getItem("id")}?recipeID=${recipeID}`, {
+    const token = sessionStorage.getItem("token");
+    fetch(`http://localhost:8080/doctor/AproveRecipe/${sessionStorage.getItem("id")}?recipeID=${recipeID}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
     })

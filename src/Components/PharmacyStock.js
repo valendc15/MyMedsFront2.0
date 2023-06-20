@@ -19,16 +19,16 @@ function PharmacyStock() {
   }, [trigger]);
 
   function getDrugs() {
-    fetch(`http://localhost:8080/pharmacy/getAllDrugsFromPharmacy/${localStorage.getItem("id")}`, {
+    fetch(`http://localhost:8080/pharmacy/getAllDrugsFromPharmacy/${sessionStorage.getItem("id")}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         } else {
           return response.json().then((data) => {
@@ -54,9 +54,9 @@ function PharmacyStock() {
 
 
   function saveChanges(){
-    fetch(`http://localhost:8080/pharmacy/loadMassiveStock/${localStorage.getItem('id')}`, {
+    fetch(`http://localhost:8080/pharmacy/loadMassiveStock/${sessionStorage.getItem('id')}`, {
         method: "PUT",
-        headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         body: JSON.stringify(drugStock)
       })
         .then((result) => {

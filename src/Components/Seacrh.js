@@ -18,7 +18,7 @@ function Search(){
 
     const handlesubmit = (e) => {
         e.preventDefault();
-        const token=localStorage.getItem('token');
+        const token=sessionStorage.getItem('token');
         fetch(`http://localhost:8080/doctor/getPatientById/${id}`,{
             method:"GET",
             headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${token}`,}
@@ -28,7 +28,7 @@ function Search(){
                 throw Error
             }
             else if (response.status==401){
-                localStorage.clear()
+                sessionStorage.clear()
                 navigate('/login')
             }
             return (response.json())
@@ -41,8 +41,8 @@ function Search(){
     }
 
     function connect(){
-        const medicId= parseInt( localStorage.getItem("id"))
-        const token=localStorage.getItem("token")
+        const medicId= parseInt( sessionStorage.getItem("id"))
+        const token=sessionStorage.getItem("token")
         let obj={id,medicId}
         fetch(`http://localhost:8080/doctor/addpatient/${medicId}`,{
             method:"PUT",
@@ -54,7 +54,7 @@ function Search(){
                 throw Error("Error")
             }
             else if (result.status==401){
-                localStorage.clear()
+                sessionStorage.clear()
                 navigate('/login')
             }
             toast.success("User succesfully registered!")

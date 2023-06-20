@@ -19,13 +19,13 @@ function ViewRequestsP() {
   }, []);
 
   function getRequests() {
-    fetch(`http://localhost:8080/patient/viewRecipes/${localStorage.getItem('id')}?status=IN_PROGRESS`, {
+    fetch(`http://localhost:8080/patient/viewRecipes/${sessionStorage.getItem('id')}?status=IN_PROGRESS`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
@@ -41,13 +41,13 @@ function ViewRequestsP() {
   }
 
   function getAcceptedRequests() {
-    fetch(`http://localhost:8080/patient/viewRecipes/${localStorage.getItem('id')}?status=APPROVED`, {
+    fetch(`http://localhost:8080/patient/viewRecipes/${sessionStorage.getItem('id')}?status=APPROVED`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
@@ -63,13 +63,13 @@ function ViewRequestsP() {
   }
 
   function getDeclinedRequests() {
-    fetch(`http://localhost:8080/patient/viewRecipes/${localStorage.getItem('id')}?status=DECLINED`, {
+    fetch(`http://localhost:8080/patient/viewRecipes/${sessionStorage.getItem('id')}?status=DECLINED`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();

@@ -7,7 +7,7 @@ function PharmacyNavBar(){
 
     const navigate=useNavigate()
     useEffect(()=>{
-        if(!localStorage.getItem('token')){
+        if(!sessionStorage.getItem('token')){
             navigate('/login');
         }
        
@@ -15,24 +15,24 @@ function PharmacyNavBar(){
 
 
     function logout(){
-        fetch(`http://localhost:8080/token/${localStorage.getItem('id')}`, {
+        fetch(`http://localhost:8080/token/${sessionStorage.getItem('id')}`, {
             method: "PUT",
             headers: { 'content-type': 'application/json' },
-            body:localStorage.getItem('token')
+            body:sessionStorage.getItem('token')
           })
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         window.location.reload(false);
-        localStorage.removeItem('id')
+        sessionStorage.removeItem('id')
     }
     
     function checkToken(){
-        const token=localStorage.getItem("token")
+        const token=sessionStorage.getItem("token")
         fetch(`http://localhost:8080/pharmacy/tokenPharmacy`, {
             method: "GET",
             headers: { 'content-type': 'application/json','Authorization': `Bearer ${token}` },
           }).then(response=>{
             if (response.status===401){
-                localStorage.clear()
+                sessionStorage.clear()
                 navigate('/login')
             }
           })

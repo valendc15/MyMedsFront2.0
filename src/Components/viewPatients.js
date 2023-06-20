@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 
 function ViewPatients() {
   const [patientList, setPatientList] = useState([]);
-  const medicId = localStorage.getItem("id");
-  const token = localStorage.getItem("token");
+  const medicId = sessionStorage.getItem("id");
+  const token = sessionStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -22,7 +22,7 @@ function ViewPatients() {
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
@@ -37,14 +37,14 @@ function ViewPatients() {
   }
   
   function goToInfo(dni,name){
-    localStorage.setItem('info', 1)
+    sessionStorage.setItem('info', 1)
     navigate('/patientInfo', {state:{ dni:dni, name:name}})
 
   }
 
   function dismisP(dni) {
-    const token = localStorage.getItem("token");
-    fetch(`http://localhost:8080/doctor/listpatients/${localStorage.getItem("id")}`, {
+    const token = sessionStorage.getItem("token");
+    fetch(`http://localhost:8080/doctor/listpatients/${sessionStorage.getItem("id")}`, {
       method: "DELETE",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(dni),

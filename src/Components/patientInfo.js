@@ -42,7 +42,7 @@ function PatientInfo(props) {
   useEffect(() => {
     if(triggerUse2){
       if (!location.state || !location.state.name || !location.state.dni) {
-        localStorage.clear();
+        sessionStorage.clear();
         navigate('/');
       } else {
         setDni(location.state.dni);
@@ -73,13 +73,13 @@ function PatientInfo(props) {
 
 
   function getPatientMeds() {
-    fetch(`http://localhost:8080/doctor/getPatientDrugs/${localStorage.getItem('id')}?patientID=${dni}`,{
+    fetch(`http://localhost:8080/doctor/getPatientDrugs/${sessionStorage.getItem('id')}?patientID=${dni}`,{
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
@@ -94,8 +94,8 @@ function PatientInfo(props) {
   }
 
   function addDrugs(did){
-    const token = localStorage.getItem("token");
-    fetch(`http://localhost:8080/doctor/addDrugToPatient/${localStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
+    const token = sessionStorage.getItem("token");
+    fetch(`http://localhost:8080/doctor/addDrugToPatient/${sessionStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
     })
@@ -118,9 +118,9 @@ function PatientInfo(props) {
   }
 
   function deleteDrug(did){
-    fetch(`http://localhost:8080/doctor/removePatientDrug/${localStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
+    fetch(`http://localhost:8080/doctor/removePatientDrug/${sessionStorage.getItem('id')}?patientID=${dni}&drugID=${did}`, {
       method: "DELETE",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((result) => {
         console.log(result);
@@ -142,11 +142,11 @@ function PatientInfo(props) {
     }
     fetch(`http://localhost:8080/doctor/filterDrugByBrandName/${searched}`, {
       method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
     .then((response) => {
       if (response.status === 401) {
-        localStorage.clear();
+        sessionStorage.clear();
         navigate("/login");
       } else {
         return response.json().then((data) => {

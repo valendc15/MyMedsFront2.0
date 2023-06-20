@@ -20,8 +20,8 @@ function MedicineSearch() {
 
   useEffect(() => {
     if (med !== "") {
-        getDrugList();
-      }
+      getDrugList();
+    }
   }, [med]);
 
   const cardStyle = {
@@ -59,12 +59,12 @@ function MedicineSearch() {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         } else {
           return response.json().then((data) => {
@@ -106,12 +106,12 @@ function MedicineSearch() {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         } else {
           return response.json().then((data) => {
@@ -121,21 +121,21 @@ function MedicineSearch() {
             } else {
               setDrugInfo([]);
             }
-            setIsLoading(false); 
+            setIsLoading(false);
           });
         }
       });
   }
 
   function addDrugs(drug) {
-    const token = localStorage.getItem("token");
-    fetch(`http://localhost:8080/pharmacy/addDrugToPharmacy/${localStorage.getItem('id')}`, {
+    const token = sessionStorage.getItem("token");
+    fetch(`http://localhost:8080/pharmacy/addDrugToPharmacy/${sessionStorage.getItem('id')}`, {
       method: "POST",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(drug)
     })
       .then((result) => {
-        if (result.status === 409){
+        if (result.status === 409) {
           toast.warning("Medicine already added.");
           return;
         }
@@ -187,8 +187,8 @@ function MedicineSearch() {
               />
               <datalist id="drugOptions" className="drug-options">
                 {drugList.map((drug, index) => (
-                    <div key={drug}>
-                  <option key={index} value={drug} />
+                  <div key={drug}>
+                    <option key={index} value={drug} />
                   </div>
                 ))}
               </datalist>
@@ -218,27 +218,27 @@ function MedicineSearch() {
             ) : (
               <div style={cardContainerStyle}>
                 {Array.isArray(drugInfo) &&
-  drugInfo.map((drug, index) => (
-    <div key={index} style={cardStyle}>
-      <div>
-        <h5 style={cardTitleStyle}>
-          Name: {capitalizeFirstLetter(drug.brandName)}
-        </h5>
-        <p style={cardTextStyle}>
-          Dosage: {drug.dosageForm}
-        </p>
-        <p style={cardTextStyle}>
-          Method: {capitalizeFirstLetter(drug.strength)}
-        </p>
-        <button
-          className="btn btn-info"
-          onClick={() => addDrugs(drug)}
-        >
-          Add
-        </button>
-      </div>
-    </div>
-  ))}
+                  drugInfo.map((drug, index) => (
+                    <div key={index} style={cardStyle}>
+                      <div>
+                        <h5 style={cardTitleStyle}>
+                          Name: {capitalizeFirstLetter(drug.brandName)}
+                        </h5>
+                        <p style={cardTextStyle}>
+                          Dosage: {drug.dosageForm}
+                        </p>
+                        <p style={cardTextStyle}>
+                          Method: {capitalizeFirstLetter(drug.strength)}
+                        </p>
+                        <button
+                          className="btn btn-info"
+                          onClick={() => addDrugs(drug)}
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  ))}
 
               </div>
             )}

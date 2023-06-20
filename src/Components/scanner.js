@@ -16,13 +16,13 @@ function Scanner() {
       method: "PUT",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
  
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
@@ -34,12 +34,12 @@ function Scanner() {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (response.status === 401) {
-          localStorage.clear();
+          sessionStorage.clear();
           navigate("/login");
         }
         return response.json();
