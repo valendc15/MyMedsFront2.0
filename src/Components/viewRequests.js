@@ -176,7 +176,7 @@ function ViewRequests() {
     </li>
   ))}
 </ul>
-<p style={cardTextStyle}>Pharmacy Name: {request.pharmacyName}</p>
+  <p style={cardTextStyle}>Pharmacy Name:{request.pharmacyName}</p>
                 <button
                   className="btn btn-primary"
                   onClick={() => setpopUpState(true)}

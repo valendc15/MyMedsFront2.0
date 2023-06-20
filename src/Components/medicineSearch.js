@@ -127,7 +127,7 @@ function MedicineSearch() {
 
   function addDrugs(drug) {
     const token = localStorage.getItem("token");
-    fetch(`http://localhost:8080/doctor/addDrugToPharmacy/${localStorage.getItem('id')}`, {
+    fetch(`http://localhost:8080/pharmacy/addDrugToPharmacy/${localStorage.getItem('id')}`, {
       method: "POST",
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(drug)
