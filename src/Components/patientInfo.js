@@ -237,6 +237,7 @@ function PatientInfo(props) {
                                 <div>
                                   <div>
                                     <h4>Are you sure you want to disassociate this medication?</h4>
+                                    <p style={cardTextStyle}>Request ID: {drug.drugID}</p>
                                     <button className="btn btn-danger reject-button" onClick={() => setpopUpState2(false)}>No</button>
                                     <button className="btn btn-success accept-button" onClick={() => deleteDrug(drug.drugID)}>Yes</button>
                                   </div>

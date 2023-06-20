@@ -202,6 +202,7 @@ function PharmacyRequest() {
                 <div>
                   <div>
                     <h4>Do you want to accept this request?</h4>
+                    <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
                     {isAccepting ? (
                       <p>Loading...</p>
                     ) : (

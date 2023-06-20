@@ -137,7 +137,7 @@ function MedicHistory() {
           {requestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
-              <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
+              <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
 <p style={cardTextStyle}>Requested Medicines:</p>
 <ul>
   {request.drug.map(drug => (
