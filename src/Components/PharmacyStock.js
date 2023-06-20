@@ -122,8 +122,8 @@ function PharmacyStock() {
   }} trigger={popUpState} setTrigger={setpopUpState}>
             <div>
   <h4>Are you sure you want save changes?</h4>
-  <button className="btn btn-danger reject-button" onClick={() => setpopUpState(false)}>No</button>
   <button className="btn btn-success accept-button" onClick={() => saveChanges()}>Yes</button>
+  <button className="btn btn-danger reject-button" onClick={() => setpopUpState(false)}>No</button>
 </div>
            
           </Popup>

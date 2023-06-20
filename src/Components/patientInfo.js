@@ -61,6 +61,8 @@ function PatientInfo(props) {
 
   function closePopUp() {
     setpopUpState(false);
+    setSearched("")
+    setSDrugList([])
     setTriggerUse(true);
   }
 

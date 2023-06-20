@@ -150,8 +150,8 @@ function PharmacyRequest() {
  <div>
  <div>
   <h4>Do you want to mark this recipe as dispensed?</h4>
-  <button className="btn btn-danger reject-button" onClick={() => setpopUpState(false)}>No</button>
   <button className="btn btn-success accept-button" onClick={() =>dispense(request.recipeID)}>Yes</button>
+  <button className="btn btn-danger reject-button" onClick={() => setpopUpState(false)}>No</button>
 </div>
 
 </div>
