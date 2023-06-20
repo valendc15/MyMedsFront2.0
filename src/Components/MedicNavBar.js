@@ -10,6 +10,7 @@ function MedicNavBar(){
         if(!sessionStorage.getItem('token')){
             navigate('/login');
         }
+        checkToken()
 })
 
 
@@ -19,7 +20,7 @@ function MedicNavBar(){
             method: "GET",
             headers: { 'content-type': 'application/json','Authorization': `Bearer ${token}` },
           }).then(response=>{
-            if (response.status===401){
+            if (response.status===403 || response.status===401){
                 sessionStorage.clear()
                 navigate('/login')
             }
@@ -46,6 +47,7 @@ function MedicNavBar(){
                     <li><Link to="/search" className="link" onClick={checkToken}>Search Patient</Link></li>
                     <li><Link to="/viewPatients" className="link" onClick={checkToken}>View Patients</Link></li>
                     <li><Link to="/viewRequests" className="link" onClick={checkToken}>View Requests</Link></li>
+                    <li><Link to="/medicHistory" className="link" onClick={checkToken}>History</Link></li>
                     <button className="btn btn-warning"onClick={logout}>LogOut</button>
                 </ul>
             </div>

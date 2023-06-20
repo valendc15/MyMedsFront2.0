@@ -10,6 +10,7 @@ function PharmacyNavBar(){
         if(!sessionStorage.getItem('token')){
             navigate('/login');
         }
+        checkToken()
        
     },[])
 
@@ -31,7 +32,7 @@ function PharmacyNavBar(){
             method: "GET",
             headers: { 'content-type': 'application/json','Authorization': `Bearer ${token}` },
           }).then(response=>{
-            if (response.status===401){
+            if (response.status===403 || response.status===401){
                 sessionStorage.clear()
                 navigate('/login')
             }

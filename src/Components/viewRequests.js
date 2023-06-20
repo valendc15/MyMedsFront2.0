@@ -14,62 +14,70 @@ function ViewRequests() {
   const [pharmacyList, setPharmacyList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAccepting, setIsAccepting] = useState(false);
+  const [items, setItems] = useState([]);
+  const [isLoading2, setIsLoading2] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (triggerUse) {
-      getRequests();
-      getPharmacy();
+      fetchData()
       setTriggerUse(false);
     }
+    
   }, [triggerUse]);
 
-  function getRequests() {
-    setIsLoading(true);
-    fetch(`http://localhost:8080/doctor/viewRecipes/${sessionStorage.getItem("id")}?status=IN_PROGRESS`, {
-      method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
-    })
-      .then((response) => {
-        setIsLoading(false);
-        if (response.status === 401) {
-          sessionStorage.clear();
-          navigate("/login");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data != null || data != undefined) {
-          setRequestList(data);
-        } else {
-          setRequestList([]);
-        }
-      });
-  }
+  
 
-  function getPharmacy() {
-    fetch("http://localhost:8080/doctor/getAllPharmacys", {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    })
-      .then((response) => {
-        if (response.status === 401) {
-          sessionStorage.clear();
-          navigate("/login");
-        } else {
-          return response.json().then((data) => {
-            if (Array.isArray(data)) {
-              setPharmacyList(data);
-            } else {
-              setPharmacyList([]);
-            }
-          });
+
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    setError(null);
+  
+    try {
+      const token = sessionStorage.getItem("token");
+      const doctorId = sessionStorage.getItem('id');
+      const url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${8}`;
+  
+      const response = await fetch(url, {
+        headers: {
+          "Authorization": `Bearer ${token}`
         }
       });
-  }
+      console.log(response)
+      if (!response.ok) {
+        throw new Error('Error fetching data');
+      }
+  
+      const data = await response.json();
+  
+      if (!Array.isArray(data)) {
+        throw new Error('Invalid data format');
+      }
+  
+      setRequestList(prevItems => [...prevItems, ...data]);
+      setPage(prevPage => prevPage + 1);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  
+
+  const handleScroll = () => {
+    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
+      return;
+    }
+    fetchData();
+  };
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLoading]);
 
   const cardStyle = {
     borderRadius: "10px",
@@ -215,13 +223,6 @@ function ViewRequests() {
               )}
   
               <Popup
-                style={{
-                  zIndex: "9999",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Set the background color for the popup
-                }}
                 trigger={popUpState}
                 setTrigger={setPopUpState}
               >
@@ -243,13 +244,6 @@ function ViewRequests() {
               </Popup>
   
               <Popup
-                style={{
-                  zIndex: "9999",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Set the background color for the popup
-                }}
                 trigger={popUpState2}
                 setTrigger={setPopUpState2}
               >

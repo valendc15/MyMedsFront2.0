@@ -14,10 +14,11 @@ import ViewRequests from './Components/viewRequests';
 import ViewRequestsP from './Components/viewRequestsP';
 import PharmacyRequest from './Components/PharmacyRequests';
 import PharmacyHistory from './Components/PharmacyHistory';
-import Scanner from './Components/scanner';
+import Scanner from './Components/Scanner';
 import PatientInfo from './Components/patientInfo';
 import MedicineSearch from './Components/medicineSearch';
 import PharmacyStock from './Components/PharmacyStock';
+import MedicHistory from './Components/MedicHistory';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
           <Route exact path='/patientInfo'element={<PatientInfo></PatientInfo>}/>
           <Route exact path='/medicineSearch'element={<MedicineSearch></MedicineSearch>}/>
           <Route exact path='pharmacyStock' element={<PharmacyStock></PharmacyStock>}/>
+          <Route exact path='medicHistory' element={<MedicHistory></MedicHistory>}/>
         </Routes>
       </Router>
     </div>
