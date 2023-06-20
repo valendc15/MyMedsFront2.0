@@ -116,11 +116,10 @@ function ViewRequests() {
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
     })
       .then((result) => {
-        console.log(result);
+        setTriggerUse(true);
         if (!result.ok) {
           throw Error("Error");
         }
-        setTriggerUse(true);
         return result.json();
       })
       .catch((error) => {
