@@ -12,7 +12,7 @@ function PharmacyRequest() {
   const [popUpState, setPopUpState] = useState(false);
   const [popUpState2, setPopUpState2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [isAccepting, setIsAccepting] = useState(false);
 
   useEffect(() => {
@@ -121,14 +121,15 @@ function PharmacyRequest() {
       headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
     })
       .then((result) => {
-        setIsAccepting(false);
-        setTriggerUse(true);
         if (!result.ok) {
           throw Error("Error");
         }
         // Refresh the request list after accepting the request
         fetchData();
         setPopUpState(false);
+        setIsAccepting(false);
+        setTriggerUse(true);
+        window.location.reload(false)
         return result.json();
       })
       .catch((error) => {
