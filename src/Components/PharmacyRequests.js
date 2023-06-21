@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 
 function PharmacyRequest() {
   const [requestList, setRequestList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [dniFilter, setDniFilter] =useState("")
 
@@ -40,17 +40,16 @@ function PharmacyRequest() {
         throw new Error("Invalid data format");
       }
 
-      console.log(data);
 
       setRequestList(data.recipes);
-      setPageCount(data.totalPages-1);
+      setPageCount(data.totalPages);
     } catch (error) {
       console.log(error);
     }
   };
 
   const handlePageClick = (data) => {
-    setCurrentPage(data.selected + 1);
+    setCurrentPage(data.selected);
   };
 
   const navigate = useNavigate();
