@@ -20,10 +20,11 @@ function PharmacyHistory(){
       }, []);
 
 
+      
 
 
     function getAcceptedRequests(){
-        fetch(`http://localhost:8080/pharmacy/getRecipesByStatus/${sessionStorage.getItem('id')}?status=APPROVED`, {
+        fetch(`http://localhost:8080/pharmacy/viewRecipeHistory/${sessionStorage.getItem('id')}?status=APPROVED`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
@@ -46,7 +47,7 @@ function PharmacyHistory(){
 
 
       function getDispensedRequests(){
-        fetch(`http://localhost:8080/pharmacy/getRecipesByStatus/${sessionStorage.getItem('id')}?status=DISPENSED`, {
+        fetch(`http://localhost:8080/pharmacy/viewRecipeHistory/${sessionStorage.getItem('id')}?status=DISPENSED`, {
       method: "GET",
       headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })

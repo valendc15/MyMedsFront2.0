@@ -1,54 +1,63 @@
-import PharmacyNavBar from "./PharmacyNavBar"
-import { useState } from "react";
-import { useEffect } from "react";
+import PharmacyNavBar from "./PharmacyNavBar";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Popup from "./PopUp";
-import { reject } from "q";
+import ReactPaginate from "react-paginate";
 
 function PharmacyRequest() {
+  const [requestList, setRequestList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+  const [dniFilter, setDniFilter] =useState("")
 
-    const [requestList, setRequestList] = useState([]);
-    const [triggerUse, setTriggerUse] =useState(true)
-    const [nameFilter, setNameFilter]=useState('')
-    const [dniFilter, setDniFilter]=useState('')
-    const [records, setRecords] = useState([])
-    const [popUpState, setpopUpState]= useState(false)
-    const [popUpState2, setpopUpState2]=useState(false)
-    
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, dniFilter]);
 
-    useEffect(() => {
-        if(triggerUse){
-        getRequests();
-        setTriggerUse(false)
-        }
-      }, [triggerUse]);
+  const changeName = (event) => {
+   setDniFilter(event.target.value);
+  };
 
-    const navigate = useNavigate();
-
-    const cardStyle = {
-        backgroundColor: "#f8f9fa",
-        borderRadius: "10px",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        padding: "10px",
-        margin: "10px",
-        width: "300px",
-      };
-    
-      const cardTitleStyle = {
-        fontSize: "18px",
-        fontWeight: "bold",
-        marginBottom: "10px",
-      };
-    
-      const cardTextStyle = {
-        fontSize: "14px",
-        marginBottom: "10px",
-      };
+  const fetchData = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const id = sessionStorage.getItem("id");
+      let url = `http://localhost:8080/pharmacy/getRecipesByStatus/${id}?status=APPROVED&page=${currentPage}&size=${3}&patientID=${dniFilter}`;
 
 
-      function getRequests(){
-        fetch(`http://localhost:8080/pharmacy/getRecipesByStatus/${sessionStorage.getItem('id')}?status=APPROVED`, {
-      method: "GET",
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error fetching data");
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data.recipes)) {
+        throw new Error("Invalid data format");
+      }
+
+      console.log(data);
+
+      setRequestList(data.recipes);
+      setPageCount(data.totalPages-1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected + 1);
+  };
+
+  const navigate = useNavigate();
+
+  function dispense(recipeID) {
+    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}`, {
+      method: "PUT",
       headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
     })
       .then((response) => {
@@ -57,171 +66,78 @@ function PharmacyRequest() {
           navigate("/login");
         }
         return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (data != null || data != undefined) {
-          setRequestList(data)
-          setRecords(data)
-        } else {
-          setRequestList([])
-        }
       });
-      }
+  }
 
-      function dispense(recipeID){
-        fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}`, {
-          method: "PUT",
-          headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-        })
-          .then((response) => {
-            if (response.status === 401) {
-              sessionStorage.clear();
-              navigate("/login");
-            }
-            setTriggerUse(true)
-            setpopUpState(false)
-            return response.json();
-          });
-      }
-
-      function discard(recipeID){
-        fetch(`http://localhost:8080/pharmacy/rejectRecipe/${recipeID}`, {
-          method: "PUT",
-          headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-        })
-          .then((response) => {
-            if (response.status === 401) {
-              sessionStorage.clear();
-              navigate("/login");
-            }
-            setTriggerUse(true)
-            setpopUpState2(false)
-            return response.json();
-          });
-      }
-      
-
-
-      const Filter=(event)=>{
-
-        if(event.target.value!=''){
-        setRecords(requestList.filter(f=>f.patientID == event.target.value ))
+  function discard(recipeID) {
+    fetch(`http://localhost:8080/pharmacy/rejectRecipe/${recipeID}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          sessionStorage.clear();
+          navigate("/login");
         }
-        else{
-          setRecords(requestList)
-        }
-      }
+        return response.json();
+      });
+  }
 
-      const Filter2=(event)=>{
-        if(event.target.value!=''){
-        setRecords(requestList.filter(f=>f.doctorName.match(new RegExp(event.target.value,'i'))))
-        }
-        else{
-          setRecords(requestList)
-        }
-      }
-
-      
-      
-      return (
-        <div>
-          <PharmacyNavBar></PharmacyNavBar>
-          <input type="text" className="form-control" onChange={Filter} placeholder="Search by patient DNI" />
-          <input type="text" className="form-control" onChange={Filter2} placeholder="Search by doctor name" />
-      
-          {requestList.length === 0 ? (
-            <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
-              No Recipes found.
-            </h3>
-          ) : (
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
-              {records.map((request) => (
-                <div key={request.recipeID} style={{ ...cardStyle, display: "flex", flexDirection: "column" }}>
-                  <div style={{ flexGrow: 1 }}>
-                    <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
-                    <p style={cardTextStyle}>Requested Medicines:</p>
-                    <ul>
-                      {request.drug.map((drug) => (
-                        <li key={drug.brandName}>
-                          <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
-                          <p style={cardTextStyle}>Strength: {drug.strength}</p>
-                          <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
-                        </li>
-                      ))}
-                    </ul>
-                    <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
-                    <p style={cardTextStyle}>Patient ID: {request.patientID}</p>
-                  </div>
-      
-                  <div style={{ flex: "1 0 auto" }}></div>
-      
-                  <div style={{ display: "flex",}}>
-                    <button className={`btn btn-success`} onClick={() => setpopUpState(true)} style={{ marginRight: "10px" }}>
-                      Dispensed
-                    </button>
-                    <button className={`btn btn-danger`} onClick={() => setpopUpState2(true)}>
-                      Discard
-                    </button>
-                  </div>
-                  <Popup
-                    style={{
-                      position: "fixed",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      zIndex: 9999,
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center"
-                    }}
-                    trigger={popUpState}
-                    setTrigger={setpopUpState}
-                  >
-                    <div>
-                      <div>
-                        <h4>Do you want to mark this recipe as dispensed?</h4>
-                        <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
-                        <button className="btn btn-success accept-button" onClick={() => dispense(request.recipeID)}>Yes</button>
-                        <button className="btn btn-danger reject-button" onClick={() => setpopUpState(false)}>No</button>
-                      </div>
-                    </div>
-                  </Popup>
-                  <Popup
-                    style={{
-                      position: "fixed",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      zIndex: 9999,
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center"
-                    }}
-                    trigger={popUpState2}
-                    setTrigger={setpopUpState2}
-                  >
-                    <div>
-                      <div>
-                        <h4>Do you want to discard this recipe?</h4>
-                        <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
-                        <button className="btn btn-success accept-button" onClick={() => discard(request.recipeID)}>Yes</button>
-                        <button className="btn btn-danger reject-button" onClick={() => setpopUpState2(false)}>No</button>
-                      </div>
-                    </div>
-                  </Popup>
+  return (
+    <div>
+      <PharmacyNavBar />
+      <input type="number" className="form-control" onChange={changeName} placeholder="Search by patient DNI" />
+      <div className="row m-2">
+        {requestList.map((request) => {
+          return (
+            <div key={request.recipeID} className="col-sm-6 col-md-4 v my-2">
+              <div className="card shadow-sm w-100" style={{ minHeight: 225 }}>
+                <div className="card-body">
+                  <h5 className="card-title text-center h2">Patient: {request.patientName}</h5>
+                  <h6 className="card-subtitle mb-2 text-muted text-center">
+                    recipeID: {request.recipeID}
+                  </h6>
+                  <h6 className="card-subtitle mb-2 text-muted text-center">
+                    patientID: {request.patientID}
+                  </h6>
+                  <p className="card-text">Drugs:</p>
+                  <ul>
+  {request.drug.map(drug => (
+    <li key={drug.brandName}>
+      <p>Brand Name: {drug.brandName}</p>
+      <p >Strength: {drug.strength}</p>
+      <p >Dosage: {drug.dosageForm}</p>
+    </li>
+  ))}
+</ul>
                 </div>
-              ))}
+              </div>
             </div>
-          )}
-        </div>
-      );
-      
-      
-                  }      
+          );
+        })}
+      </div>
 
-export default PharmacyRequest
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={"..."}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={3}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination justify-content-center"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"}
+      />
+    </div>
+  );
+}
+
+export default PharmacyRequest;

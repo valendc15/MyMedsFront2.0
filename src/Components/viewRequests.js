@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Popup from "./PopUp";
 import MedicNavBar from "./MedicNavBar";
 
-function PharmacyRequest() {
+function ViewRequests() {
   const [requestList, setRequestList] = useState([]);
   const [triggerUse, setTriggerUse] = useState(true);
   const [dniFilter, setDniFilter] = useState(0);
@@ -47,7 +47,7 @@ function PharmacyRequest() {
     try {
       const token = sessionStorage.getItem("token");
       const doctorId = sessionStorage.getItem("id");
-      let url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${8}`;
+      let url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${9}`;
   
       if (dniFilter) {
         url += `&patientID=${dniFilter}`;
@@ -69,15 +69,22 @@ function PharmacyRequest() {
         throw new Error("Invalid data format");
       }
   
-      setRequestList(data);
-      setPage(0);
+      setRequestList((prevItems) => getNewRequestList(prevItems, data));
+      setPage(prevPage => prevPage + 1)
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
   };
-  
+    const getNewRequestList = (current, data) => {
+    const request = {};
+    [...current, ...data].forEach((item) => {
+      request[item.recipeID] = item;
+    });
+    return Object.values(request);
+  };
+
 
   const changeName = (event) => {
     setDniFilter(event.target.value);
@@ -157,7 +164,7 @@ function PharmacyRequest() {
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {requestList.map((request, index) => (
-            <div key={`${request.recipeID}-${index}`} style={{ ...cardStyle, display: "flex", flexDirection: "column" }}>
+            <div key={`${request.recipeID}`} style={{ ...cardStyle, display: "flex", flexDirection: "column" }}>
               <div style={{ flexGrow: 1 }}>
                 <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
                 <p style={cardTextStyle}>Requested Medicines:</p>
@@ -260,4 +267,4 @@ function PharmacyRequest() {
   );
 }
 
-export default PharmacyRequest;
+export default ViewRequests;
