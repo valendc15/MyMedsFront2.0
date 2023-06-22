@@ -2,7 +2,7 @@ import PharmacyNavBar from "./PharmacyNavBar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-
+import { toast } from 'react-toastify';
 function PharmacyRequest() {
   const [requestList, setRequestList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -13,10 +13,12 @@ function PharmacyRequest() {
   const [currentRecipeID, setCurrentRecipeID] = useState("");
   const [popUpState, setPopUpState] = useState(false);
   const [popUpState2, setPopUpState2] = useState(false);
-
+  const [actionCompleted, setActionCompleted] = useState(false);
+  const [actionCompleted2, setActionCompleted2] = useState(false);
+  
   useEffect(() => {
     fetchData();
-  }, [currentPage, dniFilter]);
+  }, [currentPage, dniFilter,actionCompleted,actionCompleted2]);
 
   const changeDNI = (event) => {
     setDniFilter(event.target.value);
@@ -70,11 +72,14 @@ function PharmacyRequest() {
   function confirmDispense() {
     setShowDispenseConfirmation(false);
     dispenseRecipe(currentRecipeID);
+    setActionCompleted(true);
   }
-
+  
   function confirmDiscard() {
     setShowDiscardConfirmation(false);
     discardRecipe(currentRecipeID);
+    setActionCompleted2(true)
+
   }
 
   function dispenseRecipe(recipeID) {
@@ -90,7 +95,17 @@ function PharmacyRequest() {
           sessionStorage.clear();
           navigate("/login");
         }
-        return response.json();
+        else if (response.status===409){
+          response.json().then((data) => {
+            data.drugDTOS.forEach((drug) => {
+              toast.error(`${drug.brandName} is out of stock!`);
+            });
+          });
+        }
+        else if (response.status==200){
+          window.location.reload(false)//FALSE
+          toast.success("Recipe Dispensed!")
+        }
       });
   }
 
@@ -107,7 +122,10 @@ function PharmacyRequest() {
           sessionStorage.clear();
           navigate("/login");
         }
-        return response.json();
+        else if (response.status===200){
+          window.location.reload(false)
+          toast.success("Recipe deleted!")
+        }
       });
   }
 
