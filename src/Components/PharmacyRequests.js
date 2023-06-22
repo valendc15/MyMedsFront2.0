@@ -211,7 +211,7 @@ function PharmacyRequest() {
         <div className="popup">
           <div className="popup-inner">
             <h3>Confirm Dispense</h3>
-            <p>Are you sure you want to mark this request as dispensed?</p>
+            <p>Are you sure you want to mark this recipe as dispensed?</p>
             <p>recipeID: {currentRecipeID}</p>
             <div className="popup-buttons">
               <button className="btn btn-success" style={{marginRight:'20px'}} onClick={confirmDispense}>
@@ -229,7 +229,7 @@ function PharmacyRequest() {
         <div className="popup">
           <div className="popup-inner">
             <h3>Confirm Discard</h3>
-            <p>Are you sure you want to discard this request?</p>
+            <p>Are you sure you want to discard this recipe?</p>
             <p>recipeID: {currentRecipeID}</p>
             <div className="popup-buttons">
               <button className="btn btn-success " style={{marginRight:'20px'}} onClick={confirmDiscard}>

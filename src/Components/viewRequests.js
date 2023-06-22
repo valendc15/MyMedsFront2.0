@@ -1,266 +1,246 @@
+import PharmacyNavBar from "./PharmacyNavBar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Popup from "./PopUp";
+import ReactPaginate from "react-paginate";
+import { toast } from 'react-toastify';
 import MedicNavBar from "./MedicNavBar";
+
+
 
 function ViewRequests() {
   const [requestList, setRequestList] = useState([]);
-  const [triggerUse, setTriggerUse] = useState(true);
-  const [dniFilter, setDniFilter] = useState(0);
-  const [popUpState, setPopUpState] = useState(false);
-  const [popUpState2, setPopUpState2] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(0);
-  const [isAccepting, setIsAccepting] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [dniFilter, setDniFilter] = useState("");
+  const [showDispenseConfirmation, setShowDispenseConfirmation] = useState(false);
+  const [showDiscardConfirmation, setShowDiscardConfirmation] = useState(false);
+  const [currentRecipeID, setCurrentRecipeID] = useState("");
+  const [actionCompleted, setActionCompleted] = useState(false);
+  const [actionCompleted2, setActionCompleted2] = useState(false);
+  
   useEffect(() => {
-    if (triggerUse) {
-      fetchData();
-      setPopUpState(false);
-    }
-  }, []);
+    fetchData();
+  }, [currentPage, dniFilter,actionCompleted,actionCompleted2]);
 
-  const navigate = useNavigate();
-
-  const cardStyle = {
-    backgroundColor: "#f8f9fa",
-    borderRadius: "10px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    padding: "10px",
-    margin: "10px",
-    width: "300px",
-  };
-
-  const cardTitleStyle = {
-    fontSize: "18px",
-    fontWeight: "bold",
-    marginBottom: "10px",
-  };
-
-  const cardTextStyle = {
-    fontSize: "14px",
-    marginBottom: "10px",
+  const changeDNI = (event) => {
+    setDniFilter(event.target.value);
   };
 
   const fetchData = async () => {
-    setIsLoading(true);
     try {
       const token = sessionStorage.getItem("token");
-      const doctorId = sessionStorage.getItem("id");
-      let url = `http://localhost:8080/doctor/viewRecipes/${doctorId}?status=IN_PROGRESS&page=${page}&size=${9}`;
-  
-      if (dniFilter) {
-        url += `&patientID=${dniFilter}`;
-      }
-  
+      const id = sessionStorage.getItem("id");
+      let url = `http://localhost:8080/doctor/viewRecipes/${id}?status=IN_PROGRESS&page=${currentPage}&size=${3}&patientID=${dniFilter}`;
+
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("Error fetching data");
       }
-  
+
       const data = await response.json();
-  
-      if (!Array.isArray(data)) {
+
+      if (!Array.isArray(data.recipes)) {
         throw new Error("Invalid data format");
       }
-  
-      setRequestList((prevItems) => getNewRequestList(prevItems, data));
-      setPage(prevPage => prevPage + 1)
+
+      setRequestList(data.recipes);
+      setPageCount(data.totalPages);
     } catch (error) {
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   };
-    const getNewRequestList = (current, data) => {
-    const request = {};
-    [...current, ...data].forEach((item) => {
-      request[item.recipeID] = item;
-    });
-    return Object.values(request);
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
   };
 
+  const navigate = useNavigate();
 
-  const changeName = (event) => {
-    setDniFilter(event.target.value);
-  };
-  useEffect(() => {
-    fetchData();
-  }, [dniFilter]);
+  function dispense(recipeID) {
+    setShowDispenseConfirmation(true);
+    setCurrentRecipeID(recipeID);
+  }
 
-  const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
-      return;
-    }
-    fetchData();
-  };
+  function discard(recipeID) {
+    setShowDiscardConfirmation(true);
+    setCurrentRecipeID(recipeID);
+  }
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isLoading]);
+  function confirmDispense() {
+    setShowDispenseConfirmation(false);
+    acceptRequest(currentPage)
+    setActionCompleted(true);
+  }
+  
+  function confirmDiscard() {
+    setShowDiscardConfirmation(false);
+    rejectRequest(currentRecipeID);
+    setActionCompleted2(true)
 
-  function rejectRequest(id) {
-    const token = sessionStorage.getItem("token");
-    fetch(`http://localhost:8080/doctor/DeclineRecipe/${id}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(id),
-    })
-      .then((result) => {
-        console.log(result);
-        if (!result.ok) {
-          throw Error("Error");
-        }
-        setTriggerUse(true);
-        return result.json();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
   function acceptRequest(recipeID) {
-    setIsAccepting(true);
-    const token = sessionStorage.getItem("token");
     fetch(`http://localhost:8080/doctor/AproveRecipe/${sessionStorage.getItem("id")}?recipeID=${recipeID}`, {
       method: "PUT",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${token}` },
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
     })
-      .then((result) => {
-        if (!result.ok) {
-          throw Error("Error");
+      .then((response) => {
+        if (response.status === 401) {
+          sessionStorage.clear();
+          navigate("/login");
         }
-        // Refresh the request list after accepting the request
-        fetchData();
-        setPopUpState(false);
-        setIsAccepting(false);
-        setTriggerUse(true);
-        window.location.reload(false);
-        return result.json();
-      })
-      .catch((error) => {
-        console.log(error);
+        else if (response.status===409){
+          response.json().then((data) => {
+            data.drugDTOS.forEach((drug) => {
+              toast.error(`${drug.brandName} is out of stock!`);
+            });
+          });
+        }
+        else if (response.status==200){
+          window.location.reload(false)//FALSE
+          toast.success("Recipe Dispensed!")
+        }
+      });
+  }
+
+  function rejectRequest(recipeID) {
+    fetch(`http://localhost:8080/doctor/DeclineRecipe/${recipeID}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          sessionStorage.clear();
+          navigate("/login");
+        }
+        else if (response.status===200){
+          window.location.reload(false)
+        }
       });
   }
 
   return (
     <div>
-      <MedicNavBar></MedicNavBar>
-      <input type="number" className="form-control" onChange={changeName} placeholder="Search by patient DNI" />
-      {isLoading ? (
-        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
-          Loading...
-        </h3>
-      ) : requestList.length === 0 ? (
-        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
-          No Recipes found.
-        </h3>
-      ) : (
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {requestList.map((request, index) => (
-            <div key={`${request.recipeID}`} style={{ ...cardStyle, display: "flex", flexDirection: "column" }}>
-              <div style={{ flexGrow: 1 }}>
-                <h5 style={cardTitleStyle}>Patient: {request.patientName}</h5>
-                <p style={cardTextStyle}>Requested Medicines:</p>
-                <ul>
-                  {request.drug.map((drug) => (
-                    <li key={drug.brandName}>
-                      <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
-                      <p style={cardTextStyle}>Strength: {drug.strength}</p>
-                      <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
-                    </li>
-                  ))}
-                </ul>
-                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
-                <p style={cardTextStyle}>Patient ID: {request.patientID}</p>
-              </div>
+      <MedicNavBar/>
+      <input
+        type="number"
+        className="form-control"
+        onChange={changeDNI}
+        placeholder="Search by patient DNI"
+      />
+      <div className="row m-2">
+        {requestList.length === 0 ? (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: 225 }}>
+            <h3>No requests found.</h3>
+          </div>
+        ) : (
+          requestList.map((request) => {
+            return (
+              <div key={request.recipeID} className="col-sm-6 col-md-4 v my-2">
+                <div className="card shadow-sm w-100" style={{ minHeight: 225 }}>
+                  <div className="card-body">
+                    <h5 className="card-title text-center h2">Patient: {request.patientName}</h5>
+                    <h6 className="card-subtitle mb-2 text-muted text-center">
+                      recipeID: {request.recipeID}
+                    </h6>
+                    <h6 className="card-subtitle mb-2 text-muted text-center">
+                      patientID: {request.patientID}
+                    </h6>
+                    <p className="card-text">Drugs:</p>
+                    <ul>
+                      {request.drug.map((drug) => (
+                        <li key={drug.brandName}>
+                          <p>Brand Name: {drug.brandName}</p>
+                          <p>Strength: {drug.strength}</p>
+                          <p>Dosage: {drug.dosageForm}</p>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="d-flex justify-content-between mt-3">
+                    <div>
+    <button className="btn btn-success" style={{ marginRight: "10px" }} onClick={() => dispense(request.recipeID)}>
+      Accept
+    </button>
+  </div>
+  <div>
+    <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => discard(request.recipeID)}>
+      Reject
+    </button>
+  </div>
+</div>
 
-              <div style={{ flex: "1 0 auto" }}></div>
-
-              <div style={{ display: "flex" }}>
-                <button
-                  className={`btn btn-success`}
-                  onClick={() => setPopUpState(true)}
-                  style={{ marginRight: "10px" }}
-                >
-                  Accept
-                </button>
-                <button className={`btn btn-danger`} onClick={() => setPopUpState2(true)}>
-                  Reject
-                </button>
-              </div>
-              <Popup
-                style={{
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 9999,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                }}
-                trigger={popUpState}
-                setTrigger={setPopUpState}
-              >
-                <div>
-                  <div>
-                    <h4>Do you want to accept this request?</h4>
-                    <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
-                    {isAccepting ? (
-                      <p>Loading...</p>
-                    ) : (
-                      <>
-                        <button className="btn btn-success" onClick={() => acceptRequest(request.recipeID)}>
-                          Accept
-                        </button>
-                        <button className="btn btn-danger" onClick={() => setPopUpState(false)}>
-                          Cancel
-                        </button>
-                      </>
-                    )}
                   </div>
                 </div>
-              </Popup>
-              <Popup
-                style={{
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 9999,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                }}
-                trigger={popUpState2}
-                setTrigger={setPopUpState2}
-              >
-                <div>
-                  <div>
-                    <h4>Do you want to reject this request?</h4>
-                    <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
-                    <button className="btn btn-danger" onClick={() => rejectRequest(request.recipeID)}>
-                      Reject
-                    </button>
-                    <button className="btn btn-primary" onClick={() => setPopUpState2(false)}>
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </Popup>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={"..."}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={3}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination justify-content-center"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"}
+      />
+
+      {showDispenseConfirmation && (
+        <div className="popup">
+          <div className="popup-inner">
+            <h3>Confirm Dispense</h3>
+            <p>Are you sure you want to accept this request?</p>
+            <p>recipeID: {currentRecipeID}</p>
+            <div className="popup-buttons">
+              <button className="btn btn-success" style={{marginRight:'20px'}} onClick={confirmDispense}>
+                Yes
+              </button>
+              <button className="btn btn-danger" onClick={() => setShowDispenseConfirmation(false)}>
+                No
+              </button>
             </div>
-          ))}
+          </div>
+        </div>
+      )}
+
+      {showDiscardConfirmation && (
+        <div className="popup">
+          <div className="popup-inner">
+            <h3>Confirm Discard</h3>
+            <p>Are you sure you want to reject this request?</p>
+            <p>recipeID: {currentRecipeID}</p>
+            <div className="popup-buttons">
+              <button className="btn btn-success " style={{marginRight:'20px'}} onClick={confirmDiscard}>
+                Yes
+              </button>
+              <button className="btn btn-danger" onClick={() => setShowDiscardConfirmation(false)}>
+                No
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
