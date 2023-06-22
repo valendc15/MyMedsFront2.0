@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import { toast } from 'react-toastify';
+
 function PharmacyRequest() {
   const [requestList, setRequestList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -15,20 +16,25 @@ function PharmacyRequest() {
   const [popUpState2, setPopUpState2] = useState(false);
   const [actionCompleted, setActionCompleted] = useState(false);
   const [actionCompleted2, setActionCompleted2] = useState(false);
+  const [nameFilter, setNameFilter]=useState(''
+  )
   
   useEffect(() => {
     fetchData();
-  }, [currentPage, dniFilter,actionCompleted,actionCompleted2]);
+  }, [currentPage, dniFilter,actionCompleted,actionCompleted2,nameFilter]);
 
   const changeDNI = (event) => {
     setDniFilter(event.target.value);
+  };
+  const changeName = (event) => {
+    setNameFilter(event.target.value);
   };
 
   const fetchData = async () => {
     try {
       const token = sessionStorage.getItem("token");
       const id = sessionStorage.getItem("id");
-      let url = `http://localhost:8080/pharmacy/getRecipesByStatus/${id}?status=APPROVED&page=${currentPage}&size=${3}&patientID=${dniFilter}`;
+      let url = `http://localhost:8080/pharmacy/getRecipesByStatus/${id}?status=APPROVED&page=${currentPage}&size=${3}&patientID=${dniFilter}&doctorUsername=${nameFilter}`;
 
       const response = await fetch(url, {
         headers: {
@@ -132,12 +138,20 @@ function PharmacyRequest() {
   return (
     <div>
       <PharmacyNavBar />
+      {}
       <input
         type="number"
         className="form-control"
         onChange={changeDNI}
         placeholder="Search by patient DNI"
       />
+        <input
+        type="text"
+        className="form-control"
+        onChange={changeName}
+        placeholder="Search by doctor name"
+      />
+      
       <div className="row m-2">
         {requestList.length === 0 ? (
           <div className="d-flex justify-content-center align-items-center" style={{ minHeight: 225 }}>
