@@ -73,7 +73,7 @@ function ViewRequests() {
 
   function confirmDispense() {
     setShowDispenseConfirmation(false);
-    acceptRequest(currentPage)
+    acceptRequest(currentRecipeID)
     setActionCompleted(true);
   }
   
@@ -89,10 +89,11 @@ function ViewRequests() {
       method: "PUT",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        Authorization:`Bearer ${sessionStorage.getItem("token")}`,
       },
     })
       .then((response) => {
+        console.log(recipeID);
         if (response.status === 401) {
           sessionStorage.clear();
           navigate("/login");
