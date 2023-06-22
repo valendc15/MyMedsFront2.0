@@ -7,14 +7,19 @@ function PharmacyRequest() {
   const [requestList, setRequestList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
-  const [dniFilter, setDniFilter] =useState("")
+  const [dniFilter, setDniFilter] = useState("");
+  const [showDispenseConfirmation, setShowDispenseConfirmation] = useState(false);
+  const [showDiscardConfirmation, setShowDiscardConfirmation] = useState(false);
+  const [currentRecipeID, setCurrentRecipeID] = useState("");
+  const [popUpState, setPopUpState] = useState(false);
+  const [popUpState2, setPopUpState2] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, [currentPage, dniFilter]);
 
-  const changeName = (event) => {
-   setDniFilter(event.target.value);
+  const changeDNI = (event) => {
+    setDniFilter(event.target.value);
   };
 
   const fetchData = async () => {
@@ -22,7 +27,6 @@ function PharmacyRequest() {
       const token = sessionStorage.getItem("token");
       const id = sessionStorage.getItem("id");
       let url = `http://localhost:8080/pharmacy/getRecipesByStatus/${id}?status=APPROVED&page=${currentPage}&size=${3}&patientID=${dniFilter}`;
-
 
       const response = await fetch(url, {
         headers: {
@@ -40,7 +44,6 @@ function PharmacyRequest() {
         throw new Error("Invalid data format");
       }
 
-
       setRequestList(data.recipes);
       setPageCount(data.totalPages);
     } catch (error) {
@@ -55,9 +58,32 @@ function PharmacyRequest() {
   const navigate = useNavigate();
 
   function dispense(recipeID) {
-    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}`, {
+    setShowDispenseConfirmation(true);
+    setCurrentRecipeID(recipeID);
+  }
+
+  function discard(recipeID) {
+    setShowDiscardConfirmation(true);
+    setCurrentRecipeID(recipeID);
+  }
+
+  function confirmDispense() {
+    setShowDispenseConfirmation(false);
+    dispenseRecipe(currentRecipeID);
+  }
+
+  function confirmDiscard() {
+    setShowDiscardConfirmation(false);
+    discardRecipe(currentRecipeID);
+  }
+
+  function dispenseRecipe(recipeID) {
+    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}?pharmacyID=${sessionStorage.getItem("id")}`, {
       method: "PUT",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
     })
       .then((response) => {
         if (response.status === 401) {
@@ -68,10 +94,13 @@ function PharmacyRequest() {
       });
   }
 
-  function discard(recipeID) {
+  function discardRecipe(recipeID) {
     fetch(`http://localhost:8080/pharmacy/rejectRecipe/${recipeID}`, {
       method: "PUT",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
     })
       .then((response) => {
         if (response.status === 401) {
@@ -85,35 +114,59 @@ function PharmacyRequest() {
   return (
     <div>
       <PharmacyNavBar />
-      <input type="number" className="form-control" onChange={changeName} placeholder="Search by patient DNI" />
+      <input
+        type="number"
+        className="form-control"
+        onChange={changeDNI}
+        placeholder="Search by patient DNI"
+      />
       <div className="row m-2">
-        {requestList.map((request) => {
-          return (
-            <div key={request.recipeID} className="col-sm-6 col-md-4 v my-2">
-              <div className="card shadow-sm w-100" style={{ minHeight: 225 }}>
-                <div className="card-body">
-                  <h5 className="card-title text-center h2">Patient: {request.patientName}</h5>
-                  <h6 className="card-subtitle mb-2 text-muted text-center">
-                    recipeID: {request.recipeID}
-                  </h6>
-                  <h6 className="card-subtitle mb-2 text-muted text-center">
-                    patientID: {request.patientID}
-                  </h6>
-                  <p className="card-text">Drugs:</p>
-                  <ul>
-  {request.drug.map(drug => (
-    <li key={drug.brandName}>
-      <p>Brand Name: {drug.brandName}</p>
-      <p >Strength: {drug.strength}</p>
-      <p >Dosage: {drug.dosageForm}</p>
-    </li>
-  ))}
-</ul>
+        {requestList.length === 0 ? (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: 225 }}>
+            <h3>No requests found.</h3>
+          </div>
+        ) : (
+          requestList.map((request) => {
+            return (
+              <div key={request.recipeID} className="col-sm-6 col-md-4 v my-2">
+                <div className="card shadow-sm w-100" style={{ minHeight: 225 }}>
+                  <div className="card-body">
+                    <h5 className="card-title text-center h2">Doctor: {request.doctorName}</h5>
+                    <h6 className="card-subtitle mb-2 text-muted text-center">
+                      recipeID: {request.recipeID}
+                    </h6>
+                    <h6 className="card-subtitle mb-2 text-muted text-center">
+                      patientID: {request.patientID}
+                    </h6>
+                    <p className="card-text">Drugs:</p>
+                    <ul>
+                      {request.drug.map((drug) => (
+                        <li key={drug.brandName}>
+                          <p>Brand Name: {drug.brandName}</p>
+                          <p>Strength: {drug.strength}</p>
+                          <p>Dosage: {drug.dosageForm}</p>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="d-flex justify-content-between mt-3">
+                    <div>
+    <button className="btn btn-success" style={{ marginRight: "10px" }} onClick={() => dispense(request.recipeID)}>
+      Dispense
+    </button>
+  </div>
+  <div>
+    <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => discard(request.recipeID)}>
+      Discard
+    </button>
+  </div>
+</div>
+
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
 
       <ReactPaginate
@@ -135,6 +188,42 @@ function PharmacyRequest() {
         breakLinkClassName={"page-link"}
         activeClassName={"active"}
       />
+
+      {showDispenseConfirmation && (
+        <div className="popup">
+          <div className="popup-inner">
+            <h3>Confirm Dispense</h3>
+            <p>Are you sure you want to mark this request as dispensed?</p>
+            <p>recipeID: {currentRecipeID}</p>
+            <div className="popup-buttons">
+              <button className="btn btn-success" style={{marginRight:'20px'}} onClick={confirmDispense}>
+                Yes
+              </button>
+              <button className="btn btn-danger" onClick={() => setShowDispenseConfirmation(false)}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDiscardConfirmation && (
+        <div className="popup">
+          <div className="popup-inner">
+            <h3>Confirm Discard</h3>
+            <p>Are you sure you want to discard this request?</p>
+            <p>recipeID: {currentRecipeID}</p>
+            <div className="popup-buttons">
+              <button className="btn btn-success " style={{marginRight:'20px'}} onClick={confirmDiscard}>
+                Yes
+              </button>
+              <button className="btn btn-danger" onClick={() => setShowDiscardConfirmation(false)}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
