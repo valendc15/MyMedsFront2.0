@@ -12,7 +12,7 @@ function Scanner() {
   const navigate = useNavigate();
 
   const dispense = useCallback((recipeID) => {
-    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}`, {
+    fetch(`http://localhost:8080/pharmacy/markRecipe/${recipeID}?pharmacyID=${sessionStorage.getItem(`id`)}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -71,8 +71,6 @@ function Scanner() {
     function success(result) {
       scanner.clear()
       setScanResult2(result);
-      scanner.stop().then((ignore)=>{
-      });
       sendResult(result); // Call sendResult function when the scan is successful
     }
 

@@ -538,3 +538,36 @@ nav{
   justify-content: center;
   height: 100vh;
 }
+
+.success-page {
+  background-color: green;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  animation: fade-in 0.5s ease-in forwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-page svg {
+  fill: white;
+  width: 200px;
+  height: 200px;
+}
+
+.success-page p {
+  color: white;
+  font-size: 24px;
+  margin-left: 10px;
+}
