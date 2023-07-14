@@ -46,7 +46,7 @@ function MedicNavBar(){
                     <li><Link to="/home" className="link" onClick={checkToken}>Info</Link></li>
                     <li><Link to="/search" className="link" onClick={checkToken}>Search Patient</Link></li>
                     <li><Link to="/viewPatients" className="link" onClick={checkToken}>View Patients</Link></li>
-                    <li><Link to="/viewRequests" className="link" onClick={checkToken}>View Requests</Link></li>
+                    <li><Link to="/viewRequests" className="link" onClick={checkToken}>Manage Requests</Link></li>
                     <li><Link to="/medicHistory" className="link" onClick={checkToken}>History</Link></li>
                     <button className="btn btn-warning"onClick={logout}>LogOut</button>
                 </ul>
