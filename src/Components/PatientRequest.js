@@ -170,7 +170,7 @@ function PatientRequest() {
               <option value="">Select Doctor</option>
               {doclist.map((doc) => (
                 <option key={doc.doctorUsername} value={doc.doctorID}>
-                  {doc.doctorUsername} :{doc.doctorID}
+                  {doc.doctorUsername}
                 </option>
               ))}
             </select>
@@ -188,7 +188,7 @@ function PatientRequest() {
               <option value="">Select Pharmacy</option>
               {pharmacyList.map((pharmacy) => (
                 <option key={pharmacy.pharmacyName} value={pharmacy.pharmacyID}>
-                  {pharmacy.pharmacyName} :{pharmacy.pharmacyID}
+                  {pharmacy.pharmacyName}
                 </option>
               ))}
             </select>
