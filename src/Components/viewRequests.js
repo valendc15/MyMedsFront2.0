@@ -226,7 +226,7 @@ function ViewRequests() {
           />
   
           {showDispenseConfirmation && (
-            <div className="popup">
+            <div className="popup" style={{ zIndex: 999 }}>
               <div className="popup-inner">
                 <h3>Confirm Dispense</h3>
                 <p>Are you sure you want to accept this request?</p>
@@ -244,7 +244,7 @@ function ViewRequests() {
           )}
   
           {showDiscardConfirmation && (
-            <div className="popup">
+            <div className="popup" style={{ zIndex: 999 }}>
               <div className="popup-inner">
                 <h3>Confirm Discard</h3>
                 <p>Are you sure you want to reject this request?</p>
