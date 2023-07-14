@@ -7,7 +7,6 @@ import MedicNavBar from "./MedicNavBar";
 import { Audio } from "react-loader-spinner";
 
 
-
 function ViewRequests() {
   const [requestList, setRequestList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
