@@ -10,8 +10,6 @@ const { Panel } = Collapse;
 
 function MedicHistory() {
   const [requestList, setRequestList] = useState([]);
-  const [acceptedRequestList, setAcceptedRequestList]=useState([]);
-  const [declinedRequestList, setDeclinedRequestList]=useState([]);
   const [state, setState]=useState("IN_PROGRESS")
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);

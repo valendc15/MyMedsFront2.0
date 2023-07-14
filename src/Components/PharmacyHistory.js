@@ -4,69 +4,54 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Collapse } from 'antd';
+import ReactPaginate from "react-paginate";
 
 const { Panel } = Collapse;
 
 function PharmacyHistory(){
 
-    const [acceptedRequestList, setAcceptedRequestList]=useState([]);
-    const[dispensedRequestList, setDispensedRequestList]=useState([]);
-    const navigate=useNavigate();
+  const [requestList, setRequestList] = useState([]);
+  const [state, setState]=useState("APPROVED")
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, state]);
 
-    useEffect(() => {
-        getAcceptedRequests();
-        getDispensedRequests();
-      }, []);
+  const fetchData = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const id = sessionStorage.getItem("id");
+      let url = `http://localhost:8080/pharmacy/getRecipesByStatus/${id}?status=${state}&page=${currentPage}&size=${4}`;
 
-
-      
-
-
-    function getAcceptedRequests(){
-        fetch(`http://localhost:8080/pharmacy/viewRecipeHistory/${sessionStorage.getItem('id')}?status=APPROVED`, {
-      method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-    })
-      .then((response) => {
-        if (response.status === 401) {
-          sessionStorage.clear();
-          navigate("/login");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (data != null || data != undefined) {
-          setAcceptedRequestList(data)
-        } else {
-          setAcceptedRequestList([])
-        }
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      if (!response.ok) {
+        throw new Error("Error fetching data");
       }
 
+      const data = await response.json();
 
-      function getDispensedRequests(){
-        fetch(`http://localhost:8080/pharmacy/viewRecipeHistory/${sessionStorage.getItem('id')}?status=DISPENSED`, {
-      method: "GET",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-    })
-      .then((response) => {
-        if (response.status === 401) {
-          sessionStorage.clear();
-          navigate("/login");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (data != null || data != undefined) {
-          setDispensedRequestList(data)
-        } else {
-          setDispensedRequestList([])
-        }
-      });
+      if (!Array.isArray(data.recipes)) {
+        throw new Error("Invalid data format");
       }
+
+      setRequestList(data.recipes);
+      setPageCount(data.totalPages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
 
 
 
@@ -95,15 +80,23 @@ function PharmacyHistory(){
         <div>
             <PharmacyNavBar></PharmacyNavBar>
             <h1>Recipes</h1>
-            <Collapse defaultActiveKey={['0']}>
-      <Panel header='Show recipes that are pending'>
-      {acceptedRequestList.length === 0 ? (
+            <div className="dropdown">
+      <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        {state === 'APPROVED' ? 'Showing recipes in progress' : state === 'DISPENSED' ? 'Showing dispensed recipess' : 'Showing rejected recipes'}
+      </button>
+      <ul className="dropdown-menu">
+        <li><a className={`dropdown-item ${state === 'APPROVED' ? 'active' : ''}`} href="#" onClick={() =>setState('APPROVED')}>Show Pending requests</a></li>
+        <li><a className={`dropdown-item ${state === 'DISPENSED' ? 'active' : ''}`} href="#" onClick={() => setState('DISPENSED')}>Show Approved requests</a></li>
+        <li><a className={`dropdown-item ${state === 'REJECTED' ? 'active' : ''}`} href="#" onClick={() => setState('REJECTED')}>Show Rejected requests</a></li>
+      </ul>
+    </div>
+      {requestList.length === 0 ? (
         <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           No Recipes found.
         </h3>
       ) : (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {acceptedRequestList.map((request) => (
+          {requestList.map((request) => (
             <div key={request.id} style={cardStyle}>
               <div>
                 <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
@@ -124,37 +117,25 @@ function PharmacyHistory(){
           ))}
         </div>
       )}
-      </Panel>
-      <Panel header='Show recipes already dispensed'>
-      {dispensedRequestList.length === 0 ? (
-        <h3 style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
-          No requests found.
-        </h3>
-      ) : (
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {dispensedRequestList.map((request) => (
-            <div key={request.id} style={cardStyle}>
-              <div>
-                <h5 style={cardTitleStyle}>Doctor: {request.doctorName}</h5>
-                <p style={cardTextStyle}>Requested Medicines:</p>
-<ul>
-  {request.drug.map(drug => (
-    <li key={drug.brandName}>
-      <p style={cardTextStyle}>Brand Name: {drug.brandName}</p>
-      <p style={cardTextStyle}>Strength: {drug.strength}</p>
-      <p style={cardTextStyle}>Dosage: {drug.dosageForm}</p>
-    </li>
-  ))}
-</ul>
-                <p style={cardTextStyle}>Patient ID: {request.patientID}</p>
-                <p style={cardTextStyle}>Request ID: {request.recipeID}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      </Panel>
-      </Collapse>
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={"..."}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={3}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination justify-content-center"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"}
+      />
     </div>
   );
 
