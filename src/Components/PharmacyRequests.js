@@ -222,7 +222,7 @@ function PharmacyRequest() {
       />
 
       {showDispenseConfirmation && (
-        <div className="popup" style={{ zIndex: 999 }}>
+        <div className="popup">
           <div className="popup-inner">
             <h3>Confirm Dispense</h3>
             <p>Are you sure you want to mark this recipe as dispensed?</p>
@@ -240,7 +240,7 @@ function PharmacyRequest() {
       )}
 
       {showDiscardConfirmation && (
-        <div className="popup" style={{ zIndex: 999 }}>
+        <div className="popup">
           <div className="popup-inner">
             <h3>Confirm Discard</h3>
             <p>Are you sure you want to discard this recipe?</p>
