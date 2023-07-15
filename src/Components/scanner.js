@@ -1,5 +1,5 @@
+import React, { useEffect, useState, useCallback } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, Alert } from "react-bootstrap";
 import PharmacyNavBar from "./PharmacyNavBar";
@@ -8,6 +8,7 @@ import FailurePage from "./FailureMessage";
 
 function RecipePopup({ recipe, onClose, onAccept, onReject }) {
   const navigate = useNavigate();
+
   const handleAccept = () => {
     fetch(
       `http://localhost:8080/pharmacy/markRecipe/${recipe.recipeID}?pharmacyID=${sessionStorage.getItem(
@@ -31,7 +32,6 @@ function RecipePopup({ recipe, onClose, onAccept, onReject }) {
       })
       .catch((error) => {
         console.error("Error accepting recipe:", error);
-      
       });
   };
 
@@ -102,11 +102,14 @@ function Scanner() {
   const [scanResult2, setScanResult2] = useState(null);
   const [successSt, setSuccess] = useState(false);
   const [ready, setReady] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [recipeData, setRecipeData] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState(null);
+  const [shouldReloadScanner, setShouldReloadScanner] = useState(false);
+  const [cooldown, setCooldown] = useState(false);
   const navigate = useNavigate();
+  const [scannerVisible, setScannerVisible] = useState(true);
 
   const sendResult = useCallback(
     (scanResult) => {
@@ -125,13 +128,14 @@ function Scanner() {
           } else if (response.ok) {
             return response.json();
           } else {
+            setSuccess(false);
             throw new Error("Error verifying QR code");
           }
         })
         .then((data) => {
           if (data !== null) {
             setRecipeData(data);
-            setShowPopup(true);
+            setIsPopupOpen(true);
           } else {
             setSuccess(false);
             setReady(true);
@@ -139,7 +143,17 @@ function Scanner() {
         })
         .catch((error) => {
           console.error(error);
-          setError("Error verifying QR code");
+          if (error.message === "Error verifying QR code") {
+            setSuccess(false);
+            setReady(true);
+            setCooldown(true);
+            setTimeout(() => {
+              setCooldown(false);
+              window.location.reload();
+            }, 1500);
+          } else {
+            setError("Error verifying QR code");
+          }
         });
     },
     [navigate]
@@ -171,21 +185,25 @@ function Scanner() {
     return function cleanup() {
       scanner.clear();
     };
-  }, [sendResult]);
+  }, [sendResult, shouldReloadScanner]);
 
   const handleClosePopup = () => {
-    setShowPopup(false);
+    setIsPopupOpen(false);
     setRecipeData(null);
+    setShouldReloadScanner(true);
+    setScannerVisible(true);
+    window.location.reload(); // Realizar refresh al cerrar el popup
   };
 
   const handleAcceptRecipe = () => {
     setSuccess(true);
     setReady(true);
-    setShowPopup(false);
+    setIsPopupOpen(false);
+    setShouldReloadScanner(true);
   };
 
   const handleRejectRecipe = () => {
-    setShowPopup(false);
+    setIsPopupOpen(false);
     setShowAlert(true);
     setTimeout(() => {
       setShowAlert(false);
@@ -208,13 +226,19 @@ function Scanner() {
         <div id="reader"></div>
       )}
 
-      {showPopup && recipeData && (
+      {isPopupOpen && recipeData && (
         <RecipePopup
           recipe={recipeData}
           onClose={handleClosePopup}
           onAccept={handleAcceptRecipe}
           onReject={handleRejectRecipe}
         />
+      )}
+
+      {cooldown && (
+        <div>
+          <p>Please wait...</p>
+        </div>
       )}
 
       <Alert variant="danger" show={showAlert} onClose={() => setShowAlert(false)} dismissible>
