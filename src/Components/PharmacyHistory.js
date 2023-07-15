@@ -85,9 +85,9 @@ function PharmacyHistory(){
         {state === 'APPROVED' ? 'Showing recipes in progress' : state === 'DISPENSED' ? 'Showing dispensed recipess' : 'Showing rejected recipes'}
       </button>
       <ul className="dropdown-menu">
-        <li><a className={`dropdown-item ${state === 'APPROVED' ? 'active' : ''}`} href="#" onClick={() =>setState('APPROVED')}>Show Pending requests</a></li>
-        <li><a className={`dropdown-item ${state === 'DISPENSED' ? 'active' : ''}`} href="#" onClick={() => setState('DISPENSED')}>Show Approved requests</a></li>
-        <li><a className={`dropdown-item ${state === 'REJECTED' ? 'active' : ''}`} href="#" onClick={() => setState('REJECTED')}>Show Rejected requests</a></li>
+        <li><a className={`dropdown-item ${state === 'APPROVED' ? 'active' : ''}`} href="#" onClick={() =>setState('APPROVED')}>Show recipes in progress</a></li>
+        <li><a className={`dropdown-item ${state === 'DISPENSED' ? 'active' : ''}`} href="#" onClick={() => setState('DISPENSED')}>Show dispensed recipes</a></li>
+        <li><a className={`dropdown-item ${state === 'REJECTED' ? 'active' : ''}`} href="#" onClick={() => setState('REJECTED')}>Show rejected recipes</a></li>
       </ul>
     </div>
       {requestList.length === 0 ? (

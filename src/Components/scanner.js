@@ -160,39 +160,36 @@ function Scanner() {
   );
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
-      qrbox: {
-        width: 250,
-        height: 250,
-      },
-      fps: 5,
-    });
+    let scanner;
 
-    scanner.clear();
+    const initializeScanner = () => {
+      scanner = new Html5QrcodeScanner("reader", {
+        qrbox: {
+          width: 250,
+          height: 250,
+        },
+        fps: 5,
+      });
 
-    function success(result) {
-      scanner.clear();
-      setScanResult2(result);
-      sendResult(result); // Call sendResult function when the scan is successful
-    }
-
-    function error(err) {
-      // toast.error(err);
-    }
-
-    scanner.render(success, error);
-
-    return function cleanup() {
-      scanner.clear();
+      scanner.render((result) => {
+        scanner.clear();
+        setScanResult2(result);
+        sendResult(result); // Llamar a la función sendResult cuando la lectura sea exitosa
+      }, (error) => {
+        console.error("Error scanning QR code:", error);
+      });
     };
-  }, [sendResult, shouldReloadScanner]);
+
+    initializeScanner();
+
+  }, [sendResult]);
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setRecipeData(null);
     setShouldReloadScanner(true);
     setScannerVisible(true);
-    window.location.reload(); // Realizar refresh al cerrar el popup
+    window.location.reload(); // Realizar una recarga de la página al cerrar el popup
   };
 
   const handleAcceptRecipe = () => {
