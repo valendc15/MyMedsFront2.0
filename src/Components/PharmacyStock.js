@@ -112,33 +112,36 @@ function PharmacyStock() {
       </div>
 
       <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Drug ID</th>
-            <th scope="col">Brand Name</th>
-            <th scope="col">Dosage Form</th>
-            <th scope="col">Strength</th>
-            <th scope="col">Stock</th>
-          </tr>
-        </thead>
-        <tbody>
-          {drugStock.map((drug) => (
-            <tr key={drug.drugID}>
-              <td>{drug.drugID}</td>
-              <td>{drug.brandName}</td>
-              <td>{drug.dosageForm}</td>
-              <td>{drug.strength}</td>
-              <td>
-                <input
-                  type="number"
-                  value={drug.stock}
-                  onChange={(e) => handleStockChange(drug.drugID, e.target.value)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  <thead>
+    <tr>
+      <th scope="col">Drug ID</th>
+      <th scope="col">Brand Name</th>
+      <th scope="col">Dosage Form</th>
+      <th scope="col">Strength</th>
+      <th scope="col">Stock</th>
+    </tr>
+  </thead>
+  <tbody>
+    {drugStock
+      .sort((a, b) => a.drugID - b.drugID)
+      .map((drug) => (
+        <tr key={drug.drugID}>
+          <td>{drug.drugID}</td>
+          <td>{drug.brandName}</td>
+          <td>{drug.dosageForm}</td>
+          <td>{drug.strength}</td>
+          <td>
+            <input
+              type="number"
+              value={drug.stock}
+              onChange={(e) => handleStockChange(drug.drugID, e.target.value)}
+            />
+          </td>
+        </tr>
+      ))}
+  </tbody>
+</table>
+
 
       {popUpState ? (
         <Popup
