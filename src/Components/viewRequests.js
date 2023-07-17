@@ -81,9 +81,9 @@ function ViewRequests() {
   
   function confirmDiscard() {
     setShowDiscardConfirmation(false);
+    setIsLoading(true)
     rejectRequest(currentRecipeID);
     setActionCompleted2(true)
-
   }
 
   function acceptRequest(recipeID) {
