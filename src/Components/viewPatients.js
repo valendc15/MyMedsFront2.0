@@ -93,19 +93,21 @@ function ViewPatients() {
   return (
     <div>
       <MedicNavBar></MedicNavBar>
-      <h1>Registered Patients</h1>
+      <h1 className="text-center">Registered Patients</h1>
+      <div className="containerinput mt-3">
       <input
         type="number"
-        className="form-control"
+        className="input"
         onChange={changeDNI}
         placeholder="Search by patient DNI"
       />
       <input
         type="text"
-        className="form-control"
+        className="input"
         onChange={changeName}
         placeholder="Search by patient Name"
       />
+      </div>
       <div className="d-flex justify-content-center mt-3"></div>
       <div className="row justify-content-center">
         {filteredPatientList.length > 0 ? (
@@ -117,7 +119,7 @@ function ViewPatients() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="card border-primary" style={{ width: "100%", padding: "10px" }}>
+              <div className="card border-dark" style={{ width: "100%", padding: "10px" }}>
                 <div className="card-body">
                   <h5 className="card-title">Name: {patient.username}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">DNI: {patient.dni}</h6>

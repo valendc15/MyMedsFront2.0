@@ -139,19 +139,20 @@ function PharmacyRequest() {
     <div>
       <PharmacyNavBar />
       {}
+      <div className="containerinput mt-3">
       <input
         type="number"
-        className="form-control"
+        className="input"
         onChange={changeDNI}
         placeholder="Search by patient DNI"
       />
         <input
         type="text"
-        className="form-control"
+        className="input"
         onChange={changeName}
         placeholder="Search by doctor name"
       />
-      
+      </div>
       <div className="row m-2">
         {requestList.length === 0 ? (
           <div className="d-flex justify-content-center align-items-center" style={{ minHeight: 225 }}>
@@ -165,10 +166,10 @@ function PharmacyRequest() {
                   <div className="card-body">
                     <h5 className="card-title text-center h2">Doctor: {request.doctorName}</h5>
                     <h6 className="card-subtitle mb-2 text-muted text-center">
-                      recipeID: {request.recipeID}
+                      RecipeID: {request.recipeID}
                     </h6>
                     <h6 className="card-subtitle mb-2 text-muted text-center">
-                      patientID: {request.patientID}
+                      Patient DNI: {request.patientID}
                     </h6>
                     <p className="card-text">Drugs:</p>
                     <ul>
